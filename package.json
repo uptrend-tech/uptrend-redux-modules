@@ -1,0 +1,46 @@
+{
+  "name": "@uptrend/redux-modules-resource-entities",
+  "version": "0.0.0-semantically-released",
+  "description":
+    "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "> 4",
+    "npm": "> 3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uptrend-tech/redux-modules-resource-entities.git"
+  },
+  "scripts": {
+    "add-contributor": "kcd-scripts contributors add",
+    "build": "kcd-scripts build",
+    "lint": "kcd-scripts lint",
+    "test": "kcd-scripts test",
+    "test:update": "npm test -- --updateSnapshot --coverage",
+    "validate": "kcd-scripts validate",
+    "setup": "npm install && npm run validate -s",
+    "precommit": "kcd-scripts precommit"
+  },
+  "files": ["dist"],
+  "keywords": [],
+  "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
+  "license": "MIT",
+  "dependencies": {
+    "npm": "^5.8.0"
+  },
+  "devDependencies": {
+    "all-contributors-cli": "^4.11.1",
+    "kcd-scripts": "^0.37.0"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/kcd-scripts/eslint.js"
+  },
+  "eslintIgnore": ["node_modules", "coverage", "dist"],
+  "bugs": {
+    "url":
+      "https://github.com/uptrend-tech/redux-modules-resource-entities/issues"
+  },
+  "homepage":
+    "https://github.com/uptrend-tech/redux-modules-resource-entities#readme"
+}
