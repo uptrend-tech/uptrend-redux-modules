@@ -19,8 +19,8 @@
     "test": "kcd-scripts test",
     "test:update": "npm test -- --updateSnapshot --coverage",
     "validate": "kcd-scripts validate",
-    "setup": "npm install && npm run validate -s",
-    "precommit": "kcd-scripts precommit",
+    "setup": "yarn install && yarn run validate -s",
+    "bbprecommit": "kcd-scripts precommit",
     "cm": "git-cz"
   },
   "files": ["dist"],
@@ -31,7 +31,6 @@
     "npm": "^5.8.0"
   },
   "devDependencies": {
-    "all-contributors-cli": "^4.11.1",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
     "kcd-scripts": "^0.37.0"
@@ -46,6 +45,11 @@
   },
   "homepage":
     "https://github.com/uptrend-tech/redux-modules-resource-entities#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "kcd-scripts precommit"
+    }
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
