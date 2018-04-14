@@ -1,14 +1,14 @@
 // https://github.com/diegohaz/arc/wiki/Selectors#unit-testing-selectors
 // https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
 import values from 'lodash/values';
-import * as selectors from '../selectors';
+import { schema } from 'normalizr';
+import selectorsFactory from '../selectors';
 
-jest.mock('../schemas', () => {
-  const { schema } = require('normalizr');
-  return {
-    entity: new schema.Entity('entity'),
-  };
-});
+const schemas = {
+  entity: new schema.Entity('entity'),
+};
+
+const selectors = selectorsFactory({ schemas });
 
 const altState = {
   entity: {

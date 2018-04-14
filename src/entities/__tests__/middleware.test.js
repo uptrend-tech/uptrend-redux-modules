@@ -1,16 +1,17 @@
 // https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
 import configureStore from 'redux-mock-store';
-import entitiesMiddleware from '../middleware';
+import { schema } from 'normalizr';
+
+import middlewareFactory from '../middleware';
 import { entitiesReceive } from '../actions';
 
-jest.mock('../schemas', () => {
-  const { schema } = require('normalizr');
-  return {
+const middleware = middlewareFactory({
+  schemas: {
     entity: new schema.Entity('entity'),
-  };
+  }
 });
 
-const mockStore = configureStore([entitiesMiddleware]);
+const mockStore = configureStore([middleware]);
 
 it('dispatches the exactly same action', () => {
   const store = mockStore({});
