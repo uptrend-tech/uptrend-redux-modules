@@ -64,6 +64,7 @@ export default (state = initialState, { type, payload, meta }) => {
 
   switch (type) {
     case RESOURCE_CREATE_SUCCESS:
+      console.log('TEZ2',{payload,data, gle: getList(state, resource)})
       return {
         ...state,
         [resource]: {

@@ -176,7 +176,7 @@ export function* watchResourceDeleteRequest(api, { payload, meta }) {
   yield call(deleteResource, api, payload, meta);
 }
 
-export default function*({ api, consoleErrorRecovery, safeSaga }) {
+export default function*({ api }) {
   const safe = safeSaga(consoleErrorRecovery);
 
   yield takeEvery(actions.RESOURCE_CREATE_REQUEST, safe(watchResourceCreateRequest, api));
