@@ -1,8 +1,8 @@
 // https://github.com/diegohaz/arc/wiki/Sagas#unit-testing-sagas
 // https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
 import { takeEvery, put, call } from 'redux-saga/effects';
-import * as actions from '../actions';
-import saga, * as sagas from '../sagas';
+import * as actions from './actions';
+import saga, * as sagas from './sagas';
 
 const api = {
   post: () => {},
@@ -13,8 +13,7 @@ const api = {
 
 const thunk = '123';
 const resource = 'resources';
-const entityType = 'resource'
-const meta = { thunk, resource, entityType };
+const meta = { thunk, resource };
 
 describe('createResource', () => {
   const payload = { data: 'foo' };
@@ -24,7 +23,7 @@ describe('createResource', () => {
     const generator = sagas.createResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.post], `/${resource}`, 'foo'));
     expect(generator.next({ data: detail }).value).toEqual(
-      put(actions.resourceCreateSuccess(resource, entityType, detail, payload, thunk)),
+      put(actions.resourceCreateSuccess(resource, detail, payload, thunk)),
     );
   });
 
@@ -32,7 +31,7 @@ describe('createResource', () => {
     const generator = sagas.createResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.post], `/${resource}`, 'foo'));
     expect(generator.throw('test').value).toEqual(
-      put(actions.resourceCreateFailure(resource, entityType, 'test', payload, thunk)),
+      put(actions.resourceCreateFailure(resource, 'test', payload, thunk)),
     );
   });
 });
@@ -45,7 +44,7 @@ describe('readResourceList', () => {
     const generator = sagas.readResourceList(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.get], `/${resource}`, payload));
     expect(generator.next({ data: detail }).value).toEqual(
-      put(actions.resourceListReadSuccess(resource, entityType, detail, payload, thunk)),
+      put(actions.resourceListReadSuccess(resource, detail, payload, thunk)),
     );
   });
 
@@ -53,7 +52,7 @@ describe('readResourceList', () => {
     const generator = sagas.readResourceList(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.get], `/${resource}`, payload));
     expect(generator.throw('test').value).toEqual(
-      put(actions.resourceListReadFailure(resource, entityType, 'test', payload, thunk)),
+      put(actions.resourceListReadFailure(resource, 'test', payload, thunk)),
     );
   });
 });
@@ -66,7 +65,7 @@ describe('readResourceDetail', () => {
     const generator = sagas.readResourceDetail(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.get], `/${resource}/1`));
     expect(generator.next({ data: detail }).value).toEqual(
-      put(actions.resourceDetailReadSuccess(resource, entityType, detail, payload, thunk)),
+      put(actions.resourceDetailReadSuccess(resource, detail, payload, thunk)),
     );
   });
 
@@ -74,7 +73,7 @@ describe('readResourceDetail', () => {
     const generator = sagas.readResourceDetail(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.get], `/${resource}/1`));
     expect(generator.throw('test').value).toEqual(
-      put(actions.resourceDetailReadFailure(resource, entityType, 'test', payload, thunk)),
+      put(actions.resourceDetailReadFailure(resource, 'test', payload, thunk)),
     );
   });
 });
@@ -87,7 +86,7 @@ describe('updateResource', () => {
     const generator = sagas.updateResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.put], `/${resource}/1`, 'foo'));
     expect(generator.next({ data: detail }).value).toEqual(
-      put(actions.resourceUpdateSuccess(resource, entityType, detail, payload, thunk)),
+      put(actions.resourceUpdateSuccess(resource, detail, payload, thunk)),
     );
   });
 
@@ -95,7 +94,7 @@ describe('updateResource', () => {
     const generator = sagas.updateResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.put], `/${resource}/1`, 'foo'));
     expect(generator.throw('test').value).toEqual(
-      put(actions.resourceUpdateFailure(resource, entityType, 'test', payload, thunk)),
+      put(actions.resourceUpdateFailure(resource, 'test', payload, thunk)),
     );
   });
 });
@@ -107,7 +106,7 @@ describe('deleteResource', () => {
     const generator = sagas.deleteResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.delete], `/${resource}/1`));
     expect(generator.next().value).toEqual(
-      put(actions.resourceDeleteSuccess(resource, entityType,payload, thunk)),
+      put(actions.resourceDeleteSuccess(resource, payload, thunk)),
     );
   });
 
@@ -115,9 +114,15 @@ describe('deleteResource', () => {
     const generator = sagas.deleteResource(api, payload, meta);
     expect(generator.next().value).toEqual(call([api, api.delete], `/${resource}/1`));
     expect(generator.throw('test').value).toEqual(
-      put(actions.resourceDeleteFailure(resource, entityType, 'test', payload, thunk)),
+      put(actions.resourceDeleteFailure(resource, 'test', payload, thunk)),
     );
   });
+});
+
+test('watchResourceBulkDownloadRequest', () => {
+  const payload = { data: 1 };
+  const generator = sagas.watchResourceCreateRequest(api, { payload, meta });
+  expect(generator.next().value).toEqual(call(sagas.createResource, api, payload, meta));
 });
 
 test('watchResourceCreateRequest', () => {
@@ -136,10 +141,7 @@ test('watchResourceListReadRequest', () => {
 
 test('watchResourceDetailReadRequest', () => {
   const payload = { needle: 1 };
-  const generator = sagas.watchResourceDetailReadRequest(api, {
-    payload,
-    meta,
-  });
+  const generator = sagas.watchResourceDetailReadRequest(api, { payload, meta });
   expect(generator.next().value).toEqual(
     call(sagas.readResourceDetail, api, payload, meta),
   );
