@@ -6,5 +6,6 @@ notifications:
 install: yarn install
 script: yarn run validate
 after_success: kcd-scripts travis-after-success
+after_failure: kcd-scripts travis-after-success
 branches:
   only: master

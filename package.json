@@ -1,5 +1,5 @@
 {
-  "name": "@uptrend/redux-modules-resource-entities",
+  "name": "redux-modules-resource-entities",
   "version": "0.0.0-semantically-released",
   "description": "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
   "main": "dist/index.js",
