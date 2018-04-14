@@ -17,10 +17,20 @@ const  selectorsFactory = ({ schemas = {} }) => {
   const getDenormalizedDetail = (state = initialState, entity, id) =>
     denormalize(getDetail(state, entity, id), schemas[entity], state);
 
-  const getDenormalizedList = (state = initialState, entity, ids) =>
-    denormalize(getList(state, entity, ids), [schemas[entity]], state);
+  const getDenormalizedList = (state = initialState, entity, ids) => {
+
+        console.log('gdl',{
+          gl: getList(state, entity, ids),
+          state,
+          entity,
+          ids,
+          schema: schemas[entity],
+        })
+    return denormalize(getList(state, entity, ids), [schemas[entity]], state);
+  }
 
   return {
+    initialState,
     getEntity,
     getDetail,
     getList,

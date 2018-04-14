@@ -51,10 +51,17 @@ describe('resource', () => {
 
         expect(getList(getState(), 'resources')).toEqual([]);
 
-        dispatch(resourceCreateRequest('resources', {
-            title: 'foo'
-        }));
+
+        console.log('idx:1', {
+          getState: getState(),
+          getList: getList(getState(), 'resources'),
+        });
+        dispatch(resourceCreateRequest('resources', { title: 'foo' }));
         await delay();
+        console.log('idx:1', {
+          getState: getState(),
+          getList: getList(getState(), 'resources'),
+        });
         expect(getList(getState(), 'resources')).toEqual([{
             title: 'foo'
         }]);
