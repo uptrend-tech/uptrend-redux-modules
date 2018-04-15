@@ -21,11 +21,6 @@ const GetEntitySelector = t.func(
   EntitySubState
 );
 
-const GetEntityItemListSelector = t.func(
-  [EntitiesState, EntityName, t.list(EntityItemId)],
-  EntityItemList
-);
-
 // const GetDenormalizedListFn = t.func(
 //   [],
 
@@ -35,7 +30,7 @@ const GetEntityItemListSelector = t.func(
 // -- Selectors Implementation
 // --
 
-const  selectorsFactory = ({ schemas = {} }) => {
+const selectorsFactory = ({ schemas = {} }) => {
   const initialState = {};
 
   const getEntity = GetEntitySelector.of(
@@ -48,40 +43,17 @@ const  selectorsFactory = ({ schemas = {} }) => {
     [EntitiesState, EntityName, EntityItemId],
     t.maybe(EntityItem),
   ).of((state = initialState, entity, id) => {
-    getEntity(state, entity)[id];
+    return getEntity(state, entity)[id];
   });
 
-
-  const getEntityItemList = GetEntityItemListSelector.of(
-    (state = initialState, entity, ids) => {
-      const lookupDetail = id => {
-        console.warn({state, entity, id})
-        return getEntityItem(state, entity, id);
-      };
-
-      const entityState = getEntity(state, entity);
-      const entityAllIds = Object.keys(entityState);
-      const lookupIds = ids || entityAllIds;
-      // console.log('sel:gl', {
-      //   state,
-      //   entity,
-      //   ids,
-      // });
-      // console.warn('sel:gl', {
-      //   entityState,
-      //   entityAllIds,
-      //   lookupIds,
-      // });
-
-      const entityList = lookupIds.map(lookupDetail);
-
-      // console.error('sel:gl', { entityList    });
-      return entityList;
-
-
-      // return (ids || Object.keys(getEntity(state, entity))).map(id => getEntityItem(state, entity, id));
-    }
-  );
+  const getEntityItemList = t.func(
+    [EntitiesState, EntityName, t.list(EntityItemId)],
+    EntityItemList
+  ).of((state = initialState, entity, idList) => {
+    const ids = idList || Object.keys(getEntity(state, entity));
+    const entityItemList = ids.map(id => getEntityItem(state, entity, id));
+    return entityItemList.filter(EntityItem.is);
+  });
 
   // const getDenormalizedDetail = (state = initialState, entity, id) =>
   //   denormalize(getEntityItem(state, entity, id), schemas[entity], state);
@@ -135,7 +107,7 @@ const  selectorsFactory = ({ schemas = {} }) => {
     getEntityItemList,
     // getDenormalizedDetail,
     // getDenormalizedList,
-  }
-}
+  };
+};
 
 export default selectorsFactory;

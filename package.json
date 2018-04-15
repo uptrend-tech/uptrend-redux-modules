@@ -39,6 +39,7 @@
   "devDependencies": {
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
+    "jest-in-case": "^1.0.2",
     "kcd-scripts": "^0.37.0",
     "kitimat": "^0.1.8",
     "kitimat-jest": "^0.1.8",
