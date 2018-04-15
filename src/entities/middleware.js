@@ -1,34 +1,36 @@
 // https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
-import { normalize } from 'normalizr';
-import { entitiesReceive } from './actions';
+import {normalize} from 'normalizr'
+import {entitiesReceive} from './actions'
 
-const  middlewareFactory = ({ isDevEnv = false, schemas = {} }) => {
+const middlewareFactory = ({isDevEnv = false, schemas = {}}) => {
   // eslint-disable-next-line complexity
   const middleware = store => next => action => {
-    const { payload, meta } = action;
+    const {payload, meta} = action
 
     if (meta && meta.normalizeEntities && meta.entityType) {
-      const schema = schemas[meta.entityType];
+      const schema = schemas[meta.entityType]
 
       if (schema) {
-        const { result, entities } = normalize(
+        const {result, entities} = normalize(
           payload.data,
           Array.isArray(payload.data) ? [schema] : schema,
-        );
-        store.dispatch(entitiesReceive(entities));
-        return next({ ...action, payload: { ...payload, data: result } });
+        )
+        store.dispatch(entitiesReceive(entities))
+        return next({...action, payload: {...payload, data: result}})
       }
 
       if (isDevEnv) {
         // eslint-disable-next-line no-console
-        console.warn(`[entityType] There is no ${meta.entityType} schema on schemas.js`);
+        console.warn(
+          `[entityType] There is no ${meta.entityType} schema on schemas.js`,
+        )
       }
     }
 
-    return next(action);
-  };
+    return next(action)
+  }
 
-  return middleware;
+  return middleware
 }
 
-export default middlewareFactory;
+export default middlewareFactory

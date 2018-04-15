@@ -1,7 +1,8 @@
 {
   "name": "redux-modules-resource-entities",
   "version": "0.0.0-semantically-released",
-  "description": "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
+  "description":
+    "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
   "main": "dist/index.js",
   "engines": {
     "node": "> 4",
@@ -21,9 +22,7 @@
     "setup": "yarn install && yarn run validate -s",
     "cm": "kcd-scripts precommit && git-cz"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "keywords": [],
   "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
   "license": "MIT",
@@ -49,15 +48,13 @@
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js"
   },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ],
+  "eslintIgnore": ["node_modules", "coverage", "dist"],
   "bugs": {
-    "url": "https://github.com/uptrend-tech/redux-modules-resource-entities/issues"
+    "url":
+      "https://github.com/uptrend-tech/redux-modules-resource-entities/issues"
   },
-  "homepage": "https://github.com/uptrend-tech/redux-modules-resource-entities#readme",
+  "homepage":
+    "https://github.com/uptrend-tech/redux-modules-resource-entities#readme",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

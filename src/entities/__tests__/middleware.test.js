@@ -1,60 +1,60 @@
 // https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
-import configureStore from 'redux-mock-store';
-import { schema } from 'normalizr';
+import configureStore from 'redux-mock-store'
+import {schema} from 'normalizr'
 
-import middlewareFactory from '../middleware';
-import { entitiesReceive } from '../actions';
+import middlewareFactory from '../middleware'
+import {entitiesReceive} from '../actions'
 
 const middleware = middlewareFactory({
   schemas: {
     entity: new schema.Entity('entity'),
-  }
-});
+  },
+})
 
-const mockStore = configureStore([middleware]);
+const mockStore = configureStore([middleware])
 
 it('dispatches the exactly same action', () => {
-  const store = mockStore({});
-  const action = { type: 'FOO', payload: 1 };
-  expect(store.dispatch(action)).toEqual(action);
-  expect(store.getActions()).toEqual([action]);
-});
+  const store = mockStore({})
+  const action = {type: 'FOO', payload: 1}
+  expect(store.dispatch(action)).toEqual(action)
+  expect(store.getActions()).toEqual([action])
+})
 
 it('dispatches the exactly same action if there is no schema', () => {
-  const store = mockStore({});
+  const store = mockStore({})
   const action = {
     type: 'FOO',
-    payload: { id: 2, foo: 'bar' },
-    meta: { entities: 'noentity' },
-  };
-  expect(store.dispatch(action)).toEqual(action);
-  expect(store.getActions()).toEqual([action]);
-});
+    payload: {id: 2, foo: 'bar'},
+    meta: {entities: 'noentity'},
+  }
+  expect(store.dispatch(action)).toEqual(action)
+  expect(store.getActions()).toEqual([action])
+})
 
 it('dispatches entities action along with the normalized action', () => {
-  const store = mockStore({});
+  const store = mockStore({})
   const action = {
     type: 'FOO',
-    payload: { id: 2, foo: 'bar' },
-    meta: { entities: 'entity' },
-  };
-  expect(store.dispatch(action)).toEqual({ ...action, payload: 2 });
+    payload: {id: 2, foo: 'bar'},
+    meta: {entities: 'entity'},
+  }
+  expect(store.dispatch(action)).toEqual({...action, payload: 2})
   expect(store.getActions()).toEqual([
-    entitiesReceive({ entity: { 2: { id: 2, foo: 'bar' } } }),
-    { ...action, payload: 2 },
-  ]);
-});
+    entitiesReceive({entity: {2: {id: 2, foo: 'bar'}}}),
+    {...action, payload: 2},
+  ])
+})
 
 it('dispatches entities action along with array', () => {
-  const store = mockStore({});
+  const store = mockStore({})
   const action = {
     type: 'FOO',
-    payload: [{ id: 2, foo: 'bar' }],
-    meta: { entities: 'entity' },
-  };
-  expect(store.dispatch(action)).toEqual({ ...action, payload: [2] });
+    payload: [{id: 2, foo: 'bar'}],
+    meta: {entities: 'entity'},
+  }
+  expect(store.dispatch(action)).toEqual({...action, payload: [2]})
   expect(store.getActions()).toEqual([
-    entitiesReceive({ entity: { 2: { id: 2, foo: 'bar' } } }),
-    { ...action, payload: [2] },
-  ]);
-});
+    entitiesReceive({entity: {2: {id: 2, foo: 'bar'}}}),
+    {...action, payload: [2]},
+  ])
+})
