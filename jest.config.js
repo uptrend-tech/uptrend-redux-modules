@@ -6,4 +6,5 @@ module.exports = Object.assign(jestConfig, {
     '<rootDir>/src/resource',
     '<rootDir>/src/entities/__tests__/middleware.test.js',
   ],
+  coverageThreshold: undefined,
 })
