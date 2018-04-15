@@ -1,9 +1,20 @@
+import { BaseError } from 'make-error-cause'
 import { call } from 'redux-saga/effects';
 import { camelizeKeys, decamelizeKeys } from 'humps';
 
+// --
+// -- Async Helpers
+// --
+
 export { delay } from 'redux-saga';
-// export const delay = (ms, val = true) =>
-//   reduxSagaDelay(ms, val);
+
+// --
+// -- Custom Errors
+// --
+
+export class RdxModEntitiesError extends BaseError { }
+
+export class RdxModResourceError extends BaseError { }
 
 // --
 // -- object key formating
@@ -32,3 +43,5 @@ export const safeSaga = recovery => (saga, ...args) =>
       yield call(recovery, err, ...args);
     }
   };
+
+
