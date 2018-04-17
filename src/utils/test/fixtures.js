@@ -9,7 +9,7 @@ const userSchema = new schema.Entity('user', {}, {idAttribute: 'uuid'})
 const teamSchema = new schema.Entity(
   'team',
   {owner: userSchema, members: [userSchema]},
-  {idAttribute: 'id'},
+  // {idAttribute: 'id'},
 )
 
 export const getSchemas = () => ({
