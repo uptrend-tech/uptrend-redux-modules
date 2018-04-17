@@ -1,7 +1,11 @@
 import configureStore from 'redux-mock-store'
 import {denormalize, schema} from 'normalizr'
 
-import {getSchemas, getEntitiesState, getEntitiesStateDenormalized} from '../../utils/test/fixtures'
+import {
+  getSchemas,
+  getEntitiesState,
+  getEntitiesStateDenormalized,
+} from '../../utils/test/fixtures'
 import middlewareFactory from '../middleware'
 import selectorsFactory from '../selectors'
 import {entitiesReceive} from '../actions'
@@ -17,15 +21,18 @@ const mockStore = configureStore([middleware])
 const getMockDataForEntity = (entity, entityId) => {
   const schemas = getSchemas()
   const state = getEntitiesState()
-  const data = denormalize({ [entity]: entityId }, schemas, state)
-  console.log('den',data)
-  const entities = { [entity]: { [entityId]: state[entity][entityId] } };
-  const meta = { entityType: entity, normalizeEntities: true};
-  const payload = { payload: {data}  };
-  const action = { type: 'RES', payload: {data},  meta };
-  const modifyAction = {...action, payload: {...action.payload, entities: entityId}}
+  const data = denormalize({[entity]: entityId}, schemas, state)
+  console.log('den', data)
+  const entities = {[entity]: {[entityId]: state[entity][entityId]}}
+  const meta = {entityType: entity, normalizeEntities: true}
+  const payload = {payload: {data}}
+  const action = {type: 'RES', payload: {data}, meta}
+  const modifyAction = {
+    ...action,
+    payload: {...action.payload, entities: entityId},
+  }
 
-  return { action, modifyAction, data,payload, entities, meta }
+  return {action, modifyAction, data, payload, entities, meta}
 }
 
 it('dispatches the exactly same action', () => {
@@ -48,7 +55,7 @@ it('dispatches the exactly same action if there is no schema', () => {
 
 it('dispatches entities action along with the normalized action', () => {
   const store = mockStore({})
-  const mock =  getMockDataForEntity('team', 1)
+  const mock = getMockDataForEntity('team', 1)
   // const meta = { entity, normalizeEntities: true};
   // const action = { type: 'ACT003', payload: {data},  meta };
   expect(store.dispatch(mock.action)).toEqual(mock.modifyAction)

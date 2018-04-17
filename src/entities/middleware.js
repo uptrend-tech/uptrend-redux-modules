@@ -16,7 +16,7 @@ const middlewareFactory = ({isDevEnv = false, schemas = {}}) => {
           Array.isArray(payload.data) ? [schema] : schema,
         )
         store.dispatch(entitiesReceive(entities))
-        console.warn({schema,result, entities, payload })
+        console.warn({schema, result, entities, payload})
         return next({...action, payload: {...payload, entities: result}})
       }
 
