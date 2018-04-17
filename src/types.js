@@ -11,11 +11,7 @@ export const State = t.Object
 // --
 
 export const EntityItemId = t.union([t.String, t.Integer])
-export const EntityItem = t.refinement(
-  t.Object,
-  obj => obj.hasOwnProperty('id'),
-  'EntityItem',
-)
+export const EntityItem = t.Object
 export const EntityItemList = t.list(EntityItem)
 
 export const EntityName = t.refinement(

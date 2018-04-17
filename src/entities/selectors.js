@@ -1,4 +1,5 @@
 import t from 'tcomb'
+import {denormalize} from 'normalizr'
 import {
   EntityItemId,
   EntityItemList,
@@ -12,12 +13,7 @@ import {
 // -- Selectors Implementation
 // --
 
-const selectorsFactory = (
-  // eslint-disable-next-line no-empty-pattern
-  {
-    /* schemas = {} */
-  },
-) => {
+const selectorsFactory = ({schemas}) => {
   const initialState = {}
 
   const getEntity = t
@@ -28,16 +24,31 @@ const selectorsFactory = (
 
   const getEntityItem = t
     .func([EntitiesState, EntityName, EntityItemId], t.maybe(EntityItem))
-    .of((state = initialState, entity, id) => {
-      return getEntity(state, entity)[id]
+    .of((state = initialState, entity, entityId) => {
+      return getEntity(state, entity)[entityId]
     })
 
   const getEntityItemList = t
     .func([EntitiesState, EntityName, t.list(EntityItemId)], EntityItemList)
-    .of((state = initialState, entity, idList) => {
-      const ids = idList || Object.keys(getEntity(state, entity))
-      const entityItemList = ids.map(id => getEntityItem(state, entity, id))
+    .of((state = initialState, entity, entityIdList) => {
+      const ids = entityIdList || Object.keys(getEntity(state, entity))
+      const entityItemList = ids.map(entityId =>
+        getEntityItem(state, entity, entityId),
+      )
       return entityItemList.filter(EntityItem.is)
+    })
+
+  const getDenormalizedDetail = t
+    .func([EntitiesState, EntityName, EntityItemId], EntityItem)
+    .of((state = initialState, entity, entityId) => {
+      return denormalize({[entity]: entityId}, schemas[entity], state)
+    })
+
+  const getDenormalizedList = t
+    .func([EntitiesState, EntityName, t.list(EntityItemId)], EntityItemList)
+    .of((state = initialState, entity, entityIdList) => {
+      const schema = schemas[entity]
+      return denormalize({[entity]: entityIdList}, [schema], state)
     })
 
   return {
@@ -45,6 +56,8 @@ const selectorsFactory = (
     getEntity,
     getEntityItem,
     getEntityItemList,
+    getDenormalizedDetail,
+    getDenormalizedList,
   }
 }
 

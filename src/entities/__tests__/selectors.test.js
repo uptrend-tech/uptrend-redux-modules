@@ -1,18 +1,12 @@
 import cases from 'jest-in-case'
-// import t from 'tcomb';
-// import * as k from 'kitimat-jest';
 import selectorsFactory from '../selectors'
-import {/* getSchemas, */ getState} from './fixtures'
+import {getSchemas, getEntitiesState} from '../../utils/test/fixtures'
 
 const selectors = selectorsFactory({
-  /* schemas: getSchemas() */
+  schemas: getSchemas(),
 })
 
-let state = getState()
-
-beforeEach(() => {
-  state = getState()
-})
+let state = getEntitiesState()
 
 test('initialState', () => {
   expect(selectors.initialState).toEqual({})
@@ -20,7 +14,7 @@ test('initialState', () => {
 
 describe('getEntity', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -42,7 +36,7 @@ describe('getEntity', () => {
     opts => {
       expect(selectors.getEntity(opts.state, opts.entity)).toEqual({})
     },
-    [{state: {}, entity: 'test'}, {state, entity: 'no-match-entity'}],
+    [{state: {}, entity: 'team'}, {state, entity: 'no-match-entity'}],
   )
 
   cases(
@@ -51,13 +45,13 @@ describe('getEntity', () => {
       const entity = opts.state[opts.entity]
       expect(selectors.getEntity(opts.state, opts.entity)).toBe(entity)
     },
-    [{state, entity: 'test'}, {state, entity: 'trial'}],
+    [{state, entity: 'team'}, {state, entity: 'user'}],
   )
 })
 
 describe('getEntityItem', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -69,8 +63,8 @@ describe('getEntityItem', () => {
     },
     [
       {state},
-      {state, entity: 'test'},
-      {state, entity: 'test', id: null},
+      {state, entity: 'team'},
+      {state, entity: 'team', id: null},
       {state, entity: [], id: null},
     ],
   )
@@ -83,10 +77,10 @@ describe('getEntityItem', () => {
       ).toBeUndefined()
     },
     [
-      {state: {}, entity: 'test', id: 1},
-      {state: {}, entity: 'test', id: '2'},
-      {state, entity: 'test', id: 99999},
-      {state, entity: 'trial', id: 'miss'},
+      {state: {}, entity: 'team', id: 1},
+      {state: {}, entity: 'team', id: '2'},
+      {state, entity: 'team', id: 99999},
+      {state, entity: 'user', id: 'miss'},
     ],
   )
 
@@ -99,16 +93,16 @@ describe('getEntityItem', () => {
       )
     },
     [
-      {state, entity: 'test', id: 1},
-      {state, entity: 'test', id: 'aaa-bbb'},
-      {state, entity: 'trial', id: 1},
+      {state, entity: 'team', id: 1},
+      {state, entity: 'team', id: 'aaa-bbb'},
+      {state, entity: 'user', id: 1},
     ],
   )
 })
 
 describe('getEntityItemList', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -124,11 +118,11 @@ describe('getEntityItemList', () => {
       {state, entity: 1, ids: 1},
       {state, entity: [], ids: 1},
       {state, entity: {}, ids: 1},
-      {state, entity: 'test'},
-      {state, entity: 'test', ids: null},
-      {state, entity: 'test', ids: 1},
-      {state, entity: 'test', ids: 'aaa-bbb'},
-      {state, entity: 'test', ids: {}},
+      {state, entity: 'team'},
+      {state, entity: 'team', ids: null},
+      {state, entity: 'team', ids: 1},
+      {state, entity: 'team', ids: 'aaa-bbb'},
+      {state, entity: 'team', ids: {}},
     ],
   )
 
@@ -140,10 +134,10 @@ describe('getEntityItemList', () => {
       ).toEqual([])
     },
     [
-      {state: {}, entity: 'test', ids: [1]},
-      {state: {}, entity: 'test', ids: ['2']},
-      {state, entity: 'test', ids: [99999]},
-      {state, entity: 'trial', ids: [99999, 'miss']},
+      {state: {}, entity: 'team', ids: [1]},
+      {state: {}, entity: 'team', ids: ['2']},
+      {state, entity: 'team', ids: [99999]},
+      {state, entity: 'user', ids: [99999, 'miss']},
     ],
   )
 
@@ -158,20 +152,19 @@ describe('getEntityItemList', () => {
       expect(result).toEqual(opts.result)
     },
     [
-      {state, entity: 'test', ids: [1], result: [state.test[1]]},
+      {state, entity: 'team', ids: [1], result: [state.team[1]]},
       {
         state,
-        entity: 'test',
+        entity: 'team',
         ids: [1, 2],
-        result: [state.test[1], state.test[2]],
+        result: [state.team[1], state.team[2]],
       },
       {
         state,
-        entity: 'test',
-        ids: [1, 'aaa-bbb'],
-        result: [state.test[1], state.test['aaa-bbb']],
+        entity: 'user',
+        ids: ['aaa', 'ccc'],
+        result: [state.user.aaa, state.user.ccc],
       },
-      {state, entity: 'trial', ids: [1], result: [state.trial[1]]},
     ],
   )
 })
