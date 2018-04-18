@@ -1,20 +1,20 @@
 import configureStore from 'redux-mock-store'
-import {denormalize, schema} from 'normalizr'
+import {denormalize} from 'normalizr'
 
 import {
   getSchemas,
   getEntitiesState,
-  getEntitiesStateDenormalized,
+  // getEntitiesStateDenormalized,
 } from '../../utils/test/fixtures'
 import middlewareFactory from '../middleware'
-import selectorsFactory from '../selectors'
+// import selectorsFactory from '../selectors'
 import {entitiesReceive} from '../actions'
 
 const middleware = middlewareFactory({
   schemas: getSchemas(),
 })
 
-const entitiesTestState = getEntitiesState()
+// const entitiesTestState = getEntitiesState()
 
 const mockStore = configureStore([middleware])
 
@@ -22,7 +22,6 @@ const getMockDataForEntity = (entity, entityId) => {
   const schemas = getSchemas()
   const state = getEntitiesState()
   const data = denormalize({[entity]: entityId}, schemas, state)
-  console.log('den', data)
   const entities = {[entity]: {[entityId]: state[entity][entityId]}}
   const meta = {entityType: entity, normalizeEntities: true}
   const payload = {payload: {data}}
@@ -34,6 +33,9 @@ const getMockDataForEntity = (entity, entityId) => {
 
   return {action, modifyAction, data, payload, entities, meta}
 }
+
+const userTom = {uuid: 'aaa', name: 'Tom'}
+const userSam = {uuid: 'bbb', name: 'Sam'}
 
 it('dispatches the exactly same action', () => {
   const store = mockStore({})
@@ -58,11 +60,40 @@ it('dispatches entities action along with the normalized action', () => {
   const mock = getMockDataForEntity('team', 1)
   // const meta = { entity, normalizeEntities: true};
   // const action = { type: 'ACT003', payload: {data},  meta };
-  expect(store.dispatch(mock.action)).toEqual(mock.modifyAction)
-  expect(store.getActions()).toEqual([
-    entitiesReceive(mock.entities),
-    {...mock.action, payload: mock.payload},
-  ])
+  // console.warn(JSON.stringify(mock.action, false, 2))
+  const respData = {
+    id: 1,
+    name: 'Team 1',
+    owner: {...userTom},
+    members: [{...userTom}],
+  }
+
+  // const entitiesData = {
+  //   team: {
+  //     id: 1,
+  //     name: 'Team 1',
+  //     owner: {...userTom},
+  //     members: [{...userTom}],
+  //   },
+  // }
+
+  const action = {
+    type: 'RESP',
+    payload: {data: {...respData}},
+    meta: {entityType: 'team', normalizeEntities: true},
+  }
+
+  const modifiedAction = {
+    type: 'RESP',
+    payload: {data: {...respData}, entities: 1},
+    meta: {entityType: 'team', normalizeEntities: true},
+  }
+
+  expect(store.dispatch(action)).toEqual(modifiedAction)
+  // expect(store.getActions()).toEqual([
+  //   entitiesReceive(mock.entities),
+  //   {...mock.action, payload: mock.payload},
+  // ])
 })
 
 // it('dispatches entities action along with array', () => {

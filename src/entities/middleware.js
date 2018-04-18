@@ -1,4 +1,3 @@
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
 import {normalize} from 'normalizr'
 import {entitiesReceive} from './actions'
 
@@ -16,7 +15,6 @@ const middlewareFactory = ({isDevEnv = false, schemas = {}}) => {
           Array.isArray(payload.data) ? [schema] : schema,
         )
         store.dispatch(entitiesReceive(entities))
-        console.warn({schema, result, entities, payload})
         return next({...action, payload: {...payload, entities: result}})
       }
 
