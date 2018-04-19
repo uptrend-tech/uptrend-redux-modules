@@ -1,18 +1,24 @@
-// https://github.com/diegohaz/arc/wiki/Actions#unit-testing-actions
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
 import * as actions from '../actions'
 
+// --
+// -- Create
+// --
+
 test('resourceCreateRequest', () => {
-  expect(actions.resourceCreateRequest('resources', {title: 'test'})).toEqual(
+  expect(
+    actions.resourceCreateRequest(
+      'resourceName',
+      {title: 'test'},
+      'schemaName',
+    ),
+  ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_CREATE_REQUEST,
-      payload: {
-        data: {
-          title: 'test',
-        },
-      },
+      payload: {data: {title: 'test'}},
       meta: expect.objectContaining({
-        resource: 'resources',
+        resource: 'resourceName',
+        entityType: 'schemaName',
+        thunk: `resourceNameCreate`,
       }),
     }),
   )
@@ -21,9 +27,11 @@ test('resourceCreateRequest', () => {
 test('resourceCreateSuccess', () => {
   expect(
     actions.resourceCreateSuccess(
-      'resources',
+      'resourceName',
+      'schemaName',
       {id: 1, title: 'test'},
       'request',
+      'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
@@ -31,7 +39,7 @@ test('resourceCreateSuccess', () => {
       payload: {id: 1, title: 'test'},
       meta: expect.objectContaining({
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
       }),
     }),
   )
@@ -39,7 +47,13 @@ test('resourceCreateSuccess', () => {
 
 test('resourceCreateFailure', () => {
   expect(
-    actions.resourceCreateFailure('resources', 'error', 'request'),
+    actions.resourceCreateFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_CREATE_FAILURE,
@@ -47,7 +61,74 @@ test('resourceCreateFailure', () => {
       payload: 'error',
       meta: expect.objectContaining({
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+      }),
+    }),
+  )
+})
+
+// --
+// -- Create List
+// --
+
+test('resourceListCreateRequest', () => {
+  expect(
+    actions.resourceListCreateRequest(
+      'resourceName',
+      [{title: 'test'}, {title: 'bros'}],
+      'schemaName',
+    ),
+  ).toEqual(
+    expect.objectContaining({
+      type: actions.RESOURCE_LIST_CREATE_REQUEST,
+      payload: {data: [{title: 'test'}, {title: 'bros'}]},
+      meta: expect.objectContaining({
+        resource: 'resourceName',
+        entityType: 'schemaName',
+        thunk: `resourceNameListCreate`,
+      }),
+    }),
+  )
+})
+
+test('resourceListCreateSuccess', () => {
+  expect(
+    actions.resourceListCreateSuccess(
+      'resourceName',
+      'schemaName',
+      [{title: 'test'}, {title: 'bros'}],
+      'request',
+      'thunk',
+    ),
+  ).toEqual(
+    expect.objectContaining({
+      type: actions.RESOURCE_LIST_CREATE_SUCCESS,
+      payload: [{title: 'test'}, {title: 'bros'}],
+      meta: expect.objectContaining({
+        request: 'request',
+        resource: 'resourceName',
+      }),
+    }),
+  )
+})
+
+test('resourceListCreateFailure', () => {
+  expect(
+    actions.resourceListCreateFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
+  ).toEqual(
+    expect.objectContaining({
+      type: actions.RESOURCE_LIST_CREATE_FAILURE,
+      error: true,
+      payload: 'error',
+      meta: expect.objectContaining({
+        request: 'request',
+        resource: 'resourceName',
       }),
     }),
   )
@@ -55,7 +136,7 @@ test('resourceCreateFailure', () => {
 
 test('resourceListReadRequest', () => {
   expect(
-    actions.resourceListReadRequest('resources', {fields: 'test'}),
+    actions.resourceListReadRequest('resourceName', {fields: 'test'}),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_READ_REQUEST,
@@ -65,7 +146,7 @@ test('resourceListReadRequest', () => {
         },
       },
       meta: expect.objectContaining({
-        resource: 'resources',
+        resource: 'resourceName',
       }),
     }),
   )
@@ -73,14 +154,23 @@ test('resourceListReadRequest', () => {
 
 test('resourceListReadSuccess', () => {
   expect(
-    actions.resourceListReadSuccess('resources', [1, 2, 3], 'request'),
+    actions.resourceListReadSuccess(
+      'resourceName',
+      'schemaName',
+      [1, 2, 3],
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_READ_SUCCESS,
       payload: [1, 2, 3],
       meta: expect.objectContaining({
+        entityType: 'schemaName',
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -88,29 +178,37 @@ test('resourceListReadSuccess', () => {
 
 test('resourceListReadFailure', () => {
   expect(
-    actions.resourceListReadFailure('resources', 'error', 'request'),
+    actions.resourceListReadFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_READ_FAILURE,
       error: true,
       payload: 'error',
       meta: expect.objectContaining({
+        entityType: 'schemaName',
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
       }),
     }),
   )
 })
 
 test('resourceDetailReadRequest', () => {
-  expect(actions.resourceDetailReadRequest('resources', 1)).toEqual(
+  expect(actions.resourceDetailReadRequest('resourceName', 1)).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DETAIL_READ_REQUEST,
       payload: {
         needle: 1,
       },
       meta: expect.objectContaining({
-        resource: 'resources',
+        resource: 'resourceName',
       }),
     }),
   )
@@ -119,9 +217,11 @@ test('resourceDetailReadRequest', () => {
 test('resourceDetailReadSuccess', () => {
   expect(
     actions.resourceDetailReadSuccess(
-      'resources',
+      'resourceName',
+      'schemaName',
       {id: 1, title: 'test'},
       'request',
+      'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
@@ -129,7 +229,10 @@ test('resourceDetailReadSuccess', () => {
       payload: {id: 1, title: 'test'},
       meta: expect.objectContaining({
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
+        entityType: 'schemaName',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -137,15 +240,23 @@ test('resourceDetailReadSuccess', () => {
 
 test('resourceDetailReadFailure', () => {
   expect(
-    actions.resourceDetailReadFailure('resources', 'error', 'request'),
+    actions.resourceDetailReadFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DETAIL_READ_FAILURE,
       error: true,
       payload: 'error',
       meta: expect.objectContaining({
+        entityType: 'schemaName',
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
       }),
     }),
   )
@@ -153,7 +264,7 @@ test('resourceDetailReadFailure', () => {
 
 test('resourceUpdateRequest', () => {
   expect(
-    actions.resourceUpdateRequest('resources', 1, {title: 'test'}),
+    actions.resourceUpdateRequest('resourceName', 1, {title: 'test'}),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_UPDATE_REQUEST,
@@ -164,7 +275,7 @@ test('resourceUpdateRequest', () => {
         },
       },
       meta: expect.objectContaining({
-        resource: 'resources',
+        resource: 'resourceName',
       }),
     }),
   )
@@ -173,17 +284,22 @@ test('resourceUpdateRequest', () => {
 test('resourceUpdateSuccess', () => {
   expect(
     actions.resourceUpdateSuccess(
-      'resources',
+      'resourceName',
+      'schemaName',
       {id: 1, title: 'test'},
       'request',
+      'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_UPDATE_SUCCESS,
       payload: {id: 1, title: 'test'},
       meta: expect.objectContaining({
+        entityType: 'schemaName',
+        normalizeEntities: true,
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
       }),
     }),
   )
@@ -191,41 +307,63 @@ test('resourceUpdateSuccess', () => {
 
 test('resourceUpdateFailure', () => {
   expect(
-    actions.resourceUpdateFailure('resources', 'error', 'request'),
+    actions.resourceUpdateFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_UPDATE_FAILURE,
       error: true,
       payload: 'error',
       meta: expect.objectContaining({
+        entityType: 'schemaName',
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
       }),
     }),
   )
 })
 
 test('resourceDeleteRequest', () => {
-  expect(actions.resourceDeleteRequest('resources', 1)).toEqual(
+  expect(
+    actions.resourceDeleteRequest('resourceName', 1, 'schemaName'),
+  ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DELETE_REQUEST,
       payload: {
         needle: 1,
       },
       meta: expect.objectContaining({
-        resource: 'resources',
+        entityType: 'schemaName',
+        resource: 'resourceName',
+        thunk: `resourceNameDelete`,
       }),
     }),
   )
 })
 
 test('resourceDeleteSuccess', () => {
-  expect(actions.resourceDeleteSuccess('resources', 'request')).toEqual(
+  expect(
+    actions.resourceDeleteSuccess(
+      'resourceName',
+      'schemaName',
+      'request',
+      'thunk',
+    ),
+  ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DELETE_SUCCESS,
       meta: expect.objectContaining({
+        entityType: 'schemaName',
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -233,7 +371,13 @@ test('resourceDeleteSuccess', () => {
 
 test('resourceDeleteFailure', () => {
   expect(
-    actions.resourceDeleteFailure('resources', 'error', 'request'),
+    actions.resourceDeleteFailure(
+      'resourceName',
+      'schemaName',
+      'error',
+      'request',
+      'thunk',
+    ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DELETE_FAILURE,
@@ -241,7 +385,8 @@ test('resourceDeleteFailure', () => {
       payload: 'error',
       meta: expect.objectContaining({
         request: 'request',
-        resource: 'resources',
+        resource: 'resourceName',
+        thunk: 'thunk',
       }),
     }),
   )
