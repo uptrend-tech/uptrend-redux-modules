@@ -1,110 +1,220 @@
 import configureStore from 'redux-mock-store'
-import {denormalize} from 'normalizr'
+// import {denormalize} from 'normalizr'
 
 import {
   getSchemas,
-  getEntitiesState,
+  // getEntitiesState,
   // getEntitiesStateDenormalized,
 } from '../../utils/test/fixtures'
 import middlewareFactory from '../middleware'
 // import selectorsFactory from '../selectors'
 import {entitiesReceive} from '../actions'
 
-const middleware = middlewareFactory({
-  schemas: getSchemas(),
-})
-
-// const entitiesTestState = getEntitiesState()
-
-const mockStore = configureStore([middleware])
-
-const getMockDataForEntity = (entity, entityId) => {
-  const schemas = getSchemas()
-  const state = getEntitiesState()
-  const data = denormalize({[entity]: entityId}, schemas, state)
-  const entities = {[entity]: {[entityId]: state[entity][entityId]}}
-  const meta = {entityType: entity, normalizeEntities: true}
-  const payload = {payload: {data}}
-  const action = {type: 'RES', payload: {data}, meta}
-  const modifyAction = {
-    ...action,
-    payload: {...action.payload, entities: entityId},
-  }
-
-  return {action, modifyAction, data, payload, entities, meta}
-}
-
 const userTom = {uuid: 'aaa', name: 'Tom'}
 const userSam = {uuid: 'bbb', name: 'Sam'}
+const userMat = {uuid: 'ccc', name: 'Mat'}
 
-it('dispatches the exactly same action', () => {
-  const store = mockStore({})
-  const action = {type: 'ACT001', payload: 1}
-  expect(store.dispatch(action)).toEqual(action)
-  expect(store.getActions()).toEqual([action])
+const teamOne = {
+  id: 1,
+  name: 'Team 1',
+  owner: {...userTom},
+  members: [{...userSam}],
+}
+
+const teamTwo = {
+  id: 2,
+  name: 'Team 2',
+  owner: {...userMat},
+  members: [{...userTom}, {...userSam}],
+}
+
+describe('middlewareFactory', () => {
+  const middleware = middlewareFactory({schemas: getSchemas()})
+  const mockStore = configureStore([middleware])
+
+  it('dispatches the exactly same action', () => {
+    const store = mockStore({})
+    const action = {type: 'ACT001', payload: 1}
+    expect(store.dispatch(action)).toEqual(action)
+    expect(store.getActions()).toEqual([action])
+  })
+
+  it('dispatches the exactly same action if there is no schema', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'ACT002',
+      payload: {id: 2, foo: 'bar'},
+      meta: {entityType: 'noentity'},
+    }
+    expect(store.dispatch(action)).toEqual(action)
+    expect(store.getActions()).toEqual([action])
+  })
+
+  it('dispatches entities action along with the normalized action', () => {
+    const store = mockStore({})
+    const respData = {
+      id: 1,
+      name: 'Team 1',
+      owner: {...userTom},
+      members: [{...userSam}],
+    }
+    const action = {
+      type: 'RESP',
+      payload: {data: {...respData}},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+    const modifiedAction = {
+      type: 'RESP',
+      payload: {data: {...respData}, entities: 1},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+
+    const entities = {
+      team: {1: {...respData, owner: 'aaa', members: ['bbb']}},
+      user: {aaa: {...userTom}, bbb: {...userSam}},
+    }
+
+    expect(store.dispatch(action)).toEqual(modifiedAction)
+    expect(store.getActions()).toEqual([
+      entitiesReceive(entities),
+      {...action, payload: {...action.payload, entities: 1}},
+    ])
+  })
+
+  it('dispatches entities action along with array', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'RESP',
+      payload: {data: [{...teamOne}, {...teamTwo}]},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+    const modifiedAction = {
+      type: 'RESP',
+      payload: {data: [{...teamOne}, {...teamTwo}], entities: [1, 2]},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+
+    const entities = {
+      team: {
+        1: {...teamOne, owner: 'aaa', members: ['bbb']},
+        2: {...teamTwo, owner: 'ccc', members: ['aaa', 'bbb']},
+      },
+      user: {
+        [userTom.uuid]: {...userTom},
+        [userSam.uuid]: {...userSam},
+        [userMat.uuid]: {...userMat},
+      },
+    }
+
+    expect(store.dispatch(action)).toEqual(modifiedAction)
+    expect(store.getActions()).toEqual([
+      entitiesReceive(entities),
+      {...action, payload: {...action.payload, entities: [1, 2]}},
+    ])
+  })
 })
 
-it('dispatches the exactly same action if there is no schema', () => {
-  const store = mockStore({})
-  const action = {
-    type: 'ACT002',
-    payload: {id: 2, foo: 'bar'},
-    meta: {entityType: 'noentity'},
-  }
-  expect(store.dispatch(action)).toEqual(action)
-  expect(store.getActions()).toEqual([action])
+describe('middlewareFactory:isDevEnv=true', () => {
+  jest.spyOn(global.console, 'warn')
+  const middleware = middlewareFactory({isDevEnv: true, schemas: getSchemas()})
+  const mockStore = configureStore([middleware])
+
+  it('dispatches the exactly same action', () => {
+    const store = mockStore({})
+    const action = {type: 'ACT001', payload: 1}
+    expect(store.dispatch(action)).toEqual(action)
+    expect(store.getActions()).toEqual([action])
+  })
+
+  it('dispatches the exactly same action if there is no schema', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'ACT002',
+      payload: {id: 2, foo: 'bar'},
+      meta: {entityType: 'noentity'},
+    }
+    expect(store.dispatch(action)).toEqual(action)
+    expect(store.getActions()).toEqual([action])
+  })
+
+  it('dispatches entities action along with the normalized action', () => {
+    const store = mockStore({})
+    const respData = {
+      id: 1,
+      name: 'Team 1',
+      owner: {...userTom},
+      members: [{...userSam}],
+    }
+    const action = {
+      type: 'RESP',
+      payload: {data: {...respData}},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+    const modifiedAction = {
+      type: 'RESP',
+      payload: {data: {...respData}, entities: 1},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+
+    const entities = {
+      team: {1: {...respData, owner: 'aaa', members: ['bbb']}},
+      user: {aaa: {...userTom}, bbb: {...userSam}},
+    }
+
+    expect(store.dispatch(action)).toEqual(modifiedAction)
+    expect(store.getActions()).toEqual([
+      entitiesReceive(entities),
+      {...action, payload: {...action.payload, entities: 1}},
+    ])
+  })
+
+  it('dispatches entities action along with array', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'RESP',
+      payload: {data: [{...teamOne}, {...teamTwo}]},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+    const modifiedAction = {
+      type: 'RESP',
+      payload: {data: [{...teamOne}, {...teamTwo}], entities: [1, 2]},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+
+    const entities = {
+      team: {
+        1: {...teamOne, owner: 'aaa', members: ['bbb']},
+        2: {...teamTwo, owner: 'ccc', members: ['aaa', 'bbb']},
+      },
+      user: {
+        [userTom.uuid]: {...userTom},
+        [userSam.uuid]: {...userSam},
+        [userMat.uuid]: {...userMat},
+      },
+    }
+
+    expect(store.dispatch(action)).toEqual(modifiedAction)
+    expect(store.getActions()).toEqual([
+      entitiesReceive(entities),
+      {...action, payload: {...action.payload, entities: [1, 2]}},
+    ])
+  })
+
+  it('logs w/ console.warn when no matching entity schema', () => {
+    const store = mockStore({})
+    const respData = {
+      id: 1,
+      name: 'bad news bears',
+    }
+    const action = {
+      type: 'RESP',
+      payload: {data: {...respData}},
+      meta: {entityType: 'noschema', normalizeEntities: true},
+    }
+
+    expect(store.dispatch(action)).toEqual(action)
+    // eslint-disable-next-line no-console
+    expect(console.warn).toBeCalled()
+    expect(store.getActions()).toEqual([action])
+  })
 })
-
-it('dispatches entities action along with the normalized action', () => {
-  const store = mockStore({})
-  const mock = getMockDataForEntity('team', 1)
-  // const meta = { entity, normalizeEntities: true};
-  // const action = { type: 'ACT003', payload: {data},  meta };
-  // console.warn(JSON.stringify(mock.action, false, 2))
-  const respData = {
-    id: 1,
-    name: 'Team 1',
-    owner: {...userTom},
-    members: [{...userTom}],
-  }
-
-  // const entitiesData = {
-  //   team: {
-  //     id: 1,
-  //     name: 'Team 1',
-  //     owner: {...userTom},
-  //     members: [{...userTom}],
-  //   },
-  // }
-
-  const action = {
-    type: 'RESP',
-    payload: {data: {...respData}},
-    meta: {entityType: 'team', normalizeEntities: true},
-  }
-
-  const modifiedAction = {
-    type: 'RESP',
-    payload: {data: {...respData}, entities: 1},
-    meta: {entityType: 'team', normalizeEntities: true},
-  }
-
-  expect(store.dispatch(action)).toEqual(modifiedAction)
-  // expect(store.getActions()).toEqual([
-  //   entitiesReceive(mock.entities),
-  //   {...mock.action, payload: mock.payload},
-  // ])
-})
-
-// it('dispatches entities action along with array', () => {
-//   const store = mockStore({})
-//   const entityId = 2;
-//   const { action, modifyAction, data, entities, meta } = getMockDataForEntity('team', entityId)
-//   // const action = { type: 'ACT004', payload: {data},  meta };
-
-//   expect(store.dispatch(action)).toEqual(action)
-//   expect(store.getActions()).toEqual([
-//     entitiesReceive(entities),
-//     {...action, payload: [entityId]},
-//   ])
-// })
