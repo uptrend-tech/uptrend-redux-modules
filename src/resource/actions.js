@@ -1,5 +1,3 @@
-// https://github.com/diegohaz/arc/wiki/Actions
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
 export const RESOURCE_CREATE_REQUEST = 'RESOURCE_CREATE_REQUEST'
 export const RESOURCE_CREATE_SUCCESS = 'RESOURCE_CREATE_SUCCESS'
 export const RESOURCE_CREATE_FAILURE = 'RESOURCE_CREATE_FAILURE'
@@ -10,7 +8,6 @@ export const resourceCreateRequest = (resource, data, entityType) => ({
   meta: {
     resource,
     entityType,
-    // https://github.com/diegohaz/arc/wiki/Actions#async-actions
     thunk: `${resource}Create`,
   },
 })
@@ -47,12 +44,10 @@ export const resourceCreateFailure = (
     request,
     resource,
     entityType,
-    // https://github.com/diegohaz/arc/wiki/Actions#async-actions
     thunk,
   },
 })
 
-// TODO break out separate search rdx-mod
 export const RESOURCE_LIST_CREATE_REQUEST = 'RESOURCE_LIST_CREATE_REQUEST'
 export const RESOURCE_LIST_CREATE_SUCCESS = 'RESOURCE_LIST_CREATE_SUCCESS'
 export const RESOURCE_LIST_CREATE_FAILURE = 'RESOURCE_LIST_CREATE_FAILURE'

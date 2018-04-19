@@ -1,6 +1,3 @@
-// https://github.com/diegohaz/arc/wiki/Sagas
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
-// import { camelizeKeys, decamelizeKeys } from 'humps';
 import {takeEvery, put, call} from 'redux-saga/effects'
 
 import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../utils'
@@ -11,15 +8,15 @@ import * as actions from './actions'
 export function* createResource(api, {data}, {resource, thunk, entityType}) {
   try {
     const resp = yield call([api, api.post], `/${resource}`, snakeKeys(data))
-    yield put(
-      actions.resourceCreateSuccess(
-        resource,
-        entityType,
-        camelKeys(resp.data),
-        {data},
-        thunk,
-      ),
+    const action = actions.resourceCreateSuccess(
+      resource,
+      entityType,
+      camelKeys(resp.data),
+      {data},
+      thunk,
     )
+    console.error('::', {action, resp})
+    yield put(action)
   } catch (e) {
     yield put(
       actions.resourceCreateFailure(

@@ -28,6 +28,8 @@ const updateOrDeleteReducer = (state, {type, payload, meta}) => {
     return state
   }
 
+  // console.warn(state, {type, payload, meta})
+
   switch (type) {
     case RESOURCE_UPDATE_SUCCESS:
       return {
@@ -64,6 +66,13 @@ export default (state = initialState, {type, payload, meta}) => {
     return state
   }
 
+  console.warn('__--__', {
+    type,
+    data,
+    state,
+    resource,
+    getList: getList(state, resource),
+  })
   switch (type) {
     case RESOURCE_CREATE_SUCCESS:
       return {
