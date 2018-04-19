@@ -8,14 +8,14 @@ Thanks for being willing to contribute!
 ## Project setup
 
 1.  Fork and clone the repo
-2.  Run `npm run setup -s` to install dependencies and run validation
+2.  Run `yarn setup` to install dependencies and run validation
 3.  Create a branch for your PR with `git checkout -b pr/your-branch-name`
 
 > Tip: Keep your `master` branch pointing at the original repository and make
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream https://github.com/kentcdodds/redux-modules-resource-entities.git
+> git remote add upstream https://github.com/uptrend-tech/redux-modules-resource-entities.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/master master
 > ```
@@ -68,5 +68,5 @@ Also, please watch the repo and respond to questions/bug reports/feature
 requests! Thanks!
 
 [egghead]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-[all-contributors]: https://github.com/kentcdodds/all-contributors
-[issues]: https://github.com/kentcdodds/redux-modules-resource-entities/issues
+[all-contributors]: https://github.com/uptrend-tech/all-contributors
+[issues]: https://github.com/uptrend-tech/redux-modules-resource-entities/issues
