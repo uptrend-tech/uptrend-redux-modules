@@ -66,15 +66,15 @@ export default (state = initialState, {type, payload, meta}) => {
     return state
   }
 
-  console.warn('__--__', {
-    type,
-    data,
-    state,
-    resource,
-    getList: getList(state, resource),
-  })
+  // console.warn('__--__', {
+  //   type,
+  //   data,
+  //   state,
+  //   resource,
+  //   getList: getList(state, resource),
+  // })
   switch (type) {
-    case RESOURCE_CREATE_SUCCESS:
+    case RESOURCE_CREATE_SUCCESS: {
       return {
         ...state,
         [resource]: {
@@ -82,6 +82,7 @@ export default (state = initialState, {type, payload, meta}) => {
           list: [data, ...getList(state, resource)],
         },
       }
+    }
 
     case RESOURCE_LIST_CREATE_REQUEST:
       return {
@@ -91,6 +92,7 @@ export default (state = initialState, {type, payload, meta}) => {
           list: getList(initialState, resource),
         },
       }
+
     case RESOURCE_LIST_CREATE_SUCCESS:
       return {
         ...state,
@@ -108,6 +110,7 @@ export default (state = initialState, {type, payload, meta}) => {
           list: getList(initialState, resource),
         },
       }
+
     case RESOURCE_LIST_READ_SUCCESS:
       return {
         ...state,
@@ -125,6 +128,7 @@ export default (state = initialState, {type, payload, meta}) => {
           detail: getDetail(initialState, resource),
         },
       }
+
     case RESOURCE_DETAIL_READ_SUCCESS:
       return {
         ...state,

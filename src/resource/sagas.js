@@ -15,7 +15,6 @@ export function* createResource(api, {data}, {resource, thunk, entityType}) {
       {data},
       thunk,
     )
-    console.error('::', {action, resp})
     yield put(action)
   } catch (e) {
     yield put(
@@ -38,15 +37,14 @@ export function* createResourceList(
   const params = snakeKeys(data)
   try {
     const resp = yield call([api, api.post], `/${resource}`, params)
-    yield put(
-      actions.resourceListCreateSuccess(
-        resource,
-        entityType,
-        camelKeys(resp.data),
-        params,
-        thunk,
-      ),
+    const action = actions.resourceListCreateSuccess(
+      resource,
+      entityType,
+      camelKeys(resp.data),
+      params,
+      thunk,
     )
+    yield put(action)
   } catch (e) {
     yield put(
       actions.resourceListCreateFailure(

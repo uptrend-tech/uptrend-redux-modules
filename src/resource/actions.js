@@ -15,12 +15,12 @@ export const resourceCreateRequest = (resource, data, entityType) => ({
 export const resourceCreateSuccess = (
   resource,
   entityType,
-  detail,
+  data,
   request,
   thunk,
 ) => ({
   type: RESOURCE_CREATE_SUCCESS,
-  payload: detail,
+  payload: {data},
   meta: {
     request,
     thunk,
@@ -70,7 +70,7 @@ export const resourceListCreateSuccess = (
   thunk,
 ) => ({
   type: RESOURCE_LIST_CREATE_SUCCESS,
-  payload: data,
+  payload: {data},
   meta: {
     request,
     thunk,
@@ -120,7 +120,7 @@ export const resourceListReadSuccess = (
   thunk,
 ) => ({
   type: RESOURCE_LIST_READ_SUCCESS,
-  payload: data,
+  payload: {data},
   meta: {
     request,
     thunk,
@@ -165,12 +165,12 @@ export const resourceDetailReadRequest = (resource, needle, entityType) => ({
 export const resourceDetailReadSuccess = (
   resource,
   entityType,
-  detail,
+  data,
   request,
   thunk,
 ) => ({
   type: RESOURCE_DETAIL_READ_SUCCESS,
-  payload: detail,
+  payload: {data},
   meta: {
     request,
     thunk,
@@ -215,12 +215,12 @@ export const resourceUpdateRequest = (resource, needle, data, entityType) => ({
 export const resourceUpdateSuccess = (
   resource,
   entityType,
-  detail,
+  data,
   request,
   thunk,
 ) => ({
   type: RESOURCE_UPDATE_SUCCESS,
-  payload: detail,
+  payload: {data},
   meta: {
     request,
     thunk,

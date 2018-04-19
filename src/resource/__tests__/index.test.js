@@ -5,12 +5,12 @@ import reducer from '../reducer'
 import sagas from '../sagas'
 import {
   resourceCreateRequest,
-  // resourceListReadRequest,
-  // resourceDetailReadRequest,
-  // resourceUpdateRequest,
-  // resourceDeleteRequest,
+  resourceListReadRequest,
+  resourceDetailReadRequest,
+  resourceUpdateRequest,
+  resourceDeleteRequest,
 } from '../actions'
-import {getList /* getDetail */} from '../selectors'
+import {getList, getDetail} from '../selectors'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -37,12 +37,8 @@ describe('resource', () => {
     expect(getList(getState(), 'resources')).toEqual([])
 
     const action1 = resourceCreateRequest('resources', {title: 'foo'}, 'entity')
-    console.warn('>>', action1)
-    console.log('1###', getState())
     dispatch(action1)
-    console.log('2###', getState())
     await delay()
-    console.log('2###', getState())
     expect(getList(getState(), 'resources')).toEqual([{title: 'foo'}])
 
     dispatch(resourceCreateRequest('resources', {title: 'bar'}, 'entity'))
@@ -53,68 +49,67 @@ describe('resource', () => {
     ])
   })
 
-  // test('resourceListReadRequest', async () => {
-  //   const {getState, dispatch} = getStore()
+  test('resourceListReadRequest', async () => {
+    const {getState, dispatch} = getStore()
 
-  //   expect(getList(getState(), 'resources')).toEqual([])
+    expect(getList(getState(), 'resources')).toEqual([])
 
-  //   dispatch(resourceListReadRequest('resources'))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
+    dispatch(resourceListReadRequest('resources'))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
 
-  //   dispatch(resourceListReadRequest('resources'))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
-  // })
+    dispatch(resourceListReadRequest('resources'))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
+  })
 
-  // test('resourceDetailReadRequest', async () => {
-  //   const {getState, dispatch} = getStore()
+  test('resourceDetailReadRequest', async () => {
+    const {getState, dispatch} = getStore()
 
-  //   expect(getDetail(getState(), 'resources')).toBeNull()
+    expect(getDetail(getState(), 'resources')).toBeNull()
 
-  //   dispatch(resourceDetailReadRequest('resources'))
-  //   await delay()
-  //   expect(getDetail(getState(), 'resources')).toEqual([1, 2, 3])
+    dispatch(resourceDetailReadRequest('resources'))
+    await delay()
+    expect(getDetail(getState(), 'resources')).toEqual([1, 2, 3])
 
-  //   dispatch(resourceDetailReadRequest('resources'))
-  //   await delay()
-  //   expect(getDetail(getState(), 'resources')).toEqual([1, 2, 3])
-  // })
+    dispatch(resourceDetailReadRequest('resources'))
+    await delay()
+    expect(getDetail(getState(), 'resources')).toEqual([1, 2, 3])
+  })
 
-  // test('resourceUpdateRequest', async () => {
-  //   const {getState, dispatch} = getStore({resources: {list: [1, 2, 3]}})
+  test('resourceUpdateRequest', async () => {
+    const {getState, dispatch} = getStore({resources: {list: [1, 2, 3]}})
 
-  //   expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
+    expect(getList(getState(), 'resources')).toEqual([1, 2, 3])
 
-  //   dispatch(resourceUpdateRequest('resources', 1, 4, ''))
-  //   await delay()
-  //   console.warn(getState())
-  //   expect(getList(getState(), 'resources')).toEqual([4, 2, 3])
+    dispatch(resourceUpdateRequest('resources', 1, 4, ''))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([4, 2, 3])
 
-  //   dispatch(resourceUpdateRequest('resources', 4, {title: 'foo'}))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([{title: 'foo'}, 2, 3])
+    dispatch(resourceUpdateRequest('resources', 4, {title: 'foo'}))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([{title: 'foo'}, 2, 3])
 
-  //   dispatch(resourceUpdateRequest('resources', {title: 'foo'}, {foo: 'bar'}))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([
-  //     {title: 'foo', foo: 'bar'},
-  //     2,
-  //     3,
-  //   ])
-  // })
+    dispatch(resourceUpdateRequest('resources', {title: 'foo'}, {foo: 'bar'}))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([
+      {title: 'foo', foo: 'bar'},
+      2,
+      3,
+    ])
+  })
 
-  // test('resourceDeleteRequest', async () => {
-  //   const {getState, dispatch} = getStore({
-  //     resources: {list: [1, 2, {foo: 'bar'}]},
-  //   })
+  test('resourceDeleteRequest', async () => {
+    const {getState, dispatch} = getStore({
+      resources: {list: [1, 2, {foo: 'bar'}]},
+    })
 
-  //   expect(getList(getState(), 'resources')).toEqual([1, 2, {foo: 'bar'}])
-  //   dispatch(resourceDeleteRequest('resources', 1))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([2, {foo: 'bar'}])
-  //   dispatch(resourceDeleteRequest('resources', {foo: 'bar'}))
-  //   await delay()
-  //   expect(getList(getState(), 'resources')).toEqual([2])
-  // })
+    expect(getList(getState(), 'resources')).toEqual([1, 2, {foo: 'bar'}])
+    dispatch(resourceDeleteRequest('resources', 1))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([2, {foo: 'bar'}])
+    dispatch(resourceDeleteRequest('resources', {foo: 'bar'}))
+    await delay()
+    expect(getList(getState(), 'resources')).toEqual([2])
+  })
 })
