@@ -134,6 +134,10 @@ test('resourceListCreateFailure', () => {
   )
 })
 
+// --
+// -- Read List
+// --
+
 test('resourceListReadRequest', () => {
   expect(
     actions.resourceListReadRequest('resourceName', {fields: 'test'}),
@@ -200,6 +204,10 @@ test('resourceListReadFailure', () => {
   )
 })
 
+// --
+// -- Read Detail
+// --
+
 test('resourceDetailReadRequest', () => {
   expect(actions.resourceDetailReadRequest('resourceName', 1)).toEqual(
     expect.objectContaining({
@@ -261,6 +269,10 @@ test('resourceDetailReadFailure', () => {
     }),
   )
 })
+
+// --
+// -- Update
+// --
 
 test('resourceUpdateRequest', () => {
   expect(
@@ -328,6 +340,10 @@ test('resourceUpdateFailure', () => {
     }),
   )
 })
+
+// --
+// -- Delete
+// --
 
 test('resourceDeleteRequest', () => {
   expect(
