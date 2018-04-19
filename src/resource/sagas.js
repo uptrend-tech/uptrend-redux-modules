@@ -1,8 +1,5 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
-
 import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../utils'
-// import { apiDelete, apiGet, apiPost, apiPut } from 'rides/store/callApi/sagas';
-
 import * as actions from './actions'
 
 export function* createResource(api, {data}, {resource, thunk, entityType}) {

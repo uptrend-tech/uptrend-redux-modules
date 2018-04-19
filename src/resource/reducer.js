@@ -1,5 +1,3 @@
-// https://github.com/diegohaz/arc/wiki/Reducers
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
 import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import {initialState, getResourceState, getList, getDetail} from './selectors'
@@ -65,14 +63,6 @@ export default (state = initialState, {type, payload, meta}) => {
   if (!resource) {
     return state
   }
-
-  // console.warn('__--__', {
-  //   type,
-  //   data,
-  //   state,
-  //   resource,
-  //   getList: getList(state, resource),
-  // })
   switch (type) {
     case RESOURCE_CREATE_SUCCESS: {
       return {

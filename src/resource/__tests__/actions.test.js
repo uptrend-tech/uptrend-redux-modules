@@ -36,7 +36,7 @@ test('resourceCreateSuccess', () => {
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_CREATE_SUCCESS,
-      payload: {id: 1, title: 'test'},
+      payload: {data: {id: 1, title: 'test'}},
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
@@ -103,7 +103,7 @@ test('resourceListCreateSuccess', () => {
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_CREATE_SUCCESS,
-      payload: [{title: 'test'}, {title: 'bros'}],
+      payload: {data: [{title: 'test'}, {title: 'bros'}]},
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
@@ -164,7 +164,7 @@ test('resourceListReadSuccess', () => {
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_READ_SUCCESS,
-      payload: [1, 2, 3],
+      payload: {data: [1, 2, 3]},
       meta: expect.objectContaining({
         entityType: 'schemaName',
         request: 'request',
@@ -226,7 +226,7 @@ test('resourceDetailReadSuccess', () => {
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DETAIL_READ_SUCCESS,
-      payload: {id: 1, title: 'test'},
+      payload: {data: {id: 1, title: 'test'}},
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
@@ -293,7 +293,7 @@ test('resourceUpdateSuccess', () => {
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_UPDATE_SUCCESS,
-      payload: {id: 1, title: 'test'},
+      payload: {data: {id: 1, title: 'test'}},
       meta: expect.objectContaining({
         entityType: 'schemaName',
         normalizeEntities: true,
