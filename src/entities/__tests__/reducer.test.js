@@ -1,12 +1,9 @@
-// https://github.com/diegohaz/arc/wiki/Reducers#unit-testing-reducers
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#entities
-import reducer from '../reducer'
+import reducerFactory from '../reducer'
 import selectorsFactory from '../selectors'
 import {ENTITIES_RECEIVE} from '../actions'
 
-const {initialState} = selectorsFactory({
-  /* schemas: getSchemas() */
-})
+const {initialState} = selectorsFactory({})
+const reducer = reducerFactory({initialState})
 
 const altState = {
   ...initialState,
