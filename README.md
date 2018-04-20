@@ -1,5 +1,4 @@
 <div align="center">
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 <h1>redux-modules-resource-entities</h1>
 
 <p>Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.</p>
@@ -71,9 +70,6 @@ here!
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
 <!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/126236?v=4" width="100px;"/><br /><sub><b>Brandon Orther</b></sub>](http://uptrend.tech)<br />[💬](#question-orther "Answering Questions") [🐛](https://github.com/uptrend-tech/redux-modules-resource-entities/issues?q=author%3Aorther "Bug reports") [💻](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Code") [📖](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Documentation") [💡](#example-orther "Examples") [🤔](#ideas-orther "Ideas, Planning, & Feedback") [🚇](#infra-orther "Infrastructure (Hosting, Build-Tools, etc)") [📦](#platform-orther "Packaging/porting to new platform") [🔌](#plugin-orther "Plugin/utility libraries") [👀](#review-orther "Reviewed Pull Requests") [⚠️](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Tests") [🔧](#tool-orther "Tools") |
-| :---: |
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Thanks goes to these people ([emoji key][emojis]):

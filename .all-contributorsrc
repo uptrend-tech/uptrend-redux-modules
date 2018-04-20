@@ -15,18 +15,9 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/126236?v=4",
       "profile": "http://uptrend.tech",
       "contributions": [
-        "question",
-        "bug",
         "code",
-        "doc",
-        "example",
-        "ideas",
         "infra",
-        "platform",
-        "plugin",
-        "review",
         "test",
-        "tool"
       ]
     }
   ]
