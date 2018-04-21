@@ -15,7 +15,7 @@ Thanks for being willing to contribute!
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream https://github.com/uptrend-tech/redux-modules-resource-entities.git
+> git remote add upstream https://github.com/uptrend-tech/uptrend-redux-modules.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/master master
 > ```
@@ -69,4 +69,4 @@ requests! Thanks!
 
 [egghead]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
 [all-contributors]: https://github.com/uptrend-tech/all-contributors
-[issues]: https://github.com/uptrend-tech/redux-modules-resource-entities/issues
+[issues]: https://github.com/uptrend-tech/uptrend-redux-modules/issues
