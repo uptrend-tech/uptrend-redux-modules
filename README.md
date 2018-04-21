@@ -1,5 +1,5 @@
 <div align="center">
-<h1>redux-modules-resource-entities</h1>
+<h1>uptrend-redux-modules</h1>
 
 <p>Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.</p>
 </div>
@@ -49,7 +49,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save redux-modules-resource-entities
+npm install --save uptrend-redux-modules
 ```
 
 ## Usage
@@ -88,26 +88,26 @@ MIT
 
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/uptrend-tech/redux-modules-resource-entities.svg?style=flat-square
-[build]: https://travis-ci.org/uptrend-tech/redux-modules-resource-entities
-[coverage-badge]: https://img.shields.io/codecov/c/github/uptrend-tech/redux-modules-resource-entities.svg?style=flat-square
-[coverage]: https://codecov.io/github/uptrend-tech/redux-modules-resource-entities
-[version-badge]: https://img.shields.io/npm/v/redux-modules-resource-entities.svg?style=flat-square
-[package]: https://www.npmjs.com/package/redux-modules-resource-entities
-[downloads-badge]: https://img.shields.io/npm/dm/redux-modules-resource-entities.svg?style=flat-square
-[npmtrends]: http://www.npmtrends.com/redux-modules-resource-entities
-[license-badge]: https://img.shields.io/npm/l/redux-modules-resource-entities.svg?style=flat-square
-[license]: https://github.com/uptrend-tech/redux-modules-resource-entities/blob/master/LICENSE
+[build-badge]: https://img.shields.io/travis/uptrend-tech/uptrend-redux-modules.svg?style=flat-square
+[build]: https://travis-ci.org/uptrend-tech/uptrend-redux-modules
+[coverage-badge]: https://img.shields.io/codecov/c/github/uptrend-tech/uptrend-redux-modules.svg?style=flat-square
+[coverage]: https://codecov.io/github/uptrend-tech/uptrend-redux-modules
+[version-badge]: https://img.shields.io/npm/v/uptrend-redux-modules.svg?style=flat-square
+[package]: https://www.npmjs.com/package/uptrend-redux-modules
+[downloads-badge]: https://img.shields.io/npm/dm/uptrend-redux-modules.svg?style=flat-square
+[npmtrends]: http://www.npmtrends.com/uptrend-redux-modules
+[license-badge]: https://img.shields.io/npm/l/uptrend-redux-modules.svg?style=flat-square
+[license]: https://github.com/uptrend-tech/uptrend-redux-modules/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/uptrend-tech/redux-modules-resource-entities/blob/master/other/CODE_OF_CONDUCT.md
-[github-watch-badge]: https://img.shields.io/github/watchers/uptrend-tech/redux-modules-resource-entities.svg?style=social
-[github-watch]: https://github.com/uptrend-tech/redux-modules-resource-entities/watchers
-[github-star-badge]: https://img.shields.io/github/stars/uptrend-tech/redux-modules-resource-entities.svg?style=social
-[github-star]: https://github.com/uptrend-tech/redux-modules-resource-entities/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20redux-modules-resource-entities%20by%20%40uptrend-tech%20https%3A%2F%2Fgithub.com%2Fuptrend-tech%2Fredux-modules-resource-entities%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/uptrend-tech/redux-modules-resource-entities.svg?style=social
+[coc]: https://github.com/uptrend-tech/uptrend-redux-modules/blob/master/other/CODE_OF_CONDUCT.md
+[github-watch-badge]: https://img.shields.io/github/watchers/uptrend-tech/uptrend-redux-modules.svg?style=social
+[github-watch]: https://github.com/uptrend-tech/uptrend-redux-modules/watchers
+[github-star-badge]: https://img.shields.io/github/stars/uptrend-tech/uptrend-redux-modules.svg?style=social
+[github-star]: https://github.com/uptrend-tech/uptrend-redux-modules/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20uptrend-redux-modules%20by%20%40uptrend-tech%20https%3A%2F%2Fgithub.com%2Fuptrend-tech%2Fuptrend-redux-modules%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/uptrend-tech/uptrend-redux-modules.svg?style=social
 [emojis]: https://github.com/uptrend-tech/all-contributors#emoji-key
 [all-contributors]: https://github.com/uptrend-tech/all-contributors
