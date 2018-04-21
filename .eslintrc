@@ -1,6 +1,1 @@
-{
-  "extends": [
-    "./node_modules/kcd-scripts/eslint.js",
-    "plugin:prettier/recommended"
-  ]
-}
+{"extends": ["./node_modules/uptrend-scripts/eslint.js"]}

@@ -1,4 +1,4 @@
-const {jest: jestConfig} = require('kcd-scripts/config')
+const {jest: jestConfig} = require('uptrend-scripts/config')
 
 module.exports = Object.assign(jestConfig, {
   // collectCoverage: true,

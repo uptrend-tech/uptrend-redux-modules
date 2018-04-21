@@ -1,8 +1,7 @@
 {
   "name": "redux-modules-resource-entities",
   "version": "0.0.0-semantically-released",
-  "description":
-    "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
+  "description": "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
   "main": "dist/index.js",
   "engines": {
     "node": "> 4",
@@ -13,16 +12,18 @@
     "url": "https://github.com/uptrend-tech/redux-modules-resource-entities.git"
   },
   "scripts": {
-    "add-contributor": "kcd-scripts contributors add",
-    "build": "kcd-scripts build",
-    "lint": "kcd-scripts lint",
-    "test": "kcd-scripts test",
+    "add-contributor": "uptrend-scripts contributors add",
+    "build": "uptrend-scripts build",
+    "lint": "uptrend-scripts lint",
+    "test": "uptrend-scripts test",
     "test:update": "npm test -- --updateSnapshot --coverage",
-    "validate": "kcd-scripts validate",
+    "validate": "uptrend-scripts validate",
     "setup": "yarn install && yarn run validate -s",
-    "cm": "kcd-scripts precommit && git-cz"
+    "cm": "uptrend-scripts precommit && git-cz"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
   "license": "MIT",
@@ -38,22 +39,22 @@
   "devDependencies": {
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.1.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
     "jest-in-case": "^1.0.2",
-    "kcd-scripts": "^0.37.0",
     "kitimat": "^0.1.8",
     "kitimat-jest": "^0.1.8",
     "normalizr": "^3.2.4",
-    "redux-mock-store": "^1.5.1"
+    "redux-mock-store": "^1.5.1",
+    "uptrend-scripts": "^0.38.0"
   },
-  "eslintIgnore": ["node_modules", "coverage", "dist"],
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist"
+  ],
   "bugs": {
-    "url":
-      "https://github.com/uptrend-tech/redux-modules-resource-entities/issues"
+    "url": "https://github.com/uptrend-tech/redux-modules-resource-entities/issues"
   },
-  "homepage":
-    "https://github.com/uptrend-tech/redux-modules-resource-entities#readme",
+  "homepage": "https://github.com/uptrend-tech/redux-modules-resource-entities#readme",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
