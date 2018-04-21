@@ -22,6 +22,8 @@
 
 ## The problem
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/uptrend-tech/uptrend-redux-modules.svg)](https://greenkeeper.io/)
+
 // TODO
 
 ## This solution
