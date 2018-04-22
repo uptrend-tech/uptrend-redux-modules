@@ -58,7 +58,11 @@ npm install --save uptrend-redux-modules
 
 ## Inspiration
 
-// TODO
+Organizing actions, reducers, selectors, sagas, etc. into a module is based on
+[Diego Haz](https://twitter.com/diegohaz)' [redux-modules][redux-modules].
+
+The resource and entities modules specificaly are modified version of those
+found in [redux-modules][redux-modules] and [ARc.js][arc-redux-modules].
 
 ## Other Solutions
 
@@ -111,3 +115,5 @@ MIT
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/uptrend-tech/uptrend-redux-modules.svg?style=social
 [emojis]: https://github.com/uptrend-tech/all-contributors#emoji-key
 [all-contributors]: https://github.com/uptrend-tech/all-contributors
+[arc-redux-modules]: https://github.com/diegohaz/arc/wiki/Redux-modules
+[redux-modules]: https://github.com/diegohaz/redux-modules
