@@ -164,9 +164,9 @@ not strict guidelines by any means.
    ```js
    // - src/store/selectors.js
    import {selectors as fromEntities} from 'src/store/modules/entities';
-   import {selectors as fromResource} from 'src/store/modules/resource;
+   import {selectors as fromResource} from 'src/store/modules/resource';
    
-   export default {
+   export {
      fromEntities,
      fromResource,
    }
