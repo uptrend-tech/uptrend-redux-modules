@@ -37,6 +37,8 @@ export const isolateSelectorsState = (storeName, selectors) => {
     if (typeof selector === 'function') {
       isolatedSelectors[name] = (state, ...args) =>
         selector(getState(state), ...args)
+    } else {
+      isolatedSelectors[name] = selector
     }
   })
 

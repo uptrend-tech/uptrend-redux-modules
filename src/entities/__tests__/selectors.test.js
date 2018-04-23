@@ -6,11 +6,7 @@ const selectors = selectorsFactory({
   schemas: getSchemas(),
 })
 
-const getState = () => ({
-  entities: getEntitiesState(),
-})
-
-let state = getState()
+let state = getEntitiesState()
 
 test('initialState', () => {
   expect(selectors.initialState).toEqual({})
@@ -18,7 +14,7 @@ test('initialState', () => {
 
 describe('getEntity', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -46,7 +42,7 @@ describe('getEntity', () => {
   cases(
     'returns entity',
     opts => {
-      const entity = opts.state.entities[opts.entity]
+      const entity = opts.state[opts.entity]
       expect(selectors.getEntity(opts.state, opts.entity)).toBe(entity)
     },
     [{state, entity: 'team'}, {state, entity: 'user'}],
@@ -55,7 +51,7 @@ describe('getEntity', () => {
 
 describe('getEntityItem', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -91,7 +87,7 @@ describe('getEntityItem', () => {
   cases(
     'returns entityItem',
     opts => {
-      const entityItem = opts.state.entities[opts.entity][opts.id]
+      const entityItem = opts.state[opts.entity][opts.id]
       expect(selectors.getEntityItem(opts.state, opts.entity, opts.id)).toBe(
         entityItem,
       )
@@ -106,7 +102,7 @@ describe('getEntityItem', () => {
 
 describe('getEntityItemList', () => {
   beforeEach(() => {
-    state = getState()
+    state = getEntitiesState()
   })
 
   cases(
@@ -156,18 +152,18 @@ describe('getEntityItemList', () => {
       expect(result).toEqual(opts.result)
     },
     [
-      {state, entity: 'team', ids: [1], result: [state.entities.team[1]]},
+      {state, entity: 'team', ids: [1], result: [state.team[1]]},
       {
         state,
         entity: 'team',
         ids: [1, 2],
-        result: [state.entities.team[1], state.entities.team[2]],
+        result: [state.team[1], state.team[2]],
       },
       {
         state,
         entity: 'user',
         ids: ['aaa', 'ccc'],
-        result: [state.entities.user.aaa, state.entities.user.ccc],
+        result: [state.user.aaa, state.user.ccc],
       },
     ],
   )

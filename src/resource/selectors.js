@@ -1,17 +1,23 @@
-// https://github.com/diegohaz/arc/wiki/Selectors
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
-export const initialState = {}
+const initialState = {}
 
-export const initialResourceState = {
+const initialResourceState = {
   list: [],
   detail: null,
 }
 
-export const getResourceState = (state = initialState, resource) =>
+const getResourceState = (state = initialState, resource) =>
   state[resource] || initialResourceState
 
-export const getList = (state = initialState, resource) =>
+const getDetail = (state = initialState, resource) =>
+  getResourceState(state, resource).detail
+
+const getList = (state = initialState, resource) =>
   getResourceState(state, resource).list
 
-export const getDetail = (state = initialState, resource) =>
-  getResourceState(state, resource).detail
+export {
+  initialState,
+  initialResourceState,
+  getList,
+  getDetail,
+  getResourceState,
+}

@@ -1,9 +1,9 @@
-import reducerFactory from '../reducer'
-import selectorsFactory from '../selectors'
+import createReducer from '../reducer'
+import createSelectors from '../selectors'
 import {ENTITIES_RECEIVE} from '../actions'
 
-const {initialState} = selectorsFactory({})
-const reducer = reducerFactory({initialState})
+const {initialState} = createSelectors({storeName: 'resource'})
+const reducer = createReducer({initialState})
 
 const altState = {
   ...initialState,

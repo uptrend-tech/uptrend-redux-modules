@@ -1,6 +1,5 @@
 import t from 'tcomb'
 import {denormalize} from 'normalizr'
-import {isolateSelectorsState} from '../utils'
 import {
   EntityItemId,
   EntityItemList,
@@ -10,11 +9,7 @@ import {
   EntitiesState,
 } from '../types'
 
-// --
-// -- Selectors Implementation
-// --
-
-const selectorsFactory = ({schemas, storeName = 'entities'}) => {
+export default ({schemas}) => {
   const initialState = {}
 
   const getEntity = t
@@ -54,14 +49,10 @@ const selectorsFactory = ({schemas, storeName = 'entities'}) => {
 
   return {
     initialState,
-    ...isolateSelectorsState(storeName, {
-      getEntity,
-      getEntityItem,
-      getEntityItemList,
-      getDenormalizedDetail,
-      getDenormalizedList,
-    }),
+    getEntity,
+    getEntityItem,
+    getEntityItemList,
+    getDenormalizedDetail,
+    getDenormalizedList,
   }
 }
-
-export default selectorsFactory
