@@ -18,20 +18,20 @@ export default ({schemas}) => {
       return state[entity] || {}
     })
 
-  const getEntityItem = t
+  const getDetail = t
     .func([EntitiesState, EntityName, EntityItemId], t.maybe(EntityItem))
     .of((state = initialState, entity, entityId) => {
       return getEntity(state, entity)[entityId]
     })
 
-  const getEntityItemList = t
+  const getList = t
     .func([EntitiesState, EntityName, t.list(EntityItemId)], EntityItemList)
     .of((state = initialState, entity, entityIdList) => {
       const ids = entityIdList || Object.keys(getEntity(state, entity))
-      const entityItemList = ids.map(entityId =>
-        getEntityItem(state, entity, entityId),
+      const entityDetailList = ids.map(entityId =>
+        getDetail(state, entity, entityId),
       )
-      return entityItemList.filter(EntityItem.is)
+      return entityDetailList.filter(EntityItem.is)
     })
 
   const getDenormalizedDetail = t
@@ -50,8 +50,8 @@ export default ({schemas}) => {
   return {
     initialState,
     getEntity,
-    getEntityItem,
-    getEntityItemList,
+    getDetail,
+    getList,
     getDenormalizedDetail,
     getDenormalizedList,
   }

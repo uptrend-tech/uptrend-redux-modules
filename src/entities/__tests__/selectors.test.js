@@ -49,7 +49,7 @@ describe('getEntity', () => {
   )
 })
 
-describe('getEntityItem', () => {
+describe('getDetail', () => {
   beforeEach(() => {
     state = getEntitiesState()
   })
@@ -58,7 +58,7 @@ describe('getEntityItem', () => {
     'throws on bad arguments',
     opts => {
       expect(() =>
-        selectors.getEntityItem(opts.state, opts.entity, opts.id),
+        selectors.getDetail(opts.state, opts.entity, opts.id),
       ).toThrow()
     },
     [
@@ -73,7 +73,7 @@ describe('getEntityItem', () => {
     'returns undefined',
     opts => {
       expect(
-        selectors.getEntityItem(opts.state, opts.entity, opts.id),
+        selectors.getDetail(opts.state, opts.entity, opts.id),
       ).toBeUndefined()
     },
     [
@@ -85,11 +85,11 @@ describe('getEntityItem', () => {
   )
 
   cases(
-    'returns entityItem',
+    'returns entityDetail',
     opts => {
-      const entityItem = opts.state[opts.entity][opts.id]
-      expect(selectors.getEntityItem(opts.state, opts.entity, opts.id)).toBe(
-        entityItem,
+      const entityDetail = opts.state[opts.entity][opts.id]
+      expect(selectors.getDetail(opts.state, opts.entity, opts.id)).toBe(
+        entityDetail,
       )
     },
     [
@@ -100,7 +100,7 @@ describe('getEntityItem', () => {
   )
 })
 
-describe('getEntityItemList', () => {
+describe('getList', () => {
   beforeEach(() => {
     state = getEntitiesState()
   })
@@ -109,7 +109,7 @@ describe('getEntityItemList', () => {
     'throws on bad arguments',
     opts => {
       expect(() =>
-        selectors.getEntityItemList(opts.state, opts.entity, opts.ids),
+        selectors.getList(opts.state, opts.entity, opts.ids),
       ).toThrow()
     },
     [
@@ -129,9 +129,7 @@ describe('getEntityItemList', () => {
   cases(
     'returns no results as empty list',
     opts => {
-      expect(
-        selectors.getEntityItemList(opts.state, opts.entity, opts.ids),
-      ).toEqual([])
+      expect(selectors.getList(opts.state, opts.entity, opts.ids)).toEqual([])
     },
     [
       {state: {}, entity: 'team', ids: [1]},
@@ -142,13 +140,9 @@ describe('getEntityItemList', () => {
   )
 
   cases(
-    'returns entityItemList',
+    'returns entityDetailList',
     opts => {
-      const result = selectors.getEntityItemList(
-        opts.state,
-        opts.entity,
-        opts.ids,
-      )
+      const result = selectors.getList(opts.state, opts.entity, opts.ids)
       expect(result).toEqual(opts.result)
     },
     [
