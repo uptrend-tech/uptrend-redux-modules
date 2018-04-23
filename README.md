@@ -54,7 +54,102 @@ npm install --save uptrend-redux-modules
 
 ## Usage
 
-// TODO
+### Resource & Entities
+
+```js
+// - src/store/modules/resource/index.js
+import {createResource} from 'uptrend-redux-modules';
+
+// createResource(...) => { actions, reducers, sagas, selectors }
+export default createResource();
+```
+
+```js
+// - src/store/modules/entities/index.js
+import {createEntities} from 'uptrend-redux-modules';
+import schemas from './schemas';
+
+// createEntities(...) => { actions, middleware, reducers, sagas, selectors }
+export default createEntities({schemas});
+```
+
+```js
+// - src/store/modules/entities/schemas.js
+import {schema} from 'normalizr';
+
+export const user = new schema.Entity('users');
+export const team = new schema.Entity('teams', {owner: user, members: [user]});
+```
+
+```js
+// - src/store/actions.js
+import {actions as entities} from 'src/store/modules/entities';
+import {actions as resource} from 'src/store/modules/resource;
+
+export default {
+  ...entities,
+  ...resource,
+}
+```
+
+```js
+// - src/store/middlewares.js
+import {middleware as entities} from 'src/store/modules/entities';
+
+export default [
+  // redux-modules middlewares
+  entities,
+]
+```
+
+```js
+// - src/store/reducer.js
+import { combineReducers } from 'redux';
+
+import {reducer as entities} from 'src/store/modules/entities';
+import {reducer as resource} from 'src/store/modules/resource';
+
+export default combineReducers({
+  entities,
+  resource,
+})
+```
+
+```js
+// - src/store/sagas.js
+import {sagas as entities} from 'src/store/modules/entities';
+import {sagas as resource} from 'src/store/modules/resource';
+
+// single entry point to start all Sagas at once
+export default function*(services = {}) {
+  try {
+    yield all([
+      // app specific sagas
+      example(services),
+
+      // redux-modules sagas
+      entities(services),
+      resource(services),
+    ]);
+  } catch (error) {
+    console.error('ROOT SAGA ERROR!!!', error);
+    console.trace();
+  }
+}
+```
+
+```js
+// - src/store/selectors.js
+import {selectors as fromEntities} from 'src/store/modules/entities';
+import {selectors as fromResource} from 'src/store/modules/resource;
+
+export default {
+  fromEntities,
+  fromResource,
+}
+```
+
+// TODO - Add usage examples for every module and it's components.
 
 ## Inspiration
 
