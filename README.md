@@ -84,7 +84,7 @@ export const team = new schema.Entity('teams', {owner: user, members: [user]});
 ```js
 // - src/store/actions.js
 import {actions as entities} from 'src/store/modules/entities';
-import {actions as resource} from 'src/store/modules/resource;
+import {actions as resource} from 'src/store/modules/resource';
 
 export default {
   ...entities,
