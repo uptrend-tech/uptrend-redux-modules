@@ -181,7 +181,7 @@ not strict guidelines by any means.
 Organizing actions, reducers, selectors, sagas, etc. into a module is based on
 [redux-modules][redux-modules] from [Diego Haz](https://twitter.com/diegohaz).
 
-The resource and entities modules specificaly are modified version of those
+The resource and entities modules specifically are modified version of those
 found in [redux-modules][redux-modules] and [ARc.js][arc-redux-modules].
 
 ## Other Solutions
