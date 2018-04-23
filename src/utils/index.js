@@ -24,6 +24,26 @@ export const camelKeys = camelizeKeys
 export const snakeKeys = decamelizeKeys
 
 // --
+// -- Selector State Helpers
+// --
+
+export const isolateSelectorsState = (storeName, selectors) => {
+  const getState = (state = {}) => state[storeName] || {}
+
+  const isolatedSelectors = {}
+
+  Object.keys(selectors).forEach(name => {
+    const selector = selectors[name]
+    if (typeof selector === 'function') {
+      isolatedSelectors[name] = (state, ...args) =>
+        selector(getState(state), ...args)
+    }
+  })
+
+  return isolatedSelectors
+}
+
+// --
 // -- redux-saga helpers
 // --
 
