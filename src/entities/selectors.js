@@ -9,11 +9,7 @@ import {
   EntitiesState,
 } from '../types'
 
-// --
-// -- Selectors Implementation
-// --
-
-const selectorsFactory = ({schemas}) => {
+export default ({schemas}) => {
   const initialState = {}
 
   const getEntity = t
@@ -60,5 +56,3 @@ const selectorsFactory = ({schemas}) => {
     getDenormalizedList,
   }
 }
-
-export default selectorsFactory

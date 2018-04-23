@@ -1,9 +1,7 @@
-// https://github.com/diegohaz/arc/wiki/Selectors#unit-testing-selectors
-// https://github.com/diegohaz/arc/wiki/Example-redux-modules#resource
 import * as selectors from '../selectors'
 
-const altState = {
-  resources: {
+const state = {
+  thing: {
     list: [1, 2, 3],
     detail: 1,
   },
@@ -23,33 +21,27 @@ describe('resource/selectors', () => {
 
   test('getResourceState', () => {
     expect(selectors.getResourceState()).toBe(selectors.initialResourceState)
-    expect(selectors.getResourceState(undefined, 'resources')).toBe(
+    expect(selectors.getResourceState(undefined, 'thing')).toBe(
       selectors.initialResourceState,
     )
-    expect(selectors.getResourceState(altState, 'resources')).toBe(
-      altState.resources,
-    )
+    expect(selectors.getResourceState(state, 'thing')).toBe(state.thing)
   })
 
   test('getList', () => {
     expect(selectors.getList()).toBe(selectors.initialResourceState.list)
     expect(selectors.getList({})).toBe(selectors.initialResourceState.list)
-    expect(selectors.getList(undefined, 'resources')).toBe(
+    expect(selectors.getList(undefined, 'thing')).toBe(
       selectors.initialResourceState.list,
     )
-    expect(selectors.getList(altState, 'resources')).toBe(
-      altState.resources.list,
-    )
+    expect(selectors.getList(state, 'thing')).toBe(state.thing.list)
   })
 
   test('getDetail', () => {
     expect(selectors.getDetail()).toBe(selectors.initialResourceState.detail)
     expect(selectors.getDetail({})).toBe(selectors.initialResourceState.detail)
-    expect(selectors.getDetail(undefined, 'resources')).toBe(
+    expect(selectors.getDetail(undefined, 'thing')).toBe(
       selectors.initialResourceState.detail,
     )
-    expect(selectors.getDetail(altState, 'resources')).toBe(
-      altState.resources.detail,
-    )
+    expect(selectors.getDetail(state, 'thing')).toBe(state.thing.detail)
   })
 })

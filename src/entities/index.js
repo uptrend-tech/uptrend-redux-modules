@@ -1,20 +1,19 @@
-import middlewareFactory from './middleware'
-import reducerFactory from './reducer'
-import selectorsFactory from './selectors'
+import {isolateSelectorsState} from '../utils'
 import * as actions from './actions'
+import createMiddleware from './middleware'
+import createReducer from './reducer'
+import createSelectors from './selectors'
 
-const entitiesFactory = ({isDevEnv = false, schemas = {}}) => {
-  const middleware = middlewareFactory({isDevEnv, schemas})
-  const selectors = selectorsFactory({schemas})
-  const reducer = reducerFactory({initialState: selectors.initialState})
+export default ({isDevEnv = false, schemas = {}, storeName = 'entities'}) => {
+  const middleware = createMiddleware({isDevEnv, schemas})
+  const selectors = createSelectors({schemas})
+  const reducer = createReducer({initialState: selectors.initialState})
 
   return {
     actions,
     middleware,
     reducer,
     schemas,
-    selectors,
+    selectors: isolateSelectorsState(storeName, selectors),
   }
 }
-
-export default entitiesFactory

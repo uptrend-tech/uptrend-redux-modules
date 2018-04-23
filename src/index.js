@@ -1,11 +1,4 @@
-import resource from './resource'
-import entitiesFactory from './entities'
+import createResource from './resource'
+import createEntities from './entities'
 
-const resourceEntitiesFactory = (config = {}) => {
-  return {
-    entities: entitiesFactory(config),
-    resource,
-  }
-}
-
-export default resourceEntitiesFactory
+export {createResource, createEntities}

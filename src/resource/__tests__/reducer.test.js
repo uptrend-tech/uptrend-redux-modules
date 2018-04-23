@@ -1,20 +1,20 @@
-import {initialState, getResourceState} from '../selectors'
 import * as actions from '../actions'
+import {getResourceState, initialState} from '../selectors'
 import reducer from '../reducer'
 
 const actionGen = (type, payload, meta) => ({
   type,
   payload,
   meta: {
-    resource: 'resources',
+    resource: 'thing',
     ...meta,
   },
 })
 
 const state = resourceState => ({
   ...initialState,
-  resources: {
-    ...getResourceState(initialState, 'resources'),
+  thing: {
+    ...getResourceState(initialState, 'thing'),
     ...resourceState,
   },
 })
