@@ -13,9 +13,17 @@ import {
   RESOURCE_UPDATE_SUCCESS,
 } from './actions'
 
+// Return the data the reducer should use to store from action payload.
+// To support the entities redux-module we must store the `entities` value
+// if present instead of the `data` value.
+const getDataFromPayload = payload => {
+  const data = get(payload, 'data')
+  return get(payload, 'entities', data)
+}
+
 // eslint-disable-next-line complexity
 const updateOrDeleteReducer = (state, {type, payload, meta}) => {
-  const data = get(payload, 'data')
+  const data = getDataFromPayload(payload)
   const resource = get(meta, 'resource')
   const needle = get(meta, 'request.needle')
   const needleIsObject = typeof needle === 'object'
@@ -57,12 +65,12 @@ const updateOrDeleteReducer = (state, {type, payload, meta}) => {
 
 // eslint-disable-next-line complexity
 export default (state = initialState, {type, payload, meta}) => {
-  const data = get(payload, 'data')
   const resource = get(meta, 'resource')
 
-  if (!resource) {
-    return state
-  }
+  if (!resource) return state
+
+  const data = getDataFromPayload(payload)
+
   switch (type) {
     case RESOURCE_CREATE_SUCCESS: {
       return {
