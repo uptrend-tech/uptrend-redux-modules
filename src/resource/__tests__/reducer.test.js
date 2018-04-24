@@ -1,3 +1,4 @@
+import cases from 'jest-in-case'
 import * as actions from '../actions'
 import {getResourceState, initialState} from '../selectors'
 import reducer from '../reducer'
@@ -24,60 +25,67 @@ it('returns the initial state', () => {
 })
 
 describe('RESOURCE_CREATE_SUCCESS', () => {
-  it('adds the new data to the initial state', () => {
-    expect(
-      reducer(
-        initialState,
-        actionGen(actions.RESOURCE_CREATE_SUCCESS, {data: 1}),
-      ),
-    ).toEqual(state({list: [1]}))
-  })
-
-  it('prepends the new data to an existing state', () => {
-    expect(
-      reducer(
-        state({list: [1, 2]}),
-        actionGen(actions.RESOURCE_CREATE_SUCCESS, {data: 3}),
-      ),
-    ).toEqual(state({list: [3, 1, 2]}))
-  })
-})
-
-describe('RESOURCE_LIST_READ_REQUEST', () => {
-  it('keeps the list initial state', () => {
-    expect(
-      reducer(initialState, actionGen(actions.RESOURCE_LIST_READ_REQUEST)),
-    ).toEqual(state())
-  })
-
-  it('resets the list to initial state in an existing state', () => {
-    expect(
-      reducer(
-        state({list: [1, 2, 3]}),
-        actionGen(actions.RESOURCE_LIST_READ_REQUEST),
-      ),
-    ).toEqual(state())
-  })
+  cases(
+    'adds new items to list',
+    opts => {
+      const action = actionGen(actions.RESOURCE_CREATE_SUCCESS, opts.payload)
+      expect(reducer(opts.state, action)).toEqual(state(opts.result))
+    },
+    {
+      'initial state & payload w/ only data': {
+        payload: {data: {id: 1}},
+        state: initialState,
+        result: {list: [{id: 1}]},
+      },
+      'initial state & payload w/ entities': {
+        payload: {data: {id: 2}, entities: 2},
+        state: initialState,
+        result: {list: [2]},
+      },
+      'existing state & payload w/ only data': {
+        payload: {data: {id: 1}},
+        state: state({list: [1, 2]}),
+        result: {list: [{id: 1}, 1, 2]},
+      },
+      'existing state & payload w/ entities': {
+        payload: {data: {id: 2}, entities: 2},
+        state: state({list: [1]}),
+        result: {list: [2, 1]},
+      },
+    },
+  )
 })
 
 describe('RESOURCE_LIST_READ_SUCCESS', () => {
-  it('sets list in the initial state', () => {
-    expect(
-      reducer(
-        initialState,
-        actionGen(actions.RESOURCE_LIST_READ_SUCCESS, {data: [1, 2, 3]}),
-      ),
-    ).toEqual(state({list: [1, 2, 3]}))
-  })
-
-  it('overrides list in an existing state', () => {
-    expect(
-      reducer(
-        state({list: [1, 2, 3]}),
-        actionGen(actions.RESOURCE_LIST_READ_SUCCESS, {data: [3, 2, 1]}),
-      ),
-    ).toEqual(state({list: [3, 2, 1]}))
-  })
+  cases(
+    'sets/overrides list',
+    opts => {
+      const action = actionGen(actions.RESOURCE_LIST_READ_SUCCESS, opts.payload)
+      expect(reducer(opts.state, action)).toEqual(state(opts.result))
+    },
+    {
+      'initial state & payload w/ only data': {
+        payload: {data: [{id: 1}, {id: 2}]},
+        state: initialState,
+        result: {list: [{id: 1}, {id: 2}]},
+      },
+      'initial state & payload w/ entities': {
+        payload: {data: [{id: 1}, {id: 2}], entities: [2, 1]},
+        state: initialState,
+        result: {list: [2, 1]},
+      },
+      'existing state & payload w/ only data': {
+        payload: {data: [{id: 1}, {id: 2}]},
+        state: state({list: [1, 2, 3]}),
+        result: {list: [{id: 1}, {id: 2}]},
+      },
+      'existing state & payload w/ entities': {
+        payload: {data: [{id: 1}, {id: 2}], entities: [1, 2]},
+        state: state({list: [2, 1]}),
+        result: {list: [1, 2]},
+      },
+    },
+  )
 })
 
 describe('RESOURCE_DETAIL_READ_REQUEST', () => {
@@ -98,85 +106,141 @@ describe('RESOURCE_DETAIL_READ_REQUEST', () => {
 })
 
 describe('RESOURCE_DETAIL_READ_SUCCESS', () => {
-  it('sets detail in the initial state', () => {
-    expect(
-      reducer(
-        initialState,
-        actionGen(actions.RESOURCE_DETAIL_READ_SUCCESS, {data: 1}),
-      ),
-    ).toEqual(state({detail: 1}))
-  })
-
-  it('overrides detail in an existing state', () => {
-    expect(
-      reducer(
-        state({detail: 1}),
-        actionGen(actions.RESOURCE_DETAIL_READ_SUCCESS, {data: 2}),
-      ),
-    ).toEqual(state({detail: 2}))
-  })
+  cases(
+    'set/overrides detail',
+    opts => {
+      const action = actionGen(
+        actions.RESOURCE_DETAIL_READ_SUCCESS,
+        opts.payload,
+      )
+      expect(reducer(opts.state, action)).toEqual(state(opts.result))
+    },
+    {
+      'initial state & payload w/ only data': {
+        payload: {data: {id: 1}},
+        state: initialState,
+        result: {detail: {id: 1}},
+      },
+      'initial state & payload w/ entities': {
+        payload: {data: {id: 1}, entities: 1},
+        state: initialState,
+        result: {detail: 1},
+      },
+      'existing state & payload w/ only data': {
+        payload: {data: {id: 2}},
+        state: state({detail: {id: 1}}),
+        result: {detail: {id: 2}},
+      },
+      'existing state & payload w/ entities': {
+        payload: {data: {id: 2}, entities: 2},
+        state: state({detail: 1}),
+        result: {detail: 2},
+      },
+    },
+  )
 })
 
 describe('RESOURCE_UPDATE_SUCCESS', () => {
-  it('updates non-object data', () => {
-    expect(
-      reducer(
-        state({list: [4, 5, 6]}),
-        actionGen(
-          actions.RESOURCE_UPDATE_SUCCESS,
-          {data: 8},
-          {request: {needle: 5}},
-        ),
-      ),
-    ).toEqual(state({list: [4, 8, 6]}))
-  })
+  cases(
+    'updates non-object data',
+    opts => {
+      const action = actionGen(
+        actions.RESOURCE_UPDATE_SUCCESS,
+        opts.payload,
+        opts.meta,
+      )
+      expect(reducer(opts.state, action)).toEqual(state(opts.result))
+    },
+    {
+      'payload w/ only data': {
+        payload: {data: 8},
+        meta: {request: {needle: 5}},
+        state: state({list: [4, 5, 6]}),
+        result: {list: [4, 8, 6]},
+      },
+      'payload w/ entities': {
+        payload: {data: {id: 8}, entities: 8},
+        meta: {request: {needle: 5}},
+        state: state({list: [4, 5, 6]}),
+        result: {list: [4, 8, 6]},
+      },
+    },
+  )
 
-  it('updates an object data', () => {
-    expect(
-      reducer(
-        state({list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]}),
-        actionGen(
-          actions.RESOURCE_UPDATE_SUCCESS,
-          {data: {title: 'test3'}},
-          {request: {needle: {id: 2}}},
-        ),
-      ),
-    ).toEqual(state({list: [{id: 1, title: 'test'}, {id: 2, title: 'test3'}]}))
-  })
+  cases(
+    'updates an object data',
+    opts => {
+      const action = actionGen(
+        actions.RESOURCE_UPDATE_SUCCESS,
+        opts.payload,
+        opts.meta,
+      )
+      expect(reducer(state(opts.state), action)).toEqual(state(opts.result))
+    },
+    {
+      'payload w/ only data': {
+        state: {list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]},
+        payload: {data: {title: 'test3'}},
+        meta: {request: {needle: {id: 2}}},
+        result: {list: [{id: 1, title: 'test'}, {id: 2, title: 'test3'}]},
+      },
 
-  it('does nothing when data is not in state', () => {
-    expect(
-      reducer(
-        state({list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]}),
-        actionGen(
-          actions.RESOURCE_UPDATE_SUCCESS,
-          {data: {title: 'test3'}},
-          {request: {needle: {id: 3}}},
-        ),
-      ),
-    ).toEqual(state({list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]}))
-  })
+      // -- TODO: decide how payload with entities should be handled
+      // 'payload w/ entities': {
+      //   payload: {data: {id: 8}, entities: 8},
+      //   meta: {request: {needle: 5}},
+      //   state: {list: [4, 5, 6]},
+      //   result: {list: [4, 8, 6]},
+      // },
+    },
+  )
+
+  cases(
+    'does nothing when data is not in state',
+    opts => {
+      const action = actionGen(
+        actions.RESOURCE_UPDATE_SUCCESS,
+        opts.payload,
+        opts.meta,
+      )
+      expect(reducer(opts.state, action)).toEqual(state(opts.result))
+    },
+    {
+      'payload w/ only data': {
+        state: state({list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]}),
+        payload: {data: {title: 'test3'}},
+        meta: {request: {needle: {id: 3}}},
+        result: {list: [{id: 1, title: 'test'}, {id: 2, title: 'test2'}]},
+      },
+    },
+  )
 })
 
 describe('RESOURCE_DELETE_SUCCESS', () => {
-  it('keeps the initial state', () => {
-    expect(
-      reducer(initialState, actionGen(actionGen.RESOURCE_DELETE_SUCCESS)),
-    ).toEqual(initialState)
-  })
-
-  it('removes from list in existing state', () => {
-    expect(
-      reducer(
-        state({list: [1, 2, 3]}),
-        actionGen(
-          actions.RESOURCE_DELETE_SUCCESS,
-          {data: undefined},
-          {
-            request: {needle: 2},
-          },
-        ),
-      ),
-    ).toEqual(state({list: [1, 3]}))
-  })
+  cases(
+    'removes from state',
+    opts => {
+      const action = actionGen(
+        actions.RESOURCE_DELETE_SUCCESS,
+        opts.payload,
+        opts.meta,
+      )
+      expect(reducer(opts.state, action)).toEqual(opts.result)
+    },
+    {
+      'initial state': {
+        payload: {data: undefined},
+        meta: {request: {needle: 2}},
+        state: initialState,
+        result: initialState,
+      },
+      'existing state': {
+        tag: 1,
+        payload: {data: undefined},
+        meta: {request: {needle: 2}},
+        state: state({list: [1, 2, 3]}),
+        result: state({list: [1, 3]}),
+      },
+    },
+  )
 })
