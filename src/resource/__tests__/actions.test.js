@@ -25,21 +25,30 @@ test('resourceCreateRequest', () => {
 })
 
 test('resourceCreateSuccess', () => {
+  const api = {response: {data: {id: 1, title: 'test'}}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceCreateSuccess(
       'resourceName',
       'schemaName',
-      {id: 1, title: 'test'},
+      payload,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_CREATE_SUCCESS,
-      payload: {data: {id: 1, title: 'test'}},
+      payload: {
+        ...payload,
+        entityType: 'schemaName',
+        resource: {
+          path: 'resourceName',
+        },
+      },
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -92,21 +101,30 @@ test('resourceListCreateRequest', () => {
 })
 
 test('resourceListCreateSuccess', () => {
+  const api = {response: {data: [{title: 'test'}, {title: 'bros'}]}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceListCreateSuccess(
       'resourceName',
       'schemaName',
-      [{title: 'test'}, {title: 'bros'}],
+      payload,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_CREATE_SUCCESS,
-      payload: {data: [{title: 'test'}, {title: 'bros'}]},
+      payload: {
+        ...payload,
+        entityType: 'schemaName',
+        resource: {
+          path: 'resourceName',
+        },
+      },
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -157,20 +175,27 @@ test('resourceListReadRequest', () => {
 })
 
 test('resourceListReadSuccess', () => {
+  const api = {response: {data: [1, 2, 3]}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceListReadSuccess(
       'resourceName',
       'schemaName',
-      [1, 2, 3],
+      payload,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_LIST_READ_SUCCESS,
-      payload: {data: [1, 2, 3]},
-      meta: expect.objectContaining({
+      payload: {
+        ...payload,
         entityType: 'schemaName',
+        resource: {
+          path: 'resourceName',
+        },
+      },
+      meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
         thunk: 'thunk',
@@ -223,18 +248,26 @@ test('resourceDetailReadRequest', () => {
 })
 
 test('resourceDetailReadSuccess', () => {
+  const api = {response: {data: {id: 1, title: 'test'}}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceDetailReadSuccess(
       'resourceName',
       'schemaName',
-      {id: 1, title: 'test'},
+      payload,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DETAIL_READ_SUCCESS,
-      payload: {data: {id: 1, title: 'test'}},
+      payload: {
+        ...payload,
+        entityType: 'schemaName',
+        resource: {
+          path: 'resourceName',
+        },
+      },
       meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
@@ -294,24 +327,32 @@ test('resourceUpdateRequest', () => {
 })
 
 test('resourceUpdateSuccess', () => {
+  const api = {response: {data: {id: 1, title: 'test'}}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceUpdateSuccess(
       'resourceName',
       'schemaName',
-      {id: 1, title: 'test'},
+      payload,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_UPDATE_SUCCESS,
-      payload: {data: {id: 1, title: 'test'}},
-      meta: expect.objectContaining({
+      payload: {
+        ...payload,
         entityType: 'schemaName',
-        normalizeEntities: true,
+        resource: {
+          path: 'resourceName',
+        },
+      },
+      meta: expect.objectContaining({
         request: 'request',
         resource: 'resourceName',
         thunk: 'thunk',
+        entityType: 'schemaName',
+        normalizeEntities: true,
       }),
     }),
   )
@@ -368,12 +409,20 @@ test('resourceDeleteSuccess', () => {
     actions.resourceDeleteSuccess(
       'resourceName',
       'schemaName',
+      123,
       'request',
       'thunk',
     ),
   ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DELETE_SUCCESS,
+      payload: {
+        entityType: 'schemaName',
+        resource: {
+          path: 'resourceName',
+          needle: 123,
+        },
+      },
       meta: expect.objectContaining({
         entityType: 'schemaName',
         request: 'request',
