@@ -30,7 +30,7 @@ describe('createResource', () => {
         actions.resourceCreateSuccess(
           resource,
           entityType,
-          detail,
+          sagas.apiResponseToPayload({data: detail}),
           payload,
           thunk,
         ),
@@ -71,7 +71,7 @@ describe('readResourceList', () => {
         actions.resourceListReadSuccess(
           resource,
           entityType,
-          detail,
+          sagas.apiResponseToPayload({data: detail}),
           payload,
           thunk,
         ),
@@ -112,7 +112,7 @@ describe('readResourceDetail', () => {
         actions.resourceDetailReadSuccess(
           resource,
           entityType,
-          detail,
+          sagas.apiResponseToPayload({data: detail}),
           payload,
           thunk,
         ),
@@ -153,7 +153,7 @@ describe('updateResource', () => {
         actions.resourceUpdateSuccess(
           resource,
           entityType,
-          detail,
+          sagas.apiResponseToPayload({data: detail}),
           payload,
           thunk,
         ),

@@ -2,13 +2,18 @@ import {takeEvery, put, call} from 'redux-saga/effects'
 import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../utils'
 import * as actions from './actions'
 
+export const apiResponseToPayload = response => ({
+  api: {response},
+  data: camelKeys(response.data),
+})
+
 export function* createResource(api, {data}, {resource, thunk, entityType}) {
   try {
     const resp = yield call([api, api.post], `/${resource}`, snakeKeys(data))
     const action = actions.resourceCreateSuccess(
       resource,
       entityType,
-      camelKeys(resp.data),
+      apiResponseToPayload(resp),
       {data},
       thunk,
     )
@@ -37,7 +42,7 @@ export function* createResourceList(
     const action = actions.resourceListCreateSuccess(
       resource,
       entityType,
-      camelKeys(resp.data),
+      apiResponseToPayload(resp),
       params,
       thunk,
     )
@@ -67,7 +72,7 @@ export function* readResourceList(
       actions.resourceListReadSuccess(
         resource,
         entityType,
-        camelKeys(resp.data),
+        apiResponseToPayload(resp),
         {params},
         thunk,
       ),
@@ -96,7 +101,7 @@ export function* readResourceDetail(
       actions.resourceDetailReadSuccess(
         resource,
         entityType,
-        camelKeys(resp.data),
+        apiResponseToPayload(resp),
         {needle},
         thunk,
       ),
@@ -129,7 +134,7 @@ export function* updateResource(
       actions.resourceUpdateSuccess(
         resource,
         entityType,
-        camelKeys(resp.data),
+        apiResponseToPayload(resp),
         {needle, data},
         thunk,
       ),
