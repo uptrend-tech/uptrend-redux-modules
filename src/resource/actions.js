@@ -15,12 +15,16 @@ export const resourceCreateRequest = (resource, data, entityType) => ({
 export const resourceCreateSuccess = (
   resource,
   entityType,
-  data,
+  payload,
   request,
   thunk,
 ) => ({
   type: RESOURCE_CREATE_SUCCESS,
-  payload: {data},
+  payload: {
+    ...payload,
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
@@ -65,12 +69,16 @@ export const resourceListCreateRequest = (resource, data, entityType) => ({
 export const resourceListCreateSuccess = (
   resource,
   entityType,
-  data,
+  payload,
   request,
   thunk,
 ) => ({
   type: RESOURCE_LIST_CREATE_SUCCESS,
-  payload: {data},
+  payload: {
+    ...payload,
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
@@ -115,12 +123,16 @@ export const resourceListReadRequest = (resource, params, entityType) => ({
 export const resourceListReadSuccess = (
   resource,
   entityType,
-  data,
+  payload,
   request,
   thunk,
 ) => ({
   type: RESOURCE_LIST_READ_SUCCESS,
-  payload: {data},
+  payload: {
+    ...payload,
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
@@ -165,12 +177,16 @@ export const resourceDetailReadRequest = (resource, needle, entityType) => ({
 export const resourceDetailReadSuccess = (
   resource,
   entityType,
-  data,
+  payload,
   request,
   thunk,
 ) => ({
   type: RESOURCE_DETAIL_READ_SUCCESS,
-  payload: {data},
+  payload: {
+    ...payload,
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
@@ -215,12 +231,16 @@ export const resourceUpdateRequest = (resource, needle, data, entityType) => ({
 export const resourceUpdateSuccess = (
   resource,
   entityType,
-  data,
+  payload,
   request,
   thunk,
 ) => ({
   type: RESOURCE_UPDATE_SUCCESS,
-  payload: {data},
+  payload: {
+    ...payload,
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
@@ -269,6 +289,10 @@ export const resourceDeleteSuccess = (
   thunk,
 ) => ({
   type: RESOURCE_DELETE_SUCCESS,
+  payload: {
+    resource: {path: resource},
+    entityType,
+  },
   meta: {
     request,
     thunk,
