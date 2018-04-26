@@ -285,13 +285,12 @@ export const resourceDeleteRequest = (resource, needle, entityType) => ({
 export const resourceDeleteSuccess = (
   resource,
   entityType,
-  needle,
   request,
   thunk,
 ) => ({
   type: RESOURCE_DELETE_SUCCESS,
   payload: {
-    resource: {path: resource, needle},
+    resource: {path: resource},
     entityType,
   },
   meta: {

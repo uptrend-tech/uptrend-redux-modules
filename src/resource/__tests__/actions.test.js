@@ -409,7 +409,6 @@ test('resourceDeleteSuccess', () => {
     actions.resourceDeleteSuccess(
       'resourceName',
       'schemaName',
-      123,
       'request',
       'thunk',
     ),
@@ -420,7 +419,6 @@ test('resourceDeleteSuccess', () => {
         entityType: 'schemaName',
         resource: {
           path: 'resourceName',
-          needle: 123,
         },
       },
       meta: expect.objectContaining({
