@@ -26,36 +26,52 @@ const getSchemas = () => ({
 // -- State
 // --
 
-const getEntitiesState = () => ({
-  team: {
-    1: {
-      id: 1,
-      name: 'Team 1',
+const getState = () => ({
+  entities: {
+    team: {
+      1: {id: 1, name: 'Team 1'},
+      2: {id: 2, name: 'Team 2'},
+      3: {id: 3, name: 'Team 3'},
     },
-    2: {
-      id: 2,
-      name: 'Team 2',
-    },
-    3: {
-      id: 3,
-      name: 'Team 3',
+    user: {
+      one: {uuid: 'one', name: 'orther'},
+      two: {uuid: 'two', name: 'benjamin'},
+      three: {uuid: 'three', name: 'dylan'},
     },
   },
-  user: {
-    aaa: {
-      uuid: 'one',
-      name: 'orther',
+  resource: {
+    team: {
+      list: [1, 2, 3],
+      detail: 2,
     },
-    bbb: {
-      uuid: 'two',
-      name: 'benjamin',
-    },
-    ccc: {
-      uuid: 'three',
-      name: 'dylan',
+    user: {
+      list: ['one', 'two', 'three'],
+      detail: 'three',
     },
   },
 })
+
+const getStatusValues = status => {
+  const pending = status === 'pending'
+  const rejected = status === 'rejected'
+  const fulfilled = status === 'fulfilled'
+  const done = rejected || fulfilled
+
+  return {pending, rejected, fulfilled, done}
+}
+
+const getThunkState = (thunkName, status) => {
+  const {pending, rejected, fulfilled, done} = getStatusValues(status)
+
+  return {
+    thunk: {
+      pending: {[thunkName]: pending},
+      rejected: {[thunkName]: rejected},
+      fulfilled: {[thunkName]: fulfilled},
+      done: {[thunkName]: done},
+    },
+  }
+}
 
 const createHelpers = () => {
   const entities = createEntities({isDevEnv: false, schemas: getSchemas()})
@@ -93,28 +109,70 @@ describe('resourceCreate', () => {
     },
     {
       'resourcePath ONLY (no entityType)': {
-        resourcePath: 'resourcePath',
-        entityType: 'schemaName',
-        payload: {id: 1, title: 'test'},
+        resourcePath: 'team',
+        entityType: undefined,
+        payload: {id: 1, title: 'Team 1'},
       },
       'resourcePath & entityType': {
-        resourcePath: 'resourcePath',
-        entityType: undefined,
-        payload: {id: 1, title: 'test'},
+        resourcePath: 'team',
+        entityType: 'team',
+        payload: {id: 1, title: 'Team 2'},
       },
     },
   )
 
-  // const mapDispatchToProps = {
-  //   search: params => search.action(params), // = resourceListCreateRequest(`user/member`, data, 'member)
-  // }
-
-  // test('selectors', () => {
-  //   const mapStateToProps = state => ({
-  //     memberListDone: search.selectors.done(state),
-  //     memberListFailed: search.selectors.rejected(state),
-  //     memberListPending: search.selectors.pending(state),
-  //     memberList: search.selectors.result(state),
-  //   })
-  // })
+  cases(
+    'selectors',
+    opts => {
+      const state = {
+        ...getState(),
+        ...getThunkState(opts.resourcePath, opts.status),
+      }
+      const statuses = getStatusValues(opts.status)
+      const {selectors} = resourceCreate(opts.resourcePath, opts.entityType)
+      expect(selectors.pending(state)).toEqual(statuses.pending)
+      expect(selectors.rejected(state)).toEqual(statuses.rejected)
+      expect(selectors.fulfilled(state)).toEqual(statuses.fulfilled)
+      expect(selectors.done(state)).toEqual(statuses.done)
+      expect(selectors.resource(state)).toEqual(state.resource.team.detail)
+      expect(selectors.result(state)).toEqual(
+        state.entities.team[state.resource.team.detail],
+      )
+    },
+    {
+      'entity - no status': {
+        resourcePath: 'team',
+        entityType: 'team',
+        status: undefined,
+      },
+    },
+    {
+      'entity - pending': {
+        resourcePath: 'team',
+        entityType: 'team',
+        status: 'pending',
+      },
+    },
+    {
+      'entity - rejected': {
+        resourcePath: 'team',
+        entityType: 'team',
+        status: 'rejected',
+      },
+    },
+    {
+      'entity - fulfilled': {
+        resourcePath: 'team',
+        entityType: 'team',
+        status: 'fulfilled',
+      },
+    },
+    {
+      'entity - done': {
+        resourcePath: 'team',
+        entityType: 'team',
+        status: 'done',
+      },
+    },
+  )
 })
