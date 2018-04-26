@@ -1,22 +1,13 @@
 import {done, fulfilled, pending, rejected} from 'redux-saga-thunk'
 
-// const partialStatusActions = name => {
-//   return {
-//     done: state => done(state, name),
-//     fulfilled: state => fulfilled(state, name),
-//     pending: state => pending(state, name),
-//     rejected: state => rejected(state, name),
-//   }
-// }
-
 export default ({entities, resource}) => {
   const {
     resourceCreateRequest,
-    // resourceDeleteRequest,
-    // resourceDetailReadRequest,
-    // resourceListCreateRequest,
-    // resourceListReadRequest,
-    // resourceUpdateRequest,
+    resourceDeleteRequest,
+    resourceDetailReadRequest,
+    resourceListCreateRequest,
+    resourceListReadRequest,
+    resourceUpdateRequest,
   } = resource.actions
 
   const createHelper = (
@@ -48,35 +39,6 @@ export default ({entities, resource}) => {
     }
   }
 
-  // const resourceCreate = (resourcePath, entityType) => {
-  //   const action = data => resourceCreateRequest(resourcePath, data, entityType)
-  //   const thunkName = `${resourcePath}Create`
-
-  //   const resourceSelect = state =>
-  //     resource.selectors.getDetail(state, resourcePath)
-
-  //   const resultsSelect = state => {
-  //     const detail = resourceSelect(state)
-  //     if (entityType) {
-  //       return entities.selectors.getDetail(state, entityType, detail)
-  //     }
-  //     return detail
-  //   }
-
-  //   return {
-  //     action,
-  //     selectors: {
-  //       done: state => done(state, thunkName),
-  //       fulfilled: state => fulfilled(state, thunkName),
-  //       // eslint-disable-next-line jest/no-disabled-tests
-  //       pending: state => pending(state, thunkName),
-  //       rejected: state => rejected(state, thunkName),
-  //       resource: resourceSelect,
-  //       result: resultsSelect,
-  //     },
-  //   }
-  // }
-
   const resourceCreate = createHelper(
     resourceCreateRequest,
     resourcePath => `${resourcePath}Create`,
@@ -84,12 +46,47 @@ export default ({entities, resource}) => {
     entities.selectors.getDetail,
   )
 
+  const resourceDelete = createHelper(
+    resourceDeleteRequest,
+    resourcePath => `${resourcePath}Delete`,
+    resource.selectors.getList,
+    entities.selectors.getList,
+  )
+
+  const resourceDetailRead = createHelper(
+    resourceDetailReadRequest,
+    resourcePath => `${resourcePath}DetailRead`,
+    resource.selectors.getDetail,
+    entities.selectors.getDetail,
+  )
+
+  const resourceListCreate = createHelper(
+    resourceListCreateRequest,
+    resourcePath => `${resourcePath}ListCreate`,
+    resource.selectors.getList,
+    entities.selectors.getList,
+  )
+
+  const resourceListRead = createHelper(
+    resourceListReadRequest,
+    resourcePath => `${resourcePath}ListRead`,
+    resource.selectors.getList,
+    entities.selectors.getList,
+  )
+
+  const resourceUpdate = createHelper(
+    resourceUpdateRequest,
+    resourcePath => `${resourcePath}Update`,
+    resource.selectors.getDetail,
+    entities.selectors.getDetail,
+  )
+
   return {
     resourceCreate,
-    // resourceDelete,
-    // resourceDetailRead,
-    // resourceListCreate,
-    // resourceListRead,
-    // resourceUpdate,
+    resourceDelete,
+    resourceDetailRead,
+    resourceListCreate,
+    resourceListRead,
+    resourceUpdate,
   }
 }
