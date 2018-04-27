@@ -1,6 +1,6 @@
 import createSagaMiddleware from 'redux-saga'
 import {createStore, applyMiddleware} from 'redux'
-import {delay} from '../../utils'
+import {delay} from '../../../utils'
 import reducer from '../reducer'
 import sagas from '../sagas'
 import {getList, getDetail} from '../selectors'

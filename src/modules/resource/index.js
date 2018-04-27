@@ -1,4 +1,4 @@
-import {isolateSelectorsState} from '../utils'
+import {isolateSelectorsState} from '../../utils'
 import * as actions from './actions'
 import * as selectors from './selectors'
 import reducer from './reducer'

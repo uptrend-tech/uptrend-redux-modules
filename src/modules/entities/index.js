@@ -1,4 +1,4 @@
-import {isolateSelectorsState} from '../utils'
+import {isolateSelectorsState} from '../../utils'
 import * as actions from './actions'
 import createMiddleware from './middleware'
 import createReducer from './reducer'

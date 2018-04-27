@@ -7,7 +7,7 @@ import {
   EntityName,
   EntitySubState,
   EntitiesState,
-} from '../types'
+} from '../../types'
 
 export default ({schemas}) => {
   const initialState = {}

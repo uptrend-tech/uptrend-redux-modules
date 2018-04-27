@@ -1,13 +1,6 @@
 import configureStore from 'redux-mock-store'
-// import {denormalize} from 'normalizr'
-
-import {
-  getSchemas,
-  // getEntitiesState,
-  // getEntitiesStateDenormalized,
-} from '../../utils/test/fixtures'
+import {getSchemas} from '../../../utils/test/fixtures'
 import middlewareFactory from '../middleware'
-// import selectorsFactory from '../selectors'
 import {entitiesReceive} from '../actions'
 
 const userTom = {uuid: 'aaa', name: 'Tom'}

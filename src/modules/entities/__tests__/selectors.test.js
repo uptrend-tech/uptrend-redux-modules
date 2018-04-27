@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import selectorsFactory from '../selectors'
-import {getSchemas, getEntitiesState} from '../../utils/test/fixtures'
+import {getSchemas, getEntitiesState} from '../../../utils/test/fixtures'
 
 const selectors = selectorsFactory({
   schemas: getSchemas(),
