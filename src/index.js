@@ -1,4 +1,4 @@
-import createResource from './resource'
-import createEntities from './entities'
+import createResource from './modules/resource'
+import createEntities from './modules/entities'
 
 export {createResource, createEntities}

@@ -1,5 +1,5 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
-import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../utils'
+import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../../utils'
 import * as actions from './actions'
 
 export const apiResponseToPayload = response => ({

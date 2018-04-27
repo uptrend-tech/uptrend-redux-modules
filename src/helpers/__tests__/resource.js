@@ -1,6 +1,6 @@
 import cases from 'jest-in-case'
 import {schema} from 'normalizr'
-import * as actions from '../../resource/actions'
+import * as actions from '../../modules/resource/actions'
 import createResourceHelpers from '../resource'
 import {createResource, createEntities} from '../../'
 

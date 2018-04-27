@@ -36,7 +36,7 @@ export const getEntitiesState = () => ({
       members: ['bbb'],
     },
     3: {
-      id: 1,
+      id: 3,
       name: 'Team 3',
       owner: 'aaa',
       members: ['bbb', 'ccc'],
