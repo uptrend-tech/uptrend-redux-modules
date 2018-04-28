@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-// import {withRouter} from 'react-router'
 import {
   resourceListCreateRequest,
   resourceListReadRequest,
@@ -19,9 +18,9 @@ class ResourceLoader extends React.Component {
     loading: false,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.loadOnMount) {
-      this.loadData()
+      this.loadResource()
     }
   }
 
@@ -87,6 +86,7 @@ class ResourceLoader extends React.Component {
   }
 
   loadResourceError = error => {
+    log('error', {error})
     this.setState({loading: false, error})
   }
 
@@ -150,8 +150,6 @@ class ResourceLoader extends React.Component {
   }
 }
 
-const resourceIdType = PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-
 ResourceLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
@@ -167,7 +165,7 @@ ResourceLoader.propTypes = {
   requestListRead: PropTypes.func,
   requestParams: PropTypes.object,
   resource: PropTypes.string.isRequired,
-  resourceId: resourceIdType,
+  resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
 const mapDispatchToProps = {

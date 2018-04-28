@@ -38,6 +38,7 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "redux-saga-thunk": "^0.7.1",
+    "redux-thunk": "^2.2.0",
     "tcomb": "^3.2.25"
   },
   "devDependencies": {
