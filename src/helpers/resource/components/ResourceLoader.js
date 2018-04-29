@@ -99,7 +99,6 @@ class ResourceLoader extends React.Component {
 
   requestResourceDetail = () => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
-    log('requestResourceDetail', {resource, resourceId, entityType})
     return requestDetailRead(resource, resourceId, entityType)
   }
 
