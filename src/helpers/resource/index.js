@@ -1,4 +1,6 @@
 import {done, fulfilled, pending, rejected} from 'redux-saga-thunk'
+import ResourceDetailLoader from './components/ResourceDetailLoader'
+import ResourceListLoader from './components/ResourceListLoader'
 
 export default ({entities, resource}) => {
   const {
@@ -83,6 +85,8 @@ export default ({entities, resource}) => {
   )
 
   return {
+    ResourceDetailLoader,
+    ResourceListLoader,
     resourceCreate,
     resourceDelete,
     resourceDetailRead,

@@ -67,6 +67,7 @@ test('ResourceLoader component receives props and renders initial status', () =>
     <ResourceLoader
       resource={'example'}
       renderInitial={() => <Status initial />}
+      list={false}
     >
       {({statusView}) => statusView}
     </ResourceLoader>,
@@ -77,7 +78,7 @@ test('ResourceLoader component receives props and renders initial status', () =>
 
   // Renders ResourceLoader component with conditional content using status.initial.
   renderWithRedux(
-    <ResourceLoader resource={'example'}>
+    <ResourceLoader resource={'example'} list={false}>
       {({status}) => <div>{status.initial && <Status initial />}</div>}
     </ResourceLoader>,
     {container},
@@ -106,6 +107,7 @@ test('ResourceLoader loads detail and renders results', async () => {
         </Status>
       )}
       loadOnMount
+      list={false}
     >
       {({statusView}) => <div>{statusView}</div>}
     </ResourceLoader>,

@@ -150,7 +150,7 @@ class ResourceLoader extends React.Component {
 ResourceLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
-  list: PropTypes.bool,
+  list: PropTypes.bool.isRequired,
   loadOnMount: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
@@ -163,10 +163,6 @@ ResourceLoader.propTypes = {
   requestParams: PropTypes.object,
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-}
-
-ResourceLoader.defaultValues = {
-  resourceId: null,
 }
 
 const mapDispatchToProps = {
