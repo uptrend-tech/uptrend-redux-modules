@@ -4,7 +4,7 @@ import * as actions from './actions'
 
 export const apiResponseToPayload = response => ({
   api: {response},
-  data: camelKeys(response.data),
+  data: camelKeys(response.data.data),
 })
 
 export function* createResource(api, {data}, {resource, thunk, entityType}) {
