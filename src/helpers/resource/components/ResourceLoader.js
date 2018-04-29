@@ -8,7 +8,7 @@ import {
 } from '../../../modules/resource/actions'
 
 // eslint-disable-next-line no-console
-const log = (...args) => console.log(args)
+const log = (...args) => console.log(JSON.stringify(args, null, 2))
 // TODO remove ^^
 
 class ResourceLoader extends React.Component {
@@ -56,6 +56,7 @@ class ResourceLoader extends React.Component {
   getStatusView() {
     const {error, result} = this.state
     const status = this.getStatusObj()
+    log('++', {error, result})
 
     if (status.error) {
       return this.getStatusViewError(error)
@@ -80,7 +81,7 @@ class ResourceLoader extends React.Component {
   loadResource = params => {
     this.setState({loading: true})
     this.requestResource(params).then(
-      this.loadResourceError,
+      this.loadResourceSuccess,
       this.loadResourceError,
     )
   }
