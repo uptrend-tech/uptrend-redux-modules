@@ -1,21 +1,19 @@
 import React from 'react'
+import MockAdapter from 'axios-mock-adapter'
 import createSagaMiddleware from 'redux-saga'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware, combineReducers} from 'redux'
 import {render, Simulate, wait} from 'react-testing-library'
 import {schema} from 'normalizr'
 import ReduxThunk from 'redux-thunk'
+import 'dom-testing-library/extend-expect'
 import {middleware as ReduxSagaThunk} from 'redux-saga-thunk'
 import ResourceLoader from '../ResourceLoader'
-import 'dom-testing-library/extend-expect'
 import {createResource, createEntities} from '../../../../'
+import API from '../../../../utils/test/api'
 
-const api = {
-  post: (path, data) => Promise.resolve({data}),
-  get: () => Promise.resolve({data: [1, 2, 3]}),
-  put: (path, data) => Promise.resolve({data}),
-  delete: () => Promise.resolve(),
-}
+const {api, axiosInstance} = API.create()
+const mockApi = new MockAdapter(axiosInstance, {delayResponse: 300})
 
 function createStoreForTests(initialState) {
   const resource = createResource()
@@ -54,17 +52,21 @@ function renderWithRedux(
   }
 }
 
-const StatusInitial = () => <div data-testid="render-initial">Initial</div>
-const StatusLoading = () => <div data-testid="render-loading">Loading</div>
-const StatusError = error => <div data-testid="render-error">{error}</div>
-// const StatusSuccess = (result) => </div>
+// eslint-disable-next-line react/prop-types
+const Status = ({children, initial, loading, error, success}) => {
+  if (initial) return <div data-testid="render-initial">Initial</div>
+  if (loading) return <div data-testid="render-loading">Loading</div>
+  if (error) return <div data-testid="render-error">{children}</div>
+  if (success) return <div data-testid="render-success">{children}</div>
+  throw new Error('Status component not passed status prop')
+}
 
 test('ResourceLoader component receives props and renders initial status', () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, getByText, container} = renderWithRedux(
     <ResourceLoader
       resource={'example'}
-      renderInitial={() => <StatusInitial />}
+      renderInitial={() => <Status initial />}
     >
       {({statusView}) => statusView}
     </ResourceLoader>,
@@ -76,7 +78,7 @@ test('ResourceLoader component receives props and renders initial status', () =>
   // Renders ResourceLoader component with conditional content using status.initial.
   renderWithRedux(
     <ResourceLoader resource={'example'}>
-      {({status}) => <div>{status.initial && <StatusInitial />}</div>}
+      {({status}) => <div>{status.initial && <Status initial />}</div>}
     </ResourceLoader>,
     {container},
   )
@@ -85,68 +87,125 @@ test('ResourceLoader component receives props and renders initial status', () =>
   expect(getByTestId('render-initial')).toHaveTextContent('Initial')
 })
 
-test('ResourceLoader loads detail and renders it', () => {
+test('ResourceLoader loads detail and renders results', async () => {
+  mockApi.onGet('/user/1').reply(200, {
+    data: {id: 1, name: 'Ben'}, // {id: 2, name: 'Sam'}],
+  })
+
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, container} = renderWithRedux(
     <ResourceLoader
-      resource={'example'}
-      renderInitial={() => <StatusInitial />}
-      renderError={error => <StatusError error={error} />}
-      renderLoading={() => <StatusLoading />}
-      renderSuccess={result => <div data-testid="render-success">{result}</div>}
+      resource={'user'}
+      resourceId={1}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={user => (
+        <Status success>
+          {user.id}:{user.name}
+        </Status>
+      )}
       loadOnMount
     >
-      {({statusView}) => statusView}
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  /*  'wait' method waits (4500ms by default) until a callback
+   *  function stops throwing an error. It is being checked
+   *  at 50ms intervals.
+   *
+   *  Waiting for renderSuccess to show in DOM
+   */
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+test('ResourceLoader loads list and renders results', async () => {
+  mockApi.onGet('/user').reply(200, {
+    data: [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}],
+  })
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId, container} = renderWithRedux(
+    <ResourceLoader
+      resource={'user'}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => (
+        <Status success>
+          {userList.map(user => (
+            <div key={user.id}>
+              {user.id}:{user.name}
+            </div>
+          ))}
+        </Status>
+      )}
+      loadOnMount
+      list
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  // // Expects ResourceLoader component to render statusView from renderInitial.
+  // await wait(() => expect(getByTestId('render-loading')).not.toBeInTheDOM())
+
+  // await wait(() =>
+  //   // expect(getByTestId('render-loading')).not.toBeInTheDOM()
+  //   expect(getByTestId('render-loading')).toHaveTextContent('Loading'),
+  // )
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+test('ResourceLoader loads when loadResource clicked and renders results', async () => {
+  mockApi.onGet('/user').reply(200, {
+    data: [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}],
+  })
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId, getByText, container} = renderWithRedux(
+    <ResourceLoader
+      resource={'user'}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => (
+        <Status success>
+          {userList.map(user => (
+            <div key={user.id}>
+              {user.id}:{user.name}
+            </div>
+          ))}
+        </Status>
+      )}
+      list
+    >
+      {({statusView, onEventLoadResource}) => (
+        <div>
+          <div>
+            <button onClick={onEventLoadResource} data-testid="load-resource">
+              Load Resource
+            </button>
+          </div>
+          {statusView}
+        </div>
+      )}
     </ResourceLoader>,
   )
 
   // Expects ResourceLoader component to render statusView from renderInitial.
   expect(getByTestId('render-initial')).toHaveTextContent('Initial')
 
-  // // Renders ResourceLoader component with conditional content using status.initial.
-  // renderWithRedux(
-  //   <ResourceLoader resource={'example'}>
-  //     {({status}) => <div>{status.initial && <StatusInitial />}</div>}
-  //   </ResourceLoader>,
-  //   {container},
-  // )
+  // Simulating a button click in the browser
+  Simulate.click(getByText('Load Resource'))
 
-  // // Expects ResourceLoader component to render statusView from renderInitial.
-  // expect(getByTestId('render-initial')).toHaveTextContent('Initial')
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
-// test("'JokeGenerator' component fetches a random joke a renders it", async () => {
-//   // Mocking response for axios.get(RANDOM_JOKE_URL) request
-//   mock.onGet().replyOnce(200, {
-//     value: {
-//       joke: 'Really funny joke!',
-//     },
-//   })
-
-//   // Rendering JokeGenerator component
-//   const {getByText, queryByText, queryByTestId} = render(<JokeGenerator />)
-
-//   /* Checking if a default text is being displayed when
-//    * no joke has been loaded yet.
-//    */
-//   expect(getByText("You haven't loaded any joke yet!")).toBeInTheDOM()
-
-//   // Simulating a button click in the browser
-//   Simulate.click(getByText('Load a random joke'))
-
-//   // Checking if the default text is no longer displayed.
-//   expect(queryByText("You haven't loaded any joke yet!")).not.toBeInTheDOM()
-
-//   // Checking if 'Loading...' is visible in the DOM.
-//   expect(queryByText('Loading...')).toBeInTheDOM()
-
-//   /*  'wait' method waits (4500ms by default) until a callback
-//    *  function stops throwing an error. It is being checked
-//    *  at 50ms intervals.
-//    *
-//    *  Waiting until Loading message disappear from DOM
-//    */
-//   await wait(() => expect(queryByText('Loading...')).not.toBeInTheDOM())
-
-//   // Checking if joke is being displayed.
-//   expect(queryByTestId('joke-text')).toBeInTheDOM()
-// })

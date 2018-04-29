@@ -8,7 +8,7 @@ import {
 } from '../../../modules/resource/actions'
 
 // eslint-disable-next-line no-console
-const log = (...args) => console.log(args)
+const log = (...args) => console.log(JSON.stringify(args, null, 2))
 // TODO remove ^^
 
 class ResourceLoader extends React.Component {
@@ -70,33 +70,29 @@ class ResourceLoader extends React.Component {
     return null
   }
 
-  // Load resource on events without having to create function in render
-  //  e.g. <button onClick={handleLoadResource}>Load</button>
-  handleLoadResource = e => {
-    e.preventDefault()
-    this.loadResource()
-  }
-
   loadResource = params => {
     this.setState({loading: true})
     this.requestResource(params).then(
-      this.loadResourceError,
+      this.loadResourceSuccess,
       this.loadResourceError,
     )
   }
 
   loadResourceError = error => {
-    log('error', {error})
     this.setState({loading: false, error})
   }
 
   loadResourceSuccess = payload => {
-    log('handle payload correctly for success', {payload})
     this.setState({
-      result: payload,
+      result: payload.data,
       error: null,
       loading: false,
     })
+  }
+
+  onEventLoadResource = e => {
+    e.preventDefault()
+    this.loadResource()
   }
 
   requestResource = params => {
@@ -107,6 +103,7 @@ class ResourceLoader extends React.Component {
 
   requestResourceDetail = () => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
+    log('requestResourceDetail', {resource, resourceId, entityType})
     return requestDetailRead(resource, resourceId, entityType)
   }
 
@@ -140,7 +137,7 @@ class ResourceLoader extends React.Component {
     const {children} = this.props
     const {result, error} = this.state
     return children({
-      handleLoadResource: this.handleLoadResource,
+      onEventLoadResource: this.onEventLoadResource,
       loadResource: this.loadResource,
       status: this.getStatusObj(),
       statusView: this.getStatusView(),
@@ -166,6 +163,10 @@ ResourceLoader.propTypes = {
   requestParams: PropTypes.object,
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+}
+
+ResourceLoader.defaultValues = {
+  resourceId: null,
 }
 
 const mapDispatchToProps = {
