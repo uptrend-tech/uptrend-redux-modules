@@ -63,7 +63,7 @@ const Status = ({children, initial, loading, error, success}) => {
 
 test('ResourceLoader component receives props and renders initial status', () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
-  const {getByTestId, getByText, container} = renderWithRedux(
+  const {getByTestId, container} = renderWithRedux(
     <ResourceLoader
       resource={'example'}
       renderInitial={() => <Status initial />}
@@ -93,7 +93,7 @@ test('ResourceLoader loads detail and renders results', async () => {
   })
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
-  const {getByTestId, container} = renderWithRedux(
+  const {getByTestId} = renderWithRedux(
     <ResourceLoader
       resource={'user'}
       resourceId={1}
@@ -129,7 +129,7 @@ test('ResourceLoader loads list and renders results', async () => {
   })
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
-  const {getByTestId, container} = renderWithRedux(
+  const {getByTestId} = renderWithRedux(
     <ResourceLoader
       resource={'user'}
       renderInitial={() => <Status initial />}
@@ -154,23 +154,17 @@ test('ResourceLoader loads list and renders results', async () => {
   // Expects ResourceLoader component to render statusView from renderLoading.
   expect(getByTestId('render-loading')).toHaveTextContent('Loading')
 
-  // // Expects ResourceLoader component to render statusView from renderInitial.
-  // await wait(() => expect(getByTestId('render-loading')).not.toBeInTheDOM())
-
-  // await wait(() =>
-  //   // expect(getByTestId('render-loading')).not.toBeInTheDOM()
-  //   expect(getByTestId('render-loading')).toHaveTextContent('Loading'),
-  // )
+  // // Expects ResourceLoader component to render statusView from renderSuccess.
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
-test('ResourceLoader loads when loadResource clicked and renders results', async () => {
+test('ResourceLoader loads when onEventLoadResource called and renders results', async () => {
   mockApi.onGet('/user').reply(200, {
     data: [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}],
   })
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
-  const {getByTestId, getByText, container} = renderWithRedux(
+  const {getByTestId, getByText} = renderWithRedux(
     <ResourceLoader
       resource={'user'}
       renderInitial={() => <Status initial />}
