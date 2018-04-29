@@ -7,10 +7,6 @@ import {
   resourceDetailReadRequest,
 } from '../../../modules/resource/actions'
 
-// eslint-disable-next-line no-console
-const log = (...args) => console.log(JSON.stringify(args, null, 2))
-// TODO remove ^^
-
 class ResourceLoader extends React.Component {
   state = {
     result: null,
