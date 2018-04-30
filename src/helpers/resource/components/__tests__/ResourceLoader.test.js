@@ -6,6 +6,7 @@ import {createStore, applyMiddleware, combineReducers} from 'redux'
 import {render, Simulate, wait} from 'react-testing-library'
 import {schema} from 'normalizr'
 import ReduxThunk from 'redux-thunk'
+// eslint-disable-next-line
 import 'dom-testing-library/extend-expect'
 import {middleware as ReduxSagaThunk} from 'redux-saga-thunk'
 import ResourceLoader from '../ResourceLoader'
