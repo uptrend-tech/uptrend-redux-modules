@@ -1,4 +1,11 @@
 import createResource from './modules/resource'
 import createEntities from './modules/entities'
+import createResourceHelpers from './helpers/resource'
+import createEntitiesHelpers from './helpers/entities'
 
-export {createResource, createEntities}
+export {
+  createEntities,
+  createEntitiesHelpers,
+  createResource,
+  createResourceHelpers,
+}

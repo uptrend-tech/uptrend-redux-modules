@@ -23,12 +23,12 @@ describe('createResource', () => {
     expect(generator.next().value).toEqual(
       call([api, api.post], `/${resource}`, 'foo'),
     )
-    expect(generator.next({data: detail}).value).toEqual(
+    expect(generator.next({data: {data: detail}}).value).toEqual(
       put(
         actions.resourceCreateSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload({data: detail}),
+          sagas.apiResponseToPayload({data: {data: detail}}),
           payload,
           thunk,
         ),

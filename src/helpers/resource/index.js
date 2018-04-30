@@ -1,4 +1,6 @@
 import {done, fulfilled, pending, rejected} from 'redux-saga-thunk'
+import ResourceDetailLoader from './components/ResourceDetailLoader'
+import ResourceListLoader from './components/ResourceListLoader'
 
 export default ({entities, resource}) => {
   const {
@@ -17,7 +19,8 @@ export default ({entities, resource}) => {
     entitiesSelector,
   ) => (resourcePath, entityType) => {
     const thunkName = thunkNameFn(resourcePath)
-    const action = data => requestAction(resourcePath, data, entityType)
+    // TODO decide how to handle extra needle/data for resourceUpdateRequest
+    const action = (...args) => requestAction(resourcePath, ...args, entityType)
     const resourceSelect = state => resourceSelector(state, resourcePath)
     const resultsSelect = state => {
       const detail = resourceSelect(state)
@@ -82,6 +85,8 @@ export default ({entities, resource}) => {
   )
 
   return {
+    ResourceDetailLoader,
+    ResourceListLoader,
     resourceCreate,
     resourceDelete,
     resourceDetailRead,
