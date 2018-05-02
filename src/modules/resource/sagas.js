@@ -2,9 +2,11 @@ import {takeEvery, put, call} from 'redux-saga/effects'
 import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../../utils'
 import * as actions from './actions'
 
+export const apiResponseData = response => camelKeys(response.data)
+
 export const apiResponseToPayload = response => ({
   api: {response},
-  data: camelKeys(response.data.data),
+  data: apiResponseData(response),
 })
 
 export function* createResource(api, {data}, {resource, thunk, entityType}) {

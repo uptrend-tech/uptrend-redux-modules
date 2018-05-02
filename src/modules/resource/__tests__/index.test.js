@@ -15,9 +15,9 @@ import {
 const sagaMiddleware = createSagaMiddleware()
 
 const api = {
-  post: (path, data) => Promise.resolve({data: {data}}),
-  get: () => Promise.resolve({data: {data: [1, 2, 3]}}),
-  put: (path, data) => Promise.resolve({data: {data}}),
+  post: (path, data) => Promise.resolve({data}),
+  get: () => Promise.resolve({data: [1, 2, 3]}),
+  put: (path, data) => Promise.resolve({data}),
   delete: () => Promise.resolve(),
 }
 

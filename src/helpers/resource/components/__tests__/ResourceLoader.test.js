@@ -90,9 +90,7 @@ test('ResourceLoader component receives props and renders initial status', () =>
 })
 
 test('ResourceLoader loads detail and renders results', async () => {
-  mockApi.onGet('/user/1').reply(200, {
-    data: {id: 1, name: 'Ben'}, // {id: 2, name: 'Sam'}],
-  })
+  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
@@ -127,9 +125,9 @@ test('ResourceLoader loads detail and renders results', async () => {
 })
 
 test('ResourceLoader loads list and renders results', async () => {
-  mockApi.onGet('/user').reply(200, {
-    data: [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}],
-  })
+  mockApi
+    .onGet('/user')
+    .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
@@ -162,9 +160,9 @@ test('ResourceLoader loads list and renders results', async () => {
 })
 
 test('ResourceLoader loads when onEventLoadResource called and renders results', async () => {
-  mockApi.onGet('/user').reply(200, {
-    data: [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}],
-  })
+  mockApi
+    .onGet('/user')
+    .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, getByText} = renderWithRedux(
