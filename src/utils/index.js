@@ -24,6 +24,12 @@ export const camelKeys = camelizeKeys
 export const snakeKeys = decamelizeKeys
 
 // --
+// -- General Utils
+// --
+
+export const isObject = input => typeof input === 'object'
+
+// --
 // -- Selector State Helpers
 // --
 
