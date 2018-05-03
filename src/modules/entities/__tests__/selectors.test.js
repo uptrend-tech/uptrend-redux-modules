@@ -18,20 +18,6 @@ describe('getEntity', () => {
   })
 
   cases(
-    'throws on bad arguments',
-    opts => {
-      expect(() => selectors.getEntity(opts.state, opts.entity)).toThrow()
-    },
-    [
-      {state},
-      {state, entity: null},
-      {state, entity: false},
-      {state, entity: 1},
-      {state, entity: []},
-    ],
-  )
-
-  cases(
     'empty object returned for non-existing entity',
     opts => {
       expect(selectors.getEntity(opts.state, opts.entity)).toEqual({})
@@ -53,21 +39,6 @@ describe('getDetail', () => {
   beforeEach(() => {
     state = getEntitiesState()
   })
-
-  cases(
-    'throws on bad arguments',
-    opts => {
-      expect(() =>
-        selectors.getDetail(opts.state, opts.entity, opts.id),
-      ).toThrow()
-    },
-    [
-      {state},
-      {state, entity: 'team'},
-      {state, entity: 'team', id: null},
-      {state, entity: [], id: null},
-    ],
-  )
 
   cases(
     'returns undefined',
@@ -104,27 +75,6 @@ describe('getList', () => {
   beforeEach(() => {
     state = getEntitiesState()
   })
-
-  cases(
-    'throws on bad arguments',
-    opts => {
-      expect(() =>
-        selectors.getList(opts.state, opts.entity, opts.ids),
-      ).toThrow()
-    },
-    [
-      {state},
-      {state, entity: null},
-      {state, entity: 1, ids: 1},
-      {state, entity: [], ids: 1},
-      {state, entity: {}, ids: 1},
-      {state, entity: 'team'},
-      {state, entity: 'team', ids: null},
-      {state, entity: 'team', ids: 1},
-      {state, entity: 'team', ids: 'aaa-bbb'},
-      {state, entity: 'team', ids: {}},
-    ],
-  )
 
   cases(
     'returns no results as empty list',
