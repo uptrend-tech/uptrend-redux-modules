@@ -20,7 +20,7 @@ export default ({entities, resource}) => {
   ) => (resourcePath, entityType) => {
     const thunkName = thunkNameFn(resourcePath)
     // TODO decide how to handle extra needle/data for resourceUpdateRequest
-    const action = (...args) => requestAction(resourcePath, ...args, entityType)
+    const action = requestAction(resourcePath, entityType)
     const resourceSelect = state => resourceSelector(state, resourcePath)
     const resultsSelect = state => {
       const detail = resourceSelect(state)
@@ -43,42 +43,48 @@ export default ({entities, resource}) => {
   }
 
   const resourceCreate = createHelper(
-    resourceCreateRequest,
+    (resourcePath, entityType) => params =>
+      resourceCreateRequest(resourcePath, params, entityType),
     resourcePath => `${resourcePath}Create`,
     resource.selectors.getDetail,
     entities.selectors.getDetail,
   )
 
   const resourceDelete = createHelper(
-    resourceDeleteRequest,
+    (resourcePath, entityType) => needle =>
+      resourceDeleteRequest(resourcePath, needle, entityType),
     resourcePath => `${resourcePath}Delete`,
     resource.selectors.getList,
     entities.selectors.getList,
   )
 
   const resourceDetailRead = createHelper(
-    resourceDetailReadRequest,
+    (resourcePath, entityType) => needle =>
+      resourceDetailReadRequest(resourcePath, needle, entityType),
     resourcePath => `${resourcePath}DetailRead`,
     resource.selectors.getDetail,
     entities.selectors.getDetail,
   )
 
   const resourceListCreate = createHelper(
-    resourceListCreateRequest,
+    (resourcePath, entityType) => data =>
+      resourceListCreateRequest(resourcePath, data, entityType),
     resourcePath => `${resourcePath}ListCreate`,
     resource.selectors.getList,
     entities.selectors.getList,
   )
 
   const resourceListRead = createHelper(
-    resourceListReadRequest,
+    (resourcePath, entityType) => params =>
+      resourceListReadRequest(resourcePath, params, entityType),
     resourcePath => `${resourcePath}ListRead`,
     resource.selectors.getList,
     entities.selectors.getList,
   )
 
   const resourceUpdate = createHelper(
-    resourceUpdateRequest,
+    (resourcePath, entityType) => (needle, data) =>
+      resourceUpdateRequest(resourcePath, needle, data, entityType),
     resourcePath => `${resourcePath}Update`,
     resource.selectors.getDetail,
     entities.selectors.getDetail,

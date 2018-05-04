@@ -329,9 +329,10 @@ describe('resourceUpdate', () => {
   cases(
     'action',
     opts => {
+      const needle = {id: opts.payload.id}
       const {action} = resourceUpdate(opts.resource, opts.entitiy)
-      expect(action(opts.payload)).toEqual(
-        expectActions(opts.resource, opts.payload, opts.entitiy),
+      expect(action(needle, opts.payload)).toEqual(
+        expectActions(opts.resource, needle, opts.payload, opts.entitiy),
       )
     },
     {
