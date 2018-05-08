@@ -4,7 +4,7 @@ import ResourceLoader from './ResourceLoader'
 
 const ResourceDetailLoader = props => <ResourceLoader {...props} list={false} />
 
-ResourceLoader.propTypes = {
+ResourceDetailLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
   loadOnMount: PropTypes.bool,
