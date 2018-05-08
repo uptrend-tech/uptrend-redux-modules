@@ -23,7 +23,7 @@ class ResourceLoader extends React.Component {
   getStatusObj() {
     const error = !!this.state.error
     const loading = this.state.loading
-    const success = !!this.state.result
+    const success = !!this.state.result && !loading
     const initial = !error && !loading && !success
 
     return {error, initial, loading, success}
