@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ResourceLoader from './ResourceLoader'
 
-const ResourceListLoader = props => <ResourceLoader {...{props}} list={true} />
+const ResourceListLoader = props => <ResourceLoader {...props} list={true} />
 
 ResourceListLoader.propTypes = {
   children: PropTypes.func.isRequired,

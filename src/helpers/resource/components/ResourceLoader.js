@@ -129,9 +129,12 @@ class ResourceLoader extends React.Component {
   }
 
   render() {
-    const {children} = this.props
+    if (typeof this.props.children !== 'function') {
+      throw new Error('Children should be a Function!')
+    }
+
     const {result, error} = this.state
-    return children({
+    return this.props.children({
       onEventLoadResource: this.onEventLoadResource,
       loadResource: this.loadResource,
       status: this.getStatusObj(),
