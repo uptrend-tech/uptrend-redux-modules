@@ -130,7 +130,7 @@ class ResourceLoader extends React.Component {
 
   render() {
     if (typeof this.props.children !== 'function') {
-      throw 'Children should be a Function!'
+      throw new Error('Children should be a Function!')
     }
 
     const {result, error} = this.state
