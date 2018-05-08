@@ -1,4 +1,50 @@
 # Usage Examples
+
+## ResourceLoader Components
+### ResourceDetailLoader
+
+```js
+const OrgDetailAutoLoader = () => (
+  <ResourceDetailLoader resource="org" resourceId={123} loadOnMount>
+    {({status, result}) => (
+      <div>
+        {['initial', 'loading', 'error', 'success']
+          .filter(key => status[key])
+          .map(state => <code key={state}>{state}</code>)}
+
+        <div>
+          {result && result.map(org => <div key={org.id}>{org.name}</div>)}
+        </div>
+      </div>
+    )}
+  </ResourceListLoader>
+)
+```
+
+### ResourceListLoader
+
+```js
+const OrgListLoader = () => (
+  <ResourceListLoader resource="org">
+    {({status, result, onEventLoadResource}) => (
+      <div>
+        <button onClick={onEventLoadResource} disabled={status.loading}>
+          Load Resource
+        </button>
+
+        {['initial', 'loading', 'error', 'success']
+          .filter(key => status[key])
+          .map(state => <code key={state}>{state}</code>)}
+
+        <div>
+          {result && result.map(org => <div key={org.id}>{org.name}</div>)}
+        </div>
+      </div>
+    )}
+  </ResourceListLoader>
+)
+```
+
 ## Using Resource Redux-Saga-Thunk Style
 
 Resource actions provide a promise based interface that `redux-saga-thunk`
