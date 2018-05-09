@@ -1,49 +1,74 @@
 # Usage Examples
-
-## ResourceLoader Components
-### ResourceDetailLoader
-
+## ResourceDetailLoader Component
 ```js
-const OrgDetailAutoLoader = () => (
-  <ResourceDetailLoader resource="org" resourceId={123} loadOnMount>
-    {({status, result}) => (
+const OrgDetailAutoLoader = ({orgId}) => (
+  <ResourceDetailLoader resource="org" resourceId={orgId} loadOnMount>
+    {({status, result, onEventLoadResource}) => (
       <div>
-        {['initial', 'loading', 'error', 'success']
-          .filter(key => status[key])
-          .map(state => <code key={state}>{state}</code>)}
+        <pre>{'loadOnMount={true}'}</pre>
 
-        <div>
-          {result && result.map(org => <div key={org.id}>{org.name}</div>)}
-        </div>
+        <button onClick={onEventLoadResource} disabled={status.loading}>
+          Load Resource
+        </button>
+
+        {status.initial && <span className="label label-default">initial</span>}
+        {status.loading && <span className="label label-primary">loading</span>}
+        {status.error && <span className="label label-danger">error</span>}
+        {status.success && <span className="label label-success">success</span>}
+
+        {status.loading
+          ? <h5>Loading...</h5>
+          : result && (
+            <div>
+              <div>Org ID: <code>{result.id}</code></div>
+              <div>Active: <code>{result.active ? 'Yes' : 'No'}</code></div>
+            </div>
+          )}
       </div>
     )}
-  </ResourceListLoader>
+  </ResourceDetailLoader>
 )
 ```
 
-### ResourceListLoader
+<img src="https://user-images.githubusercontent.com/126236/39789235-7e70c508-52e3-11e8-8126-da099e063d9b.gif" width="370">
+
+## ResourceListLoader Component
 
 ```js
 const OrgListLoader = () => (
   <ResourceListLoader resource="org">
     {({status, result, onEventLoadResource}) => (
       <div>
+        <div>
+          <pre>{'loadOnMount={false}'}</pre>
+          <pre>{JSON.stringify(status, null, 2)}</pre>
+        </div>
+
         <button onClick={onEventLoadResource} disabled={status.loading}>
           Load Resource
         </button>
 
-        {['initial', 'loading', 'error', 'success']
-          .filter(key => status[key])
-          .map(state => <code key={state}>{state}</code>)}
+        {status.initial && <span className="label label-default">initial</span>}
+        {status.loading && <span className="label label-primary">loading</span>}
+        {status.error && <span className="label label-danger">error</span>}
+        {status.success && <span className="label label-success">success</span>}
 
-        <div>
-          {result && result.map(org => <div key={org.id}>{org.name}</div>)}
-        </div>
+        {status.loading
+          ? <h5>Loading...</h5>
+          : result && result.map(org => (
+            <div key={org.id}>
+              <span>Org ID: <code>{org.id}</code></span>
+              <span>Active: <code>{org.active ? 'Yes' : 'No'}</code></span>
+            </div>
+          ))}
       </div>
     )}
   </ResourceListLoader>
 )
 ```
+
+<img src="https://user-images.githubusercontent.com/126236/39788918-9b5115e4-52e1-11e8-8107-d5e9ff14e727.gif" width="370">
+
 
 ## Using Resource Redux-Saga-Thunk Style
 
