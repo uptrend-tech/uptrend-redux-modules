@@ -193,6 +193,17 @@ describe('middlewareFactory:isDevEnv=true', () => {
     ])
   })
 
+  it('skips normalizing if no data in payload', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'RESP',
+      payload: {},
+      meta: {entityType: 'team', normalizeEntities: true},
+    }
+    expect(store.dispatch(action)).toEqual(action)
+    expect(store.getActions()).toEqual([action])
+  })
+
   it('logs w/ console.warn when no matching entity schema', () => {
     const store = mockStore({})
     const respData = {
