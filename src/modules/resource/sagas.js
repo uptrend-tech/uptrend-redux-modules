@@ -68,7 +68,7 @@ export function* readResourceList(
   {resource, thunk, entityType},
 ) {
   try {
-    const resp = yield call([api, api.get], `/${resource}`, {params})
+    const resp = yield call([api, api.get], `/${resource}`, params)
 
     yield put(
       actions.resourceListReadSuccess(

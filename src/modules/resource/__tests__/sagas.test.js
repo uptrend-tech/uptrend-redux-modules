@@ -62,7 +62,7 @@ describe('readResourceList', () => {
     const detail = [1, 2, 3]
     const generator = sagas.readResourceList(api, payload, meta)
     expect(generator.next().value).toEqual(
-      call([api, api.get], `/${resource}`, payload),
+      call([api, api.get], `/${resource}`, payload.params),
     )
     expect(generator.next({data: detail}).value).toEqual(
       put(
@@ -80,7 +80,7 @@ describe('readResourceList', () => {
   it('calls failure', () => {
     const generator = sagas.readResourceList(api, payload, meta)
     expect(generator.next().value).toEqual(
-      call([api, api.get], `/${resource}`, payload),
+      call([api, api.get], `/${resource}`, payload.params),
     )
     expect(generator.throw('test').value).toEqual(
       put(

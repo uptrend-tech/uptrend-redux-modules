@@ -204,3 +204,41 @@ test('ResourceLoader loads when onEventLoadResource called and renders results',
   // Expects ResourceLoader component to render statusView from renderLoading.
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
+
+test('ResourceLoader loads with params passed in', async () => {
+  mockApi
+    .onGet('/dude', {params: {best: 'dude'}})
+    .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader
+      resource={'dude'}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => (
+        <Status success>
+          {userList.map(user => (
+            <div key={user.id}>
+              {user.id}:{user.name}
+            </div>
+          ))}
+        </Status>
+      )}
+      requestParams={{best: 'dude'}}
+      loadOnMount
+      list
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  // expect(api.get).toHaveBeenCalled()
+  // console.log(mockApi.history.get)
+  // // Expects ResourceLoader component to render statusView from renderSuccess.
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
