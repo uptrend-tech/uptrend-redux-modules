@@ -6,7 +6,14 @@ const middlewareFactory = ({isDevEnv = false, schemas = {}}) => {
   const middleware = store => next => action => {
     const {payload, meta} = action
 
-    if (meta && meta.normalizeEntities && meta.entityType) {
+    const isNormalized = !!(
+      payload.data &&
+      meta &&
+      meta.normalizeEntities &&
+      meta.entityType
+    )
+
+    if (isNormalized) {
       const schema = schemas[meta.entityType]
 
       if (schema) {
