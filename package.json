@@ -1,7 +1,8 @@
 {
   "name": "uptrend-redux-modules",
   "version": "0.0.0-semantically-released",
-  "description": "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
+  "description":
+    "Redux Module (redux + redux-saga + redux-saga-thunk) for requesting resources from API and storing response data into entities if provided a normalizr schema.",
   "main": "dist/index.js",
   "engines": {
     "node": "> 4",
@@ -21,9 +22,7 @@
     "setup": "yarn install && yarn run validate -s",
     "cm": "uptrend-scripts precommit && git-cz"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "keywords": [],
   "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
   "license": "MIT",
@@ -38,7 +37,8 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "redux-saga-thunk": "^0.7.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "warning": "^3.0.0"
   },
   "devDependencies": {
     "apisauce": "^0.14.3",
@@ -53,11 +53,7 @@
     "redux-mock-store": "^1.5.1",
     "uptrend-scripts": "^0.38.0"
   },
-  "eslintIgnore": [
-    "node_modules",
-    "coverage",
-    "dist"
-  ],
+  "eslintIgnore": ["node_modules", "coverage", "dist"],
   "bugs": {
     "url": "https://github.com/uptrend-tech/uptrend-redux-modules/issues"
   },

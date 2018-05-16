@@ -64,113 +64,109 @@ not strict guidelines by any means.
 
 * `src/store/modules/resource/index.js`
 
-   ```js
-   // - src/store/modules/resource/index.js
-   import {createResource} from 'uptrend-redux-modules';
-   
-   // createResource(...) => { actions, reducers, sagas, selectors }
-   export default createResource();
-   ```
-   
- * `src/store/modules/entities/index.js`
+  ```js
+  // - src/store/modules/resource/index.js
+  import {createResource} from 'uptrend-redux-modules'
 
-   ```js
-   // - src/store/modules/entities/index.js
-   import {createEntities} from 'uptrend-redux-modules';
-   import schemas from './schemas';
-   
-   // createEntities(...) => { actions, middleware, reducers, sagas, selectors }
-   export default createEntities({schemas});
-   ```
-   
- * `src/store/modules/entities/schema.js`
+  // createResource(...) => { actions, reducers, sagas, selectors }
+  export default createResource()
+  ```
 
-   ```js
-   // - src/store/modules/entities/schemas.js
-   import {schema} from 'normalizr';
-   
-   export const user = new schema.Entity('users');
-   export const team = new schema.Entity('teams', {owner: user, members: [user]});
-   ```
-   
- * `src/store/actions.js`
+* `src/store/modules/entities/index.js`
 
-   ```js
-   // - src/store/actions.js
-   import {actions as entities} from 'src/store/modules/entities';
-   import {actions as resource} from 'src/store/modules/resource';
-   
-   export {
-     ...entities,
-     ...resource,
-   }
-   ```
-   
- * `src/store/middlewares.js`
+  ```js
+  // - src/store/modules/entities/index.js
+  import {createEntities} from 'uptrend-redux-modules'
+  import schemas from './schemas'
 
-   ```js
-   // - src/store/middlewares.js
-   import {middleware as entities} from 'src/store/modules/entities';
-   
-   export default [
-     // redux-modules middlewares
-     entities,
-   ]
-   ```
-   
+  // createEntities(...) => { actions, middleware, reducers, sagas, selectors }
+  export default createEntities({schemas})
+  ```
 
- * `src/store/reducers.js`
+* `src/store/modules/entities/schema.js`
 
-   ```js
-   // - src/store/reducer.js
-   import { combineReducers } from 'redux';
-   
-   import {reducer as entities} from 'src/store/modules/entities';
-   import {reducer as resource} from 'src/store/modules/resource';
-   
-   export default combineReducers({
-     entities,
-     resource,
-   })
-   ```
-   
- * `src/store/sagas.js`
+  ```js
+  // - src/store/modules/entities/schemas.js
+  import {schema} from 'normalizr'
 
-   ```js
-   // - src/store/sagas.js
-   import {sagas as entities} from 'src/store/modules/entities';
-   import {sagas as resource} from 'src/store/modules/resource';
-   
-   // single entry point to start all Sagas at once
-   export default function*(services = {}) {
-     try {
-       yield all([
-         // app specific sagas
-         example(services),
-   
-         // redux-modules sagas
-         entities(services),
-         resource(services),
-       ]);
-     } catch (error) {
-       console.error('ROOT SAGA ERROR!!!', error);
-       console.trace();
-     }
-   }
-   ```
-   
- * `src/store/selectors.js`
+  export const user = new schema.Entity('users')
+  export const team = new schema.Entity('teams', {owner: user, members: [user]})
+  ```
 
-   ```js
-   // - src/store/selectors.js
-   import {selectors as fromEntities} from 'src/store/modules/entities';
-   import {selectors as fromResource} from 'src/store/modules/resource';
-   
-   export {
-     fromEntities,
-     fromResource,
-   }
-   ```
+* `src/store/actions.js`
+
+  ```js
+  // - src/store/actions.js
+  import {actions as entities} from 'src/store/modules/entities';
+  import {actions as resource} from 'src/store/modules/resource';
+
+  export {
+    ...entities,
+    ...resource,
+  }
+  ```
+
+* `src/store/middlewares.js`
+
+  ```js
+  // - src/store/middlewares.js
+  import {middleware as entities} from 'src/store/modules/entities'
+
+  export default [
+    // redux-modules middlewares
+    entities,
+  ]
+  ```
+
+- `src/store/reducers.js`
+
+  ```js
+  // - src/store/reducer.js
+  import {combineReducers} from 'redux'
+
+  import {reducer as entities} from 'src/store/modules/entities'
+  import {reducer as resource} from 'src/store/modules/resource'
+
+  export default combineReducers({
+    entities,
+    resource,
+  })
+  ```
+
+- `src/store/sagas.js`
+
+  ```js
+  // - src/store/sagas.js
+  import {sagas as entities} from 'src/store/modules/entities'
+  import {sagas as resource} from 'src/store/modules/resource'
+
+  // single entry point to start all Sagas at once
+  export default function*(services = {}) {
+    try {
+      yield all([
+        // app specific sagas
+        example(services),
+
+        // redux-modules sagas
+        entities(services),
+        resource(services),
+      ])
+    } catch (error) {
+      console.error('ROOT SAGA ERROR!!!', error)
+      console.trace()
+    }
+  }
+  ```
+
+- `src/store/selectors.js`
+
+  ```js
+  // - src/store/selectors.js
+  import {selectors as fromEntities} from 'src/store/modules/entities'
+  import {selectors as fromResource} from 'src/store/modules/resource'
+
+  export {fromEntities, fromResource}
+  ```
 
 ## Usage
 
@@ -192,9 +188,11 @@ here!
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/126236?v=4" width="100px;"/><br /><sub><b>Brandon Orther</b></sub>](http://uptrend.tech)<br />[💻](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Code") [🚇](#infra-orther "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Tests") [💡](#example-orther "Examples") |
 | :---: |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Thanks goes to these people ([emoji key][emojis]):

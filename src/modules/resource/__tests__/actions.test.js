@@ -426,7 +426,7 @@ test('resourceDeleteSuccess', () => {
         request: 'request',
         resource: 'resourceName',
         thunk: 'thunk',
-        normalizeEntities: true,
+        removeEntities: true,
       }),
     }),
   )

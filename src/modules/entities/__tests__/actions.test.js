@@ -6,3 +6,13 @@ test('entitiesReceive', () => {
     payload: 'test',
   })
 })
+
+test('entitiesRemove', () => {
+  expect(actions.entitiesRemove('test', [1])).toEqual({
+    type: actions.ENTITIES_REMOVE,
+    payload: {
+      entityType: 'test',
+      entityIds: [1],
+    },
+  })
+})
