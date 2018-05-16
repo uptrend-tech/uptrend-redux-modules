@@ -1,12 +1,7 @@
 import configureStore from 'redux-mock-store'
 import {getSchemas} from '../../../utils/test/fixtures'
 import {entitiesReceive} from '../actions'
-import middlewareFactory, {
-  payloadData,
-  normalizeEntities,
-  entityType,
-  entitySchema,
-} from '../middleware'
+import middlewareFactory from '../middleware'
 
 const userTom = {uuid: 'aaa', name: 'Tom'}
 const userSam = {uuid: 'bbb', name: 'Sam'}

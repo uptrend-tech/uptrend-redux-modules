@@ -1,17 +1,18 @@
-// _appendKey : ([k], v, k) -> [k]
-const _appendKey = (keys, val, key) => append(key, keys)
+// // _appendKey : ([k], v, k) -> [k]
+// const _appendKey = (keys, val, key) => append(key, keys)
 
 // _assign : ({ k: v }, { k: v }) -> { k: v }
 const _assign = (a, b) => {
+  // eslint-disable-next-line guard-for-in
   for (const key in b) a[key] = b[key]
   return a
 }
 
-// _comp : (a, b) -> Number
-const _comp = (a, b) => (a < b ? -1 : b < a ? 1 : 0)
+// // _comp : (a, b) -> Number
+// const _comp = (a, b) => (a < b ? -1 : b < a ? 1 : 0)
 
-// _index : ({ k: Number }, String) -> { k: Number }
-const _index = (idx, key) => assoc(key, 1, idx)
+// // _index : ({ k: Number }, String) -> { k: Number }
+// const _index = (idx, key) => assoc(key, 1, idx)
 
 // _partial : ((a... -> b), [a]) -> a... -> b
 const _partial = (f, args) => f.bind(null, ...args)
@@ -50,6 +51,7 @@ const assoc = curry((prop, val, obj) => {
   return res
 })
 
+/* eslint-disable */
 // dissocPath : [k] -> { k: v } -> { k: v }
 export const dissocPath = curry(
   ([head, ...tail], obj) =>
@@ -61,3 +63,4 @@ export const dissocPath = curry(
           ? assoc(head, dissocPath(tail, obj[head]), obj)
           : dissoc(head, obj),
 )
+/* eslint-enable */
