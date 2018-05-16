@@ -1,7 +1,12 @@
 import configureStore from 'redux-mock-store'
 import {getSchemas} from '../../../utils/test/fixtures'
-import middlewareFactory from '../middleware'
 import {entitiesReceive} from '../actions'
+import middlewareFactory, {
+  payloadData,
+  normalizeEntities,
+  entityType,
+  entitySchema,
+} from '../middleware'
 
 const userTom = {uuid: 'aaa', name: 'Tom'}
 const userSam = {uuid: 'bbb', name: 'Sam'}
@@ -201,24 +206,6 @@ describe('middlewareFactory:isDevEnv=true', () => {
       meta: {entityType: 'team', normalizeEntities: true},
     }
     expect(store.dispatch(action)).toEqual(action)
-    expect(store.getActions()).toEqual([action])
-  })
-
-  it('logs w/ console.warn when no matching entity schema', () => {
-    const store = mockStore({})
-    const respData = {
-      id: 1,
-      name: 'bad news bears',
-    }
-    const action = {
-      type: 'RESP',
-      payload: {data: {...respData}},
-      meta: {entityType: 'noschema', normalizeEntities: true},
-    }
-
-    expect(store.dispatch(action)).toEqual(action)
-    // eslint-disable-next-line no-console
-    expect(console.warn).toBeCalled()
     expect(store.getActions()).toEqual([action])
   })
 })

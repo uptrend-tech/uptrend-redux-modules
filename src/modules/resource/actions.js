@@ -298,7 +298,7 @@ export const resourceDeleteSuccess = (
     thunk,
     resource,
     entityType,
-    normalizeEntities: true,
+    removeEntities: true,
   },
 })
 
