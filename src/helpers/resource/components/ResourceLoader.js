@@ -9,7 +9,7 @@ import {
 
 class ResourceLoader extends React.Component {
   state = {
-    result: null,
+    requestResult: null,
     error: null,
     loading: false,
   }
@@ -20,10 +20,18 @@ class ResourceLoader extends React.Component {
     }
   }
 
+  getRequesResultValuesObj() {
+    const {requestResult} = this.state
+    const entities = requestResult && requestResult.entities
+    const result = requestResult && requestResult.data
+
+    return {entities, requestResult, result}
+  }
+
   getStatusObj() {
     const error = !!this.state.error
     const loading = this.state.loading
-    const success = !!this.state.result && !loading
+    const success = !!this.state.requestResult && !loading
     const initial = !error && !loading && !success
 
     return {error, initial, loading, success}
@@ -44,21 +52,21 @@ class ResourceLoader extends React.Component {
     return renderLoading ? renderLoading() : null
   }
 
-  getStatusViewSuccess(result) {
+  getStatusViewSuccess(result, requestResultValues) {
     const {renderSuccess} = this.props
-    return renderSuccess ? renderSuccess(result) : null
+    return renderSuccess ? renderSuccess(result, requestResultValues) : null
   }
 
   getStatusView() {
-    const {error, result} = this.state
     const status = this.getStatusObj()
 
     if (status.error) {
-      return this.getStatusViewError(error)
+      return this.getStatusViewError(this.state.error)
     } else if (status.loading) {
       return this.getStatusViewLoading()
     } else if (status.success) {
-      return this.getStatusViewSuccess(result)
+      const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+      return this.getStatusViewSuccess(result, requestResultValues)
     } else if (status.initial) {
       return this.getStatusViewInitial()
     }
@@ -79,8 +87,16 @@ class ResourceLoader extends React.Component {
   }
 
   loadResourceSuccess = payload => {
+    const requestResult = {
+      api: payload.api,
+      data: payload.data,
+      entities: payload.entities,
+      entityType: payload.entityType,
+      resource: payload.resource,
+    }
+
     this.setState({
-      result: payload.data,
+      requestResult,
       error: null,
       loading: false,
     })
@@ -122,7 +138,7 @@ class ResourceLoader extends React.Component {
 
   resetState = () => {
     this.setState({
-      result: null,
+      requestResult: null,
       error: null,
       loading: false,
     })
@@ -133,14 +149,19 @@ class ResourceLoader extends React.Component {
       throw new Error('Children should be a Function!')
     }
 
-    const {result, error} = this.state
+    const {error} = this.state
+    const {entityType} = this.props
+    const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+
     return this.props.children({
       onEventLoadResource: this.onEventLoadResource,
       loadResource: this.loadResource,
       status: this.getStatusObj(),
       statusView: this.getStatusView(),
       error,
+      entityType,
       result,
+      ...requestResultValues,
     })
   }
 }
