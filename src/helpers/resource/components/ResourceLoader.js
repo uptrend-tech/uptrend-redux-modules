@@ -150,6 +150,7 @@ class ResourceLoader extends React.Component {
     }
 
     const {error} = this.state
+    const {entityType} = this.props
     const {result, ...requestResultValues} = this.getRequesResultValuesObj()
 
     return this.props.children({
@@ -158,6 +159,7 @@ class ResourceLoader extends React.Component {
       status: this.getStatusObj(),
       statusView: this.getStatusView(),
       error,
+      entityType,
       result,
       ...requestResultValues,
     })
