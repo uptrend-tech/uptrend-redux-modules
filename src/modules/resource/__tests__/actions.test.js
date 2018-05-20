@@ -18,7 +18,7 @@ test('resourceCreateRequest', () => {
       meta: expect.objectContaining({
         resource: 'resourceName',
         entityType: 'schemaName',
-        thunk: `resourceNameCreate`,
+        thunk: {name: `resourceNameCreate`},
       }),
     }),
   )
@@ -94,7 +94,7 @@ test('resourceListCreateRequest', () => {
       meta: expect.objectContaining({
         resource: 'resourceName',
         entityType: 'schemaName',
-        thunk: `resourceNameListCreate`,
+        thunk: {name: `resourceNameListCreate`},
       }),
     }),
   )
@@ -169,6 +169,7 @@ test('resourceListReadRequest', () => {
       },
       meta: expect.objectContaining({
         resource: 'resourceName',
+        thunk: {name: `resourceNameListRead`},
       }),
     }),
   )
@@ -242,6 +243,7 @@ test('resourceDetailReadRequest', () => {
       },
       meta: expect.objectContaining({
         resource: 'resourceName',
+        thunk: {name: 'resourceNameDetailRead'},
       }),
     }),
   )
@@ -321,6 +323,7 @@ test('resourceUpdateRequest', () => {
       },
       meta: expect.objectContaining({
         resource: 'resourceName',
+        thunk: {name: 'resourceNameUpdate'},
       }),
     }),
   )
@@ -398,7 +401,7 @@ test('resourceDeleteRequest', () => {
       meta: expect.objectContaining({
         entityType: 'schemaName',
         resource: 'resourceName',
-        thunk: `resourceNameDelete`,
+        thunk: {name: 'resourceNameDelete'},
       }),
     }),
   )

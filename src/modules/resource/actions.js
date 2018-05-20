@@ -8,7 +8,7 @@ export const resourceCreateRequest = (resource, data, entityType) => ({
   meta: {
     resource,
     entityType,
-    thunk: `${resource}Create`,
+    thunk: {name: `${resource}Create`},
   },
 })
 
@@ -62,7 +62,7 @@ export const resourceListCreateRequest = (resource, data, entityType) => ({
   meta: {
     resource,
     entityType,
-    thunk: `${resource}ListCreate`,
+    thunk: {name: `${resource}ListCreate`},
   },
 })
 
@@ -116,7 +116,7 @@ export const resourceListReadRequest = (resource, params, entityType) => ({
   meta: {
     resource,
     entityType,
-    thunk: `${resource}ListRead`,
+    thunk: {name: `${resource}ListRead`},
   },
 })
 
@@ -170,7 +170,7 @@ export const resourceDetailReadRequest = (resource, needle, entityType) => ({
   meta: {
     entityType,
     resource,
-    thunk: `${resource}DetailRead`,
+    thunk: {name: `${resource}DetailRead`},
   },
 })
 
@@ -224,7 +224,7 @@ export const resourceUpdateRequest = (resource, needle, data, entityType) => ({
   meta: {
     entityType,
     resource,
-    thunk: `${resource}Update`,
+    thunk: {name: `${resource}Update`},
   },
 })
 
@@ -278,7 +278,7 @@ export const resourceDeleteRequest = (resource, needle, entityType) => ({
   meta: {
     entityType,
     resource,
-    thunk: `${resource}Delete`,
+    thunk: {name: `${resource}Delete`},
   },
 })
 
