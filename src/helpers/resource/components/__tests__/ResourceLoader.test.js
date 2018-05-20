@@ -242,3 +242,75 @@ test('ResourceLoader loads with params passed in', async () => {
   // // Expects ResourceLoader component to render statusView from renderSuccess.
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
+
+test('ResourceLoader loads detail entity and renders results', async () => {
+  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader
+      resource={'user'}
+      resourceId={1}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={user => (
+        <Status success>
+          {user.id}:{user.name}
+        </Status>
+      )}
+      entityType="user"
+      loadOnMount
+      list={false}
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  /*  'wait' method waits (4500ms by default) until a callback
+   *  function stops throwing an error. It is being checked
+   *  at 50ms intervals.
+   *
+   *  Waiting for renderSuccess to show in DOM
+   */
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+test('ResourceLoader loads list entities and renders results', async () => {
+  mockApi
+    .onGet('/user')
+    .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader
+      resource={'user'}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => (
+        <Status success>
+          {userList.map(user => (
+            <div key={user.id}>
+              {user.id}:{user.name}
+            </div>
+          ))}
+        </Status>
+      )}
+      entityType="user"
+      loadOnMount
+      list
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  // // Expects ResourceLoader component to render statusView from renderSuccess.
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
