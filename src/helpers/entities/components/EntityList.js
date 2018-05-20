@@ -11,8 +11,9 @@ export default ({entities}) => {
 
   EntityList.propTypes = {
     children: PropTypes.func,
-    entityIds: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
+    entityIds: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    ).isRequired,
     entityType: PropTypes.string.isRequired,
     entityList: PropTypes.arrayOf(PropTypes.object),
   }
