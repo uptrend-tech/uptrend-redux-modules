@@ -15,7 +15,7 @@ class ResourceLoader extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.loadOnMount) {
+    if (this.props.autoLoad) {
       this.loadResource()
     }
   }
@@ -170,7 +170,7 @@ ResourceLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
   list: PropTypes.bool.isRequired,
-  loadOnMount: PropTypes.bool,
+  autoLoad: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
   renderInitial: PropTypes.func,

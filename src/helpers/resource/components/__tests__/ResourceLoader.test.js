@@ -62,7 +62,7 @@ const Status = ({children, initial, loading, error, success}) => {
   throw new Error('Status component not passed status prop')
 }
 
-test('ResourceLoader component receives props and renders initial status', () => {
+test('component receives props and renders initial status', () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, container} = renderWithRedux(
     <ResourceLoader
@@ -89,7 +89,7 @@ test('ResourceLoader component receives props and renders initial status', () =>
   expect(getByTestId('render-initial')).toHaveTextContent('Initial')
 })
 
-test('ResourceLoader loads detail and renders results', async () => {
+test('auto loads detail and renders results', async () => {
   mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
@@ -105,7 +105,7 @@ test('ResourceLoader loads detail and renders results', async () => {
           {user.id}:{user.name}
         </Status>
       )}
-      loadOnMount
+      autoLoad
       list={false}
     >
       {({statusView}) => <div>{statusView}</div>}
@@ -124,7 +124,7 @@ test('ResourceLoader loads detail and renders results', async () => {
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
-test('ResourceLoader loads list and renders results', async () => {
+test('auto loads list and renders results', async () => {
   mockApi
     .onGet('/user')
     .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
@@ -145,7 +145,7 @@ test('ResourceLoader loads list and renders results', async () => {
           ))}
         </Status>
       )}
-      loadOnMount
+      autoLoad
       list
     >
       {({statusView}) => <div>{statusView}</div>}
@@ -159,7 +159,7 @@ test('ResourceLoader loads list and renders results', async () => {
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
-test('ResourceLoader loads when onEventLoadResource called and renders results', async () => {
+test('auto loads when onEventLoadResource called and renders results', async () => {
   mockApi
     .onGet('/user')
     .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
@@ -205,7 +205,7 @@ test('ResourceLoader loads when onEventLoadResource called and renders results',
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
-test('ResourceLoader loads with params passed in', async () => {
+test('auto loads with params passed in', async () => {
   mockApi
     .onGet('/dude', {params: {best: 'dude'}})
     .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
@@ -227,7 +227,7 @@ test('ResourceLoader loads with params passed in', async () => {
         </Status>
       )}
       requestParams={{best: 'dude'}}
-      loadOnMount
+      autoLoad
       list
     >
       {({statusView}) => <div>{statusView}</div>}
