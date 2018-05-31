@@ -20,6 +20,16 @@
         "test",
         "example"
       ]
+    },
+    {
+      "login": "dyyylan",
+      "name": "Dylan Foster",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3457993?v=4",
+      "profile": "https://www.linkedin.com/profile/view?id=233369645",
+      "contributions": [
+        "bug",
+        "ideas"
+      ]
     }
   ]
 }
