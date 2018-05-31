@@ -8,11 +8,9 @@ const create = (baseURL = 'https://uptrend.tech/') => {
     },
     timeout: 10000,
   })
-  // const getRate = () => api.get('rate_limit')
 
   return {
     api,
-    // getRate,
     axiosInstance: api.axiosInstance,
   }
 }
