@@ -1,6 +1,6 @@
 import MockAdapter from 'axios-mock-adapter'
 // eslint-disable-next-line
-import 'dom-testing-library/extend-expect';
+import 'dom-testing-library/extend-expect'
 import {schema} from 'normalizr'
 import React from 'react'
 import {Provider} from 'react-redux'

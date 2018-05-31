@@ -188,9 +188,11 @@ here!
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/126236?v=4" width="100px;"/><br /><sub><b>Brandon Orther</b></sub>](http://uptrend.tech)<br />[💻](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Code") [🚇](#infra-orther "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Tests") [💡](#example-orther "Examples") | [<img src="https://avatars1.githubusercontent.com/u/3457993?v=4" width="100px;"/><br /><sub><b>Dylan Foster</b></sub>](https://www.linkedin.com/profile/view?id=233369645)<br />[🐛](https://github.com/uptrend-tech/redux-modules-resource-entities/issues?q=author%3Adyyylan "Bug reports") [🤔](#ideas-dyyylan "Ideas, Planning, & Feedback") |
 | :---: | :---: |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Thanks goes to these people ([emoji key][emojis]):

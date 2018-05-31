@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import 'dom-testing-library/extend-expect';
+import 'dom-testing-library/extend-expect'
 import React from 'react'
 import {Simulate, wait} from 'react-testing-library'
 import ResourceLoader from '../ResourceLoader'
