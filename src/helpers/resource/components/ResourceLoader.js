@@ -20,6 +20,15 @@ class ResourceLoader extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.autoLoad && this.nextPropsChangeResource(nextProps)) {
+      this.resetState(() => {
+        // wait for state to update before loading
+        this.loadResource()
+      })
+    }
+  }
+
   getRequesResultValuesObj() {
     const {requestResult} = this.state
     const entities = requestResult && requestResult.entities
@@ -102,6 +111,12 @@ class ResourceLoader extends React.Component {
     })
   }
 
+  nextPropsChangeResource(nextProps) {
+    if (nextProps.resource !== this.props.resource) return true
+    if (nextProps.resourceId !== this.props.resourceId) return true
+    return false
+  }
+
   onEventLoadResource = e => {
     e.preventDefault()
     this.loadResource()
@@ -136,12 +151,15 @@ class ResourceLoader extends React.Component {
     return requestListRead(resource, params, entityType)
   }
 
-  resetState = () => {
-    this.setState({
-      requestResult: null,
-      error: null,
-      loading: false,
-    })
+  resetState = callback => {
+    this.setState(
+      {
+        requestResult: null,
+        error: null,
+        loading: false,
+      },
+      callback,
+    )
   }
 
   render() {

@@ -1,72 +1,16 @@
-import React from 'react'
-import MockAdapter from 'axios-mock-adapter'
-import createSagaMiddleware from 'redux-saga'
-import {Provider} from 'react-redux'
-import {createStore, applyMiddleware, combineReducers} from 'redux'
-import {render, Simulate, wait} from 'react-testing-library'
-import {schema} from 'normalizr'
-import ReduxThunk from 'redux-thunk'
 // eslint-disable-next-line
-import 'dom-testing-library/extend-expect'
-import {middleware as ReduxSagaThunk} from 'redux-saga-thunk'
+import 'dom-testing-library/extend-expect';
+import React from 'react'
+import {Simulate, wait} from 'react-testing-library'
 import ResourceLoader from '../ResourceLoader'
-import {createResource, createEntities} from '../../../../'
-import API from '../../../../utils/test/api'
-
-const {api, axiosInstance} = API.create()
-const mockApi = new MockAdapter(axiosInstance, {delayResponse: 300})
-
-function createStoreForTests(initialState) {
-  const resource = createResource()
-  const entities = createEntities({
-    isDevEnv: false,
-    schemas: {
-      user: new schema.Entity('user', {}, {idAttribute: 'uuid'}),
-      team: new schema.Entity('team', {idAttribute: 'id'}),
-    },
-  })
-  const reducer = combineReducers({
-    entities: entities.reducer,
-    resource: resource.reducer,
-  })
-  const sagas = resource.sagas
-  const sagaMiddleware = createSagaMiddleware()
-  const store = createStore(
-    reducer,
-    initialState,
-    applyMiddleware(ReduxSagaThunk, ReduxThunk, sagaMiddleware),
-  )
-  sagaMiddleware.run(sagas, {api})
-  return store
-}
-
-function renderWithRedux(
-  ui,
-  {initialState, store = createStoreForTests(initialState)} = {},
-) {
-  return {
-    ...render(<Provider store={store}>{ui}</Provider>),
-    // adding `store` to the returned utilities to allow us
-    // to reference it in our tests (just try to avoid using
-    // this to test implementation details).
-    store,
-  }
-}
-
-// eslint-disable-next-line react/prop-types
-const Status = ({children, initial, loading, error, success}) => {
-  if (initial) return <div data-testid="render-initial">Initial</div>
-  if (loading) return <div data-testid="render-loading">Loading</div>
-  if (error) return <div data-testid="render-error">{children}</div>
-  if (success) return <div data-testid="render-success">{children}</div>
-  throw new Error('Status component not passed status prop')
-}
+import {mockApi, renderWithRedux} from '../../../../utils/test'
+import {DetailResourceLoaderTester, Status} from './ResourceLoaderTestHelpers'
 
 test('component receives props and renders initial status', () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, container} = renderWithRedux(
     <ResourceLoader
-      resource={'example'}
+      resource="example"
       renderInitial={() => <Status initial />}
       list={false}
     >
@@ -95,7 +39,7 @@ test('auto loads detail and renders results', async () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
     <ResourceLoader
-      resource={'user'}
+      resource="user"
       resourceId={1}
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
@@ -132,7 +76,7 @@ test('auto loads list and renders results', async () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
     <ResourceLoader
-      resource={'user'}
+      resource="user"
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
       renderLoading={() => <Status loading />}
@@ -167,7 +111,7 @@ test('auto loads when onEventLoadResource called and renders results', async () 
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId, getByText} = renderWithRedux(
     <ResourceLoader
-      resource={'user'}
+      resource="user"
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
       renderLoading={() => <Status loading />}
@@ -213,17 +157,13 @@ test('auto loads with params passed in', async () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
     <ResourceLoader
-      resource={'dude'}
+      resource="dude"
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => (
-            <div key={user.id}>
-              {user.id}:{user.name}
-            </div>
-          ))}
+          {userList.map(user => <div key={user.id}>{user.name}</div>)}
         </Status>
       )}
       requestParams={{best: 'dude'}}
@@ -241,4 +181,61 @@ test('auto loads with params passed in', async () => {
   // console.log(mockApi.history.get)
   // // Expects ResourceLoader component to render statusView from renderSuccess.
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+// eslint-disable-next-line max-statements
+describe('auto loads resource when resource or resourceId prop changes', async () => {
+  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
+  mockApi.onGet('/user/2').reply(200, {id: 2, name: 'Mat'})
+  mockApi.onGet('/user/3').reply(200, {id: 3, name: 'Tom'})
+  mockApi.onGet('/guest/2').reply(200, {id: 2, name: 'Dylan'})
+
+  // --
+  // -- 1. Initial mount and load resource
+  // --
+  const {getByTestId, rerender} = renderWithRedux(
+    <DetailResourceLoaderTester resource="user" resourceId={1} />,
+  )
+  const instanceId = getByTestId('instance-id').textContent
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('user')
+  expect(getByTestId('resource-id').textContent).toBe('1')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Ben')
+
+  // --
+  // -- 2. resrouceId change triggering loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="user" resourceId={2} />)
+  // confirm same instance is rendered; props changed rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('user')
+  expect(getByTestId('resource-id').textContent).toBe('2')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Mat')
+
+  // --
+  // -- 3. resrouce change triggering loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="guest" resourceId={2} />)
+  // confirm same instance is rendered; props changed rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('guest')
+  expect(getByTestId('resource-id').textContent).toBe('2')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Dylan')
+
+  // --
+  // -- 4. resrouce & resourceId change triggering loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="user" resourceId={3} />)
+  // confirm same instance is rendered; props changed rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('user')
+  expect(getByTestId('resource-id').textContent).toBe('3')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Tom')
 })
