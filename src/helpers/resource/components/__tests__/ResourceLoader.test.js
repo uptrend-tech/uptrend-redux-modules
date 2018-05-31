@@ -44,13 +44,9 @@ test('auto loads detail and renders results', async () => {
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
       renderLoading={() => <Status loading />}
-      renderSuccess={user => (
-        <Status success>
-          {user.id}:{user.name}
-        </Status>
-      )}
-      autoLoad
+      renderSuccess={user => <Status success>{user.name}</Status>}
       list={false}
+      autoLoad
     >
       {({statusView}) => <div>{statusView}</div>}
     </ResourceLoader>,
@@ -82,11 +78,7 @@ test('auto loads list and renders results', async () => {
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => (
-            <div key={user.id}>
-              {user.id}:{user.name}
-            </div>
-          ))}
+          {userList.map(user => <div key={user.id}>{user.name}</div>)}
         </Status>
       )}
       autoLoad
@@ -117,11 +109,7 @@ test('auto loads when onEventLoadResource called and renders results', async () 
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => (
-            <div key={user.id}>
-              {user.id}:{user.name}
-            </div>
-          ))}
+          {userList.map(user => <div key={user.id}>{user.name}</div>)}
         </Status>
       )}
       list
@@ -177,9 +165,7 @@ test('auto loads with params passed in', async () => {
   // Expects ResourceLoader component to render statusView from renderLoading.
   expect(getByTestId('render-loading')).toHaveTextContent('Loading')
 
-  // expect(api.get).toHaveBeenCalled()
-  // console.log(mockApi.history.get)
-  // // Expects ResourceLoader component to render statusView from renderSuccess.
+  // Expects ResourceLoader component to render statusView from renderSuccess.
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
