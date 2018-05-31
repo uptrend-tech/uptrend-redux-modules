@@ -20,6 +20,7 @@ class ResourceLoader extends React.Component {
     }
   }
 
+  // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
     if (this.props.autoLoad && this.nextPropsChangeResource(nextProps)) {
       this.resetState(() => {
