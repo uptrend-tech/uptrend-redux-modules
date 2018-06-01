@@ -216,4 +216,7 @@ const mapDispatchToProps = {
   requestListRead: resourceListReadRequest,
 }
 
-export default connect(null, mapDispatchToProps)(ResourceLoader)
+export default connect(
+  null,
+  mapDispatchToProps,
+)(ResourceLoader)
