@@ -4,7 +4,7 @@ import React from 'react'
 import {Simulate, wait} from 'react-testing-library'
 import ResourceLoader from '../ResourceLoader'
 import {mockApi, renderWithRedux} from '../../../../utils/test'
-import {DetailResourceLoaderTester, Status} from './ResourceLoaderTestHelpers'
+import {DetailResourceLoaderTester, Status} from './helpers/ResourceLoader'
 
 test('component receives props and renders initial status', () => {
   // Renders ResourceLoader component with statusView from renderInitial prop.

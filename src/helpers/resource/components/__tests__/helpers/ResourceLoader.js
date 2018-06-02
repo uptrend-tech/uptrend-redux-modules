@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ResourceLoader from '../ResourceLoader'
+import ResourceLoader from '../../ResourceLoader'
 
 const resourceLoaderPropTypes = {
   resource: PropTypes.string,
