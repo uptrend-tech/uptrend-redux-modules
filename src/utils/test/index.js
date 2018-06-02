@@ -15,8 +15,7 @@ import API from './api'
 export const {api, axiosInstance} = API.create()
 export const mockApi = new MockAdapter(axiosInstance, {delayResponse: 300})
 
-export function createStoreForTests(initialState) {
-  const resource = createResource()
+export function createEntitiesForTests() {
   const entities = createEntities({
     isDevEnv: false,
     schemas: {
@@ -24,6 +23,12 @@ export function createStoreForTests(initialState) {
       team: new schema.Entity('team', {idAttribute: 'id'}),
     },
   })
+  return entities
+}
+
+export function createStoreForTests(initialState) {
+  const resource = createResource()
+  const entities = createEntitiesForTests()
   const reducer = combineReducers({
     entities: entities.reducer,
     resource: resource.reducer,
