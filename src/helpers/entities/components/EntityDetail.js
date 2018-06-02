@@ -8,7 +8,7 @@ export default ({entities}) => {
 
   // eslint-disable-next-line no-unused-vars
   const EntityDetail = ({children, entityDetail, ...props}) =>
-    children(entityDetail)
+    children(entityDetail || null) // pass null if falsey so can be rendered
 
   EntityDetail.propTypes = {
     children: PropTypes.func.isRequired,
