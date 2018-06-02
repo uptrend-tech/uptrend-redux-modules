@@ -12,7 +12,7 @@
 [![downloads][downloads-badge]][npmtrends]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 
@@ -190,8 +190,8 @@ here!
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
 <!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/126236?v=4" width="100px;"/><br /><sub><b>Brandon Orther</b></sub>](http://uptrend.tech)<br />[💻](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Code") [🚇](#infra-orther "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Tests") [💡](#example-orther "Examples") |
-| :---: |
+| [<img src="https://avatars3.githubusercontent.com/u/126236?v=4" width="100px;"/><br /><sub><b>Brandon Orther</b></sub>](http://uptrend.tech)<br />[💻](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Code") [🚇](#infra-orther "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/uptrend-tech/redux-modules-resource-entities/commits?author=orther "Tests") [💡](#example-orther "Examples") | [<img src="https://avatars1.githubusercontent.com/u/3457993?v=4" width="100px;"/><br /><sub><b>Dylan Foster</b></sub>](https://www.linkedin.com/profile/view?id=233369645)<br />[🐛](https://github.com/uptrend-tech/redux-modules-resource-entities/issues?q=author%3Adyyylan "Bug reports") [🤔](#ideas-dyyylan "Ideas, Planning, & Feedback") |
+| :---: | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

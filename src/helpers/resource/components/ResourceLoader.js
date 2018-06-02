@@ -1,10 +1,11 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
+import {polyfill} from 'react-lifecycles-compat'
 import {connect} from 'react-redux'
 import {
+  resourceDetailReadRequest,
   resourceListCreateRequest,
   resourceListReadRequest,
-  resourceDetailReadRequest,
 } from '../../../modules/resource/actions'
 
 class ResourceLoader extends React.Component {
@@ -14,9 +15,27 @@ class ResourceLoader extends React.Component {
     loading: false,
   }
 
+  static getDerivedStateFromProps(props, state) {
+    const resourcePath = `${props.resource}:${props.resourceId}`
+
+    if (resourcePath !== state.prevResourcePath) {
+      // State updated
+      return {
+        prevResourcePath: resourcePath,
+      }
+    }
+
+    // No state update necessary
+    return null
+  }
+
   componentDidMount() {
-    if (this.props.loadOnMount) {
-      this.loadResource()
+    this.loadResourceAutomatically()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.prevResourcePath !== this.state.prevResourcePath) {
+      this.loadResourceAutomatically()
     }
   }
 
@@ -82,6 +101,12 @@ class ResourceLoader extends React.Component {
     )
   }
 
+  loadResourceAutomatically = () => {
+    if (this.props.autoLoad) {
+      this.loadResource()
+    }
+  }
+
   loadResourceError = error => {
     this.setState({loading: false, error})
   }
@@ -100,6 +125,12 @@ class ResourceLoader extends React.Component {
       error: null,
       loading: false,
     })
+  }
+
+  nextPropsChangeResource(nextProps) {
+    if (nextProps.resource !== this.props.resource) return true
+    if (nextProps.resourceId !== this.props.resourceId) return true
+    return false
   }
 
   onEventLoadResource = e => {
@@ -136,14 +167,6 @@ class ResourceLoader extends React.Component {
     return requestListRead(resource, params, entityType)
   }
 
-  resetState = () => {
-    this.setState({
-      requestResult: null,
-      error: null,
-      loading: false,
-    })
-  }
-
   render() {
     if (typeof this.props.children !== 'function') {
       throw new Error('Children should be a Function!')
@@ -170,7 +193,7 @@ ResourceLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
   list: PropTypes.bool.isRequired,
-  loadOnMount: PropTypes.bool,
+  autoLoad: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
   renderInitial: PropTypes.func,
@@ -184,10 +207,16 @@ ResourceLoader.propTypes = {
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 }
 
+// Polyfill component so the new lifecycles will work with older React versions
+polyfill(ResourceLoader)
+
 const mapDispatchToProps = {
   requestDetailRead: resourceDetailReadRequest,
   requestListCreate: resourceListCreateRequest,
   requestListRead: resourceListReadRequest,
 }
 
-export default connect(null, mapDispatchToProps)(ResourceLoader)
+export default connect(
+  null,
+  mapDispatchToProps,
+)(ResourceLoader)

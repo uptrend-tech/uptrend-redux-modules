@@ -4,10 +4,10 @@
 
 ```js
 const OrgDetailAutoLoader = ({orgId}) => (
-  <ResourceDetailLoader resource="org" resourceId={orgId} loadOnMount>
+  <ResourceDetailLoader resource="org" resourceId={orgId} autoLoad>
     {({status, result, onEventLoadResource}) => (
       <div>
-        <pre>{'loadOnMount={true}'}</pre>
+        <pre>{'autoLoad={true}'}</pre>
 
         <button onClick={onEventLoadResource} disabled={status.loading}>
           Load Resource
@@ -48,7 +48,7 @@ const OrgListLoader = () => (
     {({status, result, onEventLoadResource}) => (
       <div>
         <div>
-          <pre>{'loadOnMount={false}'}</pre>
+          <pre>{'autoLoad={false}'}</pre>
           <pre>{JSON.stringify(status, null, 2)}</pre>
         </div>
 

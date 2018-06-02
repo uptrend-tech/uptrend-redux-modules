@@ -7,7 +7,7 @@ const ResourceListLoader = props => <ResourceLoader {...props} list={true} />
 ResourceListLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
-  loadOnMount: PropTypes.bool,
+  autoLoad: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
   renderInitial: PropTypes.func,
