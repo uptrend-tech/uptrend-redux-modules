@@ -225,3 +225,46 @@ describe('auto loads resource when resource or resourceId prop changes', async (
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
   expect(getByTestId('render-success')).toHaveTextContent('Tom')
 })
+
+describe('loads resource when resourceId is missing or empty', async () => {
+  mockApi.onGet('/test').reply(200, {id: 0, name: 'Test'})
+  mockApi.onGet('/test/1').reply(200, {id: 1, name: 'One'})
+  mockApi.onGet('/test/1/extra').reply(200, {id: '1e', name: 'Extra'})
+
+  // --
+  // -- 1. Initial mount and load resource with no resourceId
+  // --
+  const {getByTestId, rerender} = renderWithRedux(
+    <DetailResourceLoaderTester resource="test" />,
+  )
+  const instanceId = getByTestId('instance-id').textContent
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('test')
+  expect(getByTestId('resource-id').textContent).toBe('')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Test')
+
+  // --
+  // -- 2. resrouceId change to empty string triggering loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="test/1/extra" resourceId="" />)
+  // confirm same instance is rendered; props changed rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('test/1/extra')
+  expect(getByTestId('resource-id').textContent).toBe('')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('Extra')
+
+  // --
+  // -- 3. resrouceId change to number triggering loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="test" resourceId={1} />)
+  // confirm same instance is rendered; props changed rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('test')
+  expect(getByTestId('resource-id').textContent).toBe('1')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('One')
+})

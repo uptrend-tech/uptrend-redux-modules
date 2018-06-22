@@ -2,6 +2,10 @@ import {takeEvery, put, call} from 'redux-saga/effects'
 import {camelKeys, snakeKeys, consoleErrorRecovery, safeSaga} from '../../utils'
 import * as actions from './actions'
 
+export const resourceNeedlePath = (resource, needle) => {
+  if (!needle) return `/${resource}`
+  return `/${resource}/${needle}`
+}
 export const apiResponseData = response => camelKeys(response.data)
 
 export const apiResponseToPayload = response => ({
@@ -98,7 +102,10 @@ export function* readResourceDetail(
   {resource, thunk, entityType},
 ) {
   try {
-    const resp = yield call([api, api.get], `/${resource}/${needle}`)
+    const resp = yield call(
+      [api, api.get],
+      resourceNeedlePath(resource, needle),
+    )
     yield put(
       actions.resourceDetailReadSuccess(
         resource,
@@ -129,7 +136,7 @@ export function* updateResource(
   try {
     const resp = yield call(
       [api, api.put],
-      `/${resource}/${needle}`,
+      resourceNeedlePath(resource, needle),
       snakeKeys(data),
     )
     yield put(
@@ -156,7 +163,7 @@ export function* updateResource(
 
 export function* deleteResource(api, {needle}, {resource, thunk, entityType}) {
   try {
-    yield call([api, api.delete], `/${resource}/${needle}`)
+    yield call([api, api.delete], resourceNeedlePath(resource, needle))
     yield put(
       actions.resourceDeleteSuccess(resource, entityType, {needle}, thunk),
     )
