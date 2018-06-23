@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 // eslint-disable-next-line
 import 'dom-testing-library/extend-expect'
 import React from 'react'
