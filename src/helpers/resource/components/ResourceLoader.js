@@ -91,6 +91,7 @@ class ResourceLoader extends React.Component {
       return this.getStatusViewInitial()
     }
 
+    /* istanbul ignore next */
     return null
   }
 
@@ -126,12 +127,6 @@ class ResourceLoader extends React.Component {
       error: null,
       loading: false,
     })
-  }
-
-  nextPropsChangeResource(nextProps) {
-    if (nextProps.resource !== this.props.resource) return true
-    if (nextProps.resourceId !== this.props.resourceId) return true
-    return false
   }
 
   onEventLoadResource = e => {
