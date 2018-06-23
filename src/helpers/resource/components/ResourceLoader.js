@@ -52,8 +52,9 @@ class ResourceLoader extends React.Component {
     const loading = this.state.loading
     const success = !!this.state.requestResult && !loading
     const initial = !error && !loading && !success
+    const done = error || success
 
-    return {error, initial, loading, success}
+    return {done, error, initial, loading, success}
   }
 
   getStatusViewError(error) {
@@ -216,7 +217,4 @@ const mapDispatchToProps = {
   requestListRead: resourceListReadRequest,
 }
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(ResourceLoader)
+export default connect(null, mapDispatchToProps)(ResourceLoader)
