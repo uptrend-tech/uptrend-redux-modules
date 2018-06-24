@@ -1,5 +1,15 @@
 import apisauce from 'apisauce'
 
+const responseCheckStatus = response => {
+  if (response.ok) {
+    return response
+  }
+
+  const error = new Error(`${response.status} ${response.statusText}`)
+  error.response = response
+  throw error
+}
+
 const create = (baseURL = 'https://uptrend.tech/') => {
   const api = apisauce.create({
     baseURL,
@@ -8,6 +18,9 @@ const create = (baseURL = 'https://uptrend.tech/') => {
     },
     timeout: 10000,
   })
+
+  // response transforms
+  api.addResponseTransform(responseCheckStatus)
 
   return {
     api,

@@ -7,9 +7,22 @@ import ResourceLoader from '../ResourceLoader'
 import {mockApi, renderWithRedux} from '../../../../utils/test'
 import {DetailResourceLoaderTester, Status} from './helpers/ResourceLoader'
 
-test('component receives props and renders initial status', () => {
-  // Renders ResourceLoader component with statusView from renderInitial prop.
-  const {getByTestId, container} = renderWithRedux(
+test('throws error if child prop not function', () => {
+  expect(() => {
+    renderWithRedux(
+      <ResourceLoader
+        resource="example"
+        renderInitial={() => <Status initial />}
+        list={false}
+      >
+        {null}
+      </ResourceLoader>,
+    )
+  }).toThrow()
+})
+
+test('receives props and renders initial statusView', () => {
+  const {getByTestId} = renderWithRedux(
     <ResourceLoader
       resource="example"
       renderInitial={() => <Status initial />}
@@ -18,32 +31,55 @@ test('component receives props and renders initial status', () => {
       {({statusView}) => statusView}
     </ResourceLoader>,
   )
-
-  // Expects ResourceLoader component to render statusView from renderInitial.
-  expect(getByTestId('render-initial')).toHaveTextContent('Initial')
-
-  // Renders ResourceLoader component with conditional content using status.initial.
-  renderWithRedux(
-    <ResourceLoader resource={'example'} list={false}>
-      {({status}) => <div>{status.initial && <Status initial />}</div>}
-    </ResourceLoader>,
-    {container},
-  )
-
-  // Expects ResourceLoader component to render statusView from renderInitial.
   expect(getByTestId('render-initial')).toHaveTextContent('Initial')
 })
 
-test('auto loads detail and renders results', async () => {
-  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
+test('receives props and renders status.initial true', () => {
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader resource={'example'} list={false}>
+      {({status}) => <div>{status.initial && <Status initial />}</div>}
+    </ResourceLoader>,
+  )
+  expect(getByTestId('render-initial')).toHaveTextContent('Initial')
+})
 
-  // Renders ResourceLoader component with statusView from renderInitial prop.
+test('auto loads detail renders error', async () => {
+  mockApi.onGet('/user/1').reply(500)
+
   const {getByTestId} = renderWithRedux(
     <ResourceLoader
       resource="user"
       resourceId={1}
       renderInitial={() => <Status initial />}
-      renderError={error => <Status error>{error}</Status>}
+      renderError={error => <Status error>{error.status}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={user => <Status success>{user && user.name}</Status>}
+      list={false}
+      autoLoad
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  /*  'wait' method waits (4500ms by default) until a callback
+   *  function stops throwing an error. It is being checked
+   *  at 50ms intervals.
+   *
+   *  Waiting for renderSuccess to show in DOM
+   */
+  await wait(() => expect(getByTestId('render-error')).toBeInTheDOM())
+})
+
+test('auto loads detail and renders results', async () => {
+  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
+
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader
+      resource="user"
+      resourceId={1}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error.status}</Status>}
       renderLoading={() => <Status loading />}
       renderSuccess={user => <Status success>{user.name}</Status>}
       list={false}
@@ -52,8 +88,6 @@ test('auto loads detail and renders results', async () => {
       {({statusView}) => <div>{statusView}</div>}
     </ResourceLoader>,
   )
-
-  // Expects ResourceLoader component to render statusView from renderLoading.
   expect(getByTestId('render-loading')).toHaveTextContent('Loading')
 
   /*  'wait' method waits (4500ms by default) until a callback
@@ -63,6 +97,38 @@ test('auto loads detail and renders results', async () => {
    *  Waiting for renderSuccess to show in DOM
    */
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+test('error loading detail and updates status object', async () => {
+  mockApi.onGet('/user/1').reply(500)
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader resource="user" resourceId={1} list={false}>
+      {({result, status, onEventLoadResource}) => (
+        <div>
+          <button onClick={onEventLoadResource} data-testid="load-resource">
+            Load Resource
+          </button>
+          <code>{JSON.stringify(result, null, 2)}</code>
+          {status.initial && <div data-testid="render-initial" />}
+          {status.error && <div data-testid="render-error" />}
+          {status.loading && <div data-testid="render-loading" />}
+          {status.success && <div data-testid="render-success" />}
+          {status.done && <div data-testid="render-done" />}
+        </div>
+      )}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderInitial.
+  expect(getByTestId('render-initial')).toBeInTheDOM()
+
+  // Simulating a button click in the browser and go through status changes
+  Simulate.click(getByTestId('load-resource'))
+  await wait(() => expect(getByTestId('render-loading')).toBeInTheDOM())
+  await wait(() => expect(getByTestId('render-error')).toBeInTheDOM())
+  expect(getByTestId('render-done')).toBeInTheDOM()
 })
 
 test('loads detail successfully and updates status object', async () => {
@@ -98,13 +164,15 @@ test('loads detail successfully and updates status object', async () => {
 
 test('auto loads list and renders results', async () => {
   mockApi
-    .onGet('/user')
+    // .onGet('/user', {params: {}})
+    .onGet()
     .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
 
   // Renders ResourceLoader component with statusView from renderInitial prop.
   const {getByTestId} = renderWithRedux(
     <ResourceLoader
       resource="user"
+      // resourceIds={[1, 2]}
       renderInitial={() => <Status initial />}
       renderError={error => <Status error>{error}</Status>}
       renderLoading={() => <Status loading />}
@@ -256,6 +324,51 @@ describe('auto loads resource when resource or resourceId prop changes', async (
   expect(getByTestId('resource-id').textContent).toBe('3')
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
   expect(getByTestId('render-success')).toHaveTextContent('Tom')
+
+  // --
+  // -- 5. no change should NOT trigger loading resource
+  // --
+  rerender(<DetailResourceLoaderTester resource="user" resourceId={3} />)
+  // confirm same instance is rendered; rather than new mount
+  expect(getByTestId('instance-id').textContent).toBe(instanceId)
+  // expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  expect(getByTestId('resource').textContent).toBe('user')
+  expect(getByTestId('resource-id').textContent).toBe('3')
+  expect(getByTestId('render-success')).toBeInTheDOM()
+  expect(getByTestId('render-success')).toHaveTextContent('Tom')
+})
+
+test('post resource request and renders results', async () => {
+  mockApi
+    // .onGet('/user', {params: {}})
+    .onGet()
+    .reply(200, [{id: 1, name: 'Ben'}, {id: 2, name: 'Sam'}])
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader
+      resource="user"
+      // resourceIds={[1, 2]}
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => (
+        <Status success>
+          {userList.map(user => <div key={user.id}>{user.name}</div>)}
+        </Status>
+      )}
+      autoLoad
+      list
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderLoading.
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  // // Expects ResourceLoader component to render statusView from renderSuccess.
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
 describe('loads resource when resourceId is missing or empty', async () => {
