@@ -172,16 +172,19 @@ class ResourceLoader extends React.Component {
     const {entityType} = this.props
     const {result, ...requestResultValues} = this.getRequesResultValuesObj()
 
-    return this.props.children({
-      onEventLoadResource: this.onEventLoadResource,
-      loadResource: this.loadResource,
-      status: this.getStatusObj(),
-      statusView: this.getStatusView(),
-      error,
-      entityType,
-      result,
-      ...requestResultValues,
-    })
+    return this.props.children(
+      {
+        onEventLoadResource: this.onEventLoadResource,
+        loadResource: this.loadResource,
+        status: this.getStatusObj(),
+        statusView: this.getStatusView(),
+        error,
+        entityType,
+        result,
+        ...requestResultValues,
+      },
+      this.props.passThru,
+    )
   }
 }
 
@@ -201,6 +204,7 @@ ResourceLoader.propTypes = {
   requestParams: PropTypes.object,
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  passThru: PropTypes.any,
 }
 
 // Polyfill component so the new lifecycles will work with older React versions
@@ -215,4 +219,6 @@ const mapDispatchToProps = {
 export default connect(
   null,
   mapDispatchToProps,
+  null,
+  {pure: false},
 )(ResourceLoader)

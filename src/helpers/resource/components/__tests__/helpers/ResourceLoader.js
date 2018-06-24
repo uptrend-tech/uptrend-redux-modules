@@ -78,3 +78,31 @@ Status.propTypes = {
   error: PropTypes.bool,
   success: PropTypes.bool,
 }
+
+export function InstrumentAllStatuses({status, label = 'label'}) {
+  return (
+    <div>
+      <InstrumentStatus status={status} label={label} type="initial" />
+      <InstrumentStatus status={status} label={label} type="loading" />
+      <InstrumentStatus status={status} label={label} type="error" />
+      <InstrumentStatus status={status} label={label} type="success" />
+      <InstrumentStatus status={status} label={label} type="done" />
+    </div>
+  )
+}
+
+InstrumentAllStatuses.propTypes = {
+  status: PropTypes.object.isRequired,
+  label: PropTypes.string,
+}
+
+function InstrumentStatus({status, label, type}) {
+  if (!status[type]) return null
+  return <div data-testid={`${label}-status-${type}`} />
+}
+
+InstrumentStatus.propTypes = {
+  status: PropTypes.object.isRequired,
+  label: PropTypes.string,
+  type: PropTypes.string,
+}
