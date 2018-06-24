@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 // eslint-disable-next-line
 import 'dom-testing-library/extend-expect'
 import React from 'react'
@@ -62,6 +63,37 @@ test('auto loads detail and renders results', async () => {
    *  Waiting for renderSuccess to show in DOM
    */
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
+
+test('loads detail successfully and updates status object', async () => {
+  mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceLoader resource="user" resourceId={1} list={false}>
+      {({status, onEventLoadResource}) => (
+        <div>
+          <button onClick={onEventLoadResource} data-testid="load-resource">
+            Load Resource
+          </button>
+          {status.initial && <div data-testid="render-initial" />}
+          {status.error && <div data-testid="render-error" />}
+          {status.loading && <div data-testid="render-loading" />}
+          {status.success && <div data-testid="render-success" />}
+          {status.done && <div data-testid="render-done" />}
+        </div>
+      )}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderInitial.
+  expect(getByTestId('render-initial')).toBeInTheDOM()
+
+  // Simulating a button click in the browser and go through status changes
+  Simulate.click(getByTestId('load-resource'))
+  await wait(() => expect(getByTestId('render-loading')).toBeInTheDOM())
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-done')).toBeInTheDOM()
 })
 
 test('auto loads list and renders results', async () => {
