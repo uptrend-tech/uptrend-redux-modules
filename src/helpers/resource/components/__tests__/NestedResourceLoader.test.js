@@ -2,12 +2,14 @@
 // eslint-disable-next-line
 import 'dom-testing-library/extend-expect'
 import React from 'react'
-import {Simulate, wait} from 'react-testing-library'
+import {wait} from 'react-testing-library'
 import ResourceLoader from '../ResourceLoader'
 import {mockApi, renderWithRedux} from '../../../../utils/test'
 import {InstrumentAllStatuses} from './helpers/ResourceLoader'
 
+// eslint-disable-next-line no-unused-vars
 const delayReply = ({delay, response}) => config => {
+  // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(response)
