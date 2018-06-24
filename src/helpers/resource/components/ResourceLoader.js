@@ -219,4 +219,6 @@ const mapDispatchToProps = {
 export default connect(
   null,
   mapDispatchToProps,
+  null,
+  {pure: false},
 )(ResourceLoader)
