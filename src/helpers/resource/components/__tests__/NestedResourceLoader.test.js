@@ -5,11 +5,7 @@ import React from 'react'
 import {Simulate, wait} from 'react-testing-library'
 import ResourceLoader from '../ResourceLoader'
 import {mockApi, renderWithRedux} from '../../../../utils/test'
-import {
-  // DetailResourceLoaderTester,
-  InstrumentAllStatuses,
-  // Status,
-} from './helpers/ResourceLoader'
+import {InstrumentAllStatuses} from './helpers/ResourceLoader'
 
 const delayReply = ({delay, response}) => config => {
   return new Promise((resolve, reject) => {
@@ -19,38 +15,39 @@ const delayReply = ({delay, response}) => config => {
   })
 }
 
+const NestedLoaders = () => (
+  <ResourceLoader resource="user" resourceId={1} list={false} autoLoad>
+    {userOne => (
+      <ResourceLoader resource="user" resourceId={2} list={false} autoLoad>
+        {userTwo => (
+          <div>
+            <InstrumentAllStatuses status={userOne.status} label="one" />
+            <InstrumentAllStatuses status={userTwo.status} label="two" />
+
+            {userOne.status.success && (
+              <div>
+                <div data-testid="one-id">{userOne.result.id}</div>
+                <div data-testid="one-name">{userOne.result.name}</div>
+              </div>
+            )}
+
+            {userTwo.status.success && (
+              <div>
+                <div data-testid="two-id">{userTwo.result.id}</div>
+                <div data-testid="two-name">{userTwo.result.name}</div>
+              </div>
+            )}
+          </div>
+        )}
+      </ResourceLoader>
+    )}
+  </ResourceLoader>
+)
+
 test('renders nested ResourceLoader', async () => {
   mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
   mockApi.onGet('/user/2').reply(200, {id: 2, name: 'Tom'})
-
-  const {getByTestId} = renderWithRedux(
-    <ResourceLoader resource="user" resourceId={1} list={false} autoLoad>
-      {userOne => (
-        <ResourceLoader resource="user" resourceId={2} list={false} autoLoad>
-          {userTwo => (
-            <div>
-              <InstrumentAllStatuses status={userOne.status} label="one" />
-              <InstrumentAllStatuses status={userTwo.status} label="two" />
-
-              {userOne.status.success && (
-                <div>
-                  <div data-testid="one-id">{userOne.result.id}</div>
-                  <div data-testid="one-name">{userOne.result.name}</div>
-                </div>
-              )}
-
-              {userTwo.status.success && (
-                <div>
-                  <div data-testid="two-id">{userTwo.result.id}</div>
-                  <div data-testid="two-name">{userTwo.result.name}</div>
-                </div>
-              )}
-            </div>
-          )}
-        </ResourceLoader>
-      )}
-    </ResourceLoader>,
-  )
+  const {getByTestId} = renderWithRedux(<NestedLoaders />)
 
   // --
   // -- 1. Initial mount and begin loading BOTH resources
@@ -84,34 +81,7 @@ test('renders nested ResourceLoader with first request returns after second', as
     .onGet('/user/2')
     .reply(delayReply({delay: 100, response: [200, {id: 2, name: 'Tom'}]}))
 
-  const {getByTestId} = renderWithRedux(
-    <ResourceLoader resource="user" resourceId={1} list={false} autoLoad>
-      {userOne => (
-        <ResourceLoader resource="user" resourceId={2} list={false} autoLoad>
-          {userTwo => (
-            <div>
-              <InstrumentAllStatuses status={userOne.status} label="one" />
-              <InstrumentAllStatuses status={userTwo.status} label="two" />
-
-              {userOne.status.success && (
-                <div>
-                  <div data-testid="one-id">{userOne.result.id}</div>
-                  <div data-testid="one-name">{userOne.result.name}</div>
-                </div>
-              )}
-
-              {userTwo.status.success && (
-                <div>
-                  <div data-testid="two-id">{userTwo.result.id}</div>
-                  <div data-testid="two-name">{userTwo.result.name}</div>
-                </div>
-              )}
-            </div>
-          )}
-        </ResourceLoader>
-      )}
-    </ResourceLoader>,
-  )
+  const {getByTestId} = renderWithRedux(<NestedLoaders />)
 
   // --
   // -- 1. Initial mount and begin loading BOTH resources
