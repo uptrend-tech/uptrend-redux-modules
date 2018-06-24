@@ -20,17 +20,26 @@ export class RdxModResourceError extends BaseError {}
 // -- object key formating
 // --
 
+export const isCamelSafe = str => /^[A-Za-z0-9_]+$/.test(str)
+export const hasLodashPrefix = str => /^_/.test(str)
+
 export const camelKeys = obj =>
-  camelizeKeys(
-    obj,
-    (key, convert) => (/^[A-Za-z0-9_]+$/.test(key) ? convert(key) : key),
-  )
+  camelizeKeys(obj, (key, convert) => {
+    if (!isCamelSafe(key) || hasLodashPrefix(key)) {
+      return key
+    }
+
+    return convert(key)
+  })
+
 export const snakeKeys = obj =>
-  decamelizeKeys(
-    obj,
-    (key, convert, options) =>
-      /^[A-Za-z0-9_]+$/.test(key) ? convert(key, options) : key,
-  )
+  decamelizeKeys(obj, (key, convert, options) => {
+    if (!isCamelSafe(key) || hasLodashPrefix(key)) {
+      return key
+    }
+
+    return convert(key, options)
+  })
 
 // --
 // -- General Utils
