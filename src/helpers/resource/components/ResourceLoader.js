@@ -6,6 +6,7 @@ import {
   resourceDetailReadRequest,
   resourceListCreateRequest,
   resourceListReadRequest,
+  resourceUpdateRequest,
 } from '../../../modules/resource/actions'
 
 class ResourceLoader extends React.Component {
@@ -103,6 +104,14 @@ class ResourceLoader extends React.Component {
     )
   }
 
+  updateResource = data => {
+    this.setState({loading: true})
+    this.requestResourceDetailUpdate(data).then(
+      this.loadResourceSuccess,
+      this.loadResourceError,
+    )
+  }
+
   loadResourceAutomatically = () => {
     if (this.props.autoLoad) {
       this.loadResource()
@@ -137,12 +146,17 @@ class ResourceLoader extends React.Component {
   requestResource = params => {
     return this.props.list
       ? this.requestResourceList(params)
-      : this.requestResourceDetail(params)
+      : this.requestResourceDetailRead(params)
   }
 
-  requestResourceDetail = () => {
+  requestResourceDetailRead = () => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
     return requestDetailRead(resource, resourceId, entityType)
+  }
+
+  requestResourceDetailUpdate = data => {
+    const {requestDetailUpdate, resource, resourceId, entityType} = this.props
+    return requestDetailUpdate(resource, resourceId, data, entityType)
   }
 
   requestResourceList = dynamicParams => {
@@ -176,6 +190,7 @@ class ResourceLoader extends React.Component {
       {
         onEventLoadResource: this.onEventLoadResource,
         loadResource: this.loadResource,
+        updateResource: this.updateResource,
         status: this.getStatusObj(),
         statusView: this.getStatusView(),
         error,
@@ -199,6 +214,7 @@ ResourceLoader.propTypes = {
   renderLoading: PropTypes.func,
   renderSuccess: PropTypes.func,
   requestDetailRead: PropTypes.func,
+  requestDetailUpdate: PropTypes.func,
   requestListCreate: PropTypes.func,
   requestListRead: PropTypes.func,
   requestParams: PropTypes.object,
@@ -212,6 +228,7 @@ polyfill(ResourceLoader)
 
 const mapDispatchToProps = {
   requestDetailRead: resourceDetailReadRequest,
+  requestDetailUpdate: resourceUpdateRequest,
   requestListCreate: resourceListCreateRequest,
   requestListRead: resourceListReadRequest,
 }
