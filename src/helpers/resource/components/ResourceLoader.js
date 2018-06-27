@@ -190,7 +190,9 @@ class ResourceLoader extends React.Component {
       {
         onEventLoadResource: this.onEventLoadResource,
         loadResource: this.loadResource,
+        loadResourceRequest: this.requestResource,
         updateResource: this.updateResource,
+        updateResourceRequest: this.requestResourceDetailUpdate,
         status: this.getStatusObj(),
         statusView: this.getStatusView(),
         error,
