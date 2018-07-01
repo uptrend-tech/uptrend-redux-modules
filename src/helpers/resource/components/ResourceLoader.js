@@ -40,6 +40,11 @@ class ResourceLoader extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    // Sets this false so we can prevent setState after unmount
+    this.requestingResource = false
+  }
+
   getRequesResultValuesObj() {
     const {requestResult} = this.state
     const entities = requestResult && requestResult.entities
@@ -97,16 +102,18 @@ class ResourceLoader extends React.Component {
   }
 
   loadResource = params => {
+    this.requestingResource = true
     this.setState({loading: true})
-    this.requestResource(params).then(
+    return this.requestResource(params).then(
       this.loadResourceSuccess,
       this.loadResourceError,
     )
   }
 
   updateResource = data => {
+    this.requestingResource = true
     this.setState({loading: true})
-    this.requestResourceDetailUpdate(data).then(
+    return this.requestResourceDetailUpdate(data).then(
       this.loadResourceSuccess,
       this.loadResourceError,
     )
@@ -131,11 +138,15 @@ class ResourceLoader extends React.Component {
       resource: payload.resource,
     }
 
-    this.setState({
-      requestResult,
-      error: null,
-      loading: false,
-    })
+    if (this.requestingResource) {
+      this.requestingResource = false
+
+      this.setState({
+        requestResult,
+        error: null,
+        loading: false,
+      })
+    }
   }
 
   onEventLoadResource = e => {
