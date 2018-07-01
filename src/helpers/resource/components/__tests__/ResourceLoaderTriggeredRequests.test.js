@@ -187,3 +187,57 @@ test('auto loads and then makes update resource when updateResource called', asy
     expect(getByTestId('render-success')).toHaveTextContent('1:Sam')
   })
 })
+
+test('auto loads using GET params', async () => {
+  const userBen = {id: 5, name: 'Ben'}
+  const userExtra = {id: 5, name: 'Extra'}
+  mockApi.onGet('/user/5', {params: {extra: 1}}).replyOnce(200, userExtra)
+  mockApi.onGet('/user/5', {params: {extra: 0}}).replyOnce(200, userBen)
+
+  // Renders ResourceLoader component with statusView from renderInitial prop.
+  const {getByTestId, getByText} = renderWithRedux(
+    <ResourceLoader
+      resource="user"
+      resourceId={5}
+      requestParams={{extra: 1}}
+      renderInitial={() => <Status initial />}
+      renderError={error => (
+        <Status error>{JSON.stringify(error, null, 2)}</Status>
+      )}
+      renderLoading={() => <Status loading />}
+      renderSuccess={user => (
+        <Status success>
+          {user.id}:{user.name}
+        </Status>
+      )}
+      list={false}
+      autoLoad
+    >
+      {({statusView, loadResource}) => (
+        <div>
+          <button
+            onClick={() => loadResource({extra: 0})}
+            data-testid="load-resource"
+          >
+            Load Resource
+          </button>
+          {statusView}
+        </div>
+      )}
+    </ResourceLoader>,
+  )
+
+  // await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  await wait(() => {
+    expect(getByTestId('render-success')).toBeInTheDOM()
+    expect(getByTestId('render-success')).toHaveTextContent('5:Extra')
+  })
+
+  Simulate.click(getByText('Load Resource'))
+  expect(getByTestId('render-loading')).toBeInTheDOM()
+
+  await wait(() => {
+    expect(getByTestId('render-success')).toBeInTheDOM()
+    expect(getByTestId('render-success')).toHaveTextContent('5:Ben')
+  })
+})

@@ -98,20 +98,21 @@ export function* readResourceList(
 
 export function* readResourceDetail(
   api,
-  {needle},
+  {needle, params},
   {resource, thunk, entityType},
 ) {
   try {
     const resp = yield call(
       [api, api.get],
       resourceNeedlePath(resource, needle),
+      params,
     )
     yield put(
       actions.resourceDetailReadSuccess(
         resource,
         entityType,
         apiResponseToPayload(resp),
-        {needle},
+        {needle, params},
         thunk,
       ),
     )
@@ -121,7 +122,7 @@ export function* readResourceDetail(
         resource,
         entityType,
         camelKeys(e),
-        {needle},
+        {needle, params},
         thunk,
       ),
     )
