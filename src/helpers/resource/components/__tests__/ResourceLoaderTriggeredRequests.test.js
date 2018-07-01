@@ -87,9 +87,6 @@ test('makes resource requests using the child render request functions', async (
         const doLoadResource = () => locker.put('loadResource', loadResource())
         const doLoadResourceRequest = () =>
           locker.put('loadResourceRequest', loadResourceRequest())
-        // const doLoadResourceRequest = () => loadResourceRequest()
-        // const doUpdateResource = () => updateResource(userPut)
-        // const doUpdateResourceRequest = () => updateResourceRequest(userPut)
         const doUpdateResource = () =>
           locker.put('updateResource', updateResource(userPut))
         const doUpdateResourceRequest = () =>
