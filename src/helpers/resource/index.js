@@ -59,8 +59,8 @@ export default ({entities, resource}) => {
   )
 
   const resourceDetailRead = createHelper(
-    (resourcePath, entityType) => needle =>
-      resourceDetailReadRequest(resourcePath, needle, entityType),
+    (resourcePath, entityType) => (needle, params) =>
+      resourceDetailReadRequest(resourcePath, needle, params, entityType),
     resourcePath => `${resourcePath}DetailRead`,
     resource.selectors.getDetail,
     entities.selectors.getDetail,

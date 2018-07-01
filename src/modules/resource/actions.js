@@ -164,9 +164,14 @@ export const RESOURCE_DETAIL_READ_REQUEST = 'RESOURCE_DETAIL_READ_REQUEST'
 export const RESOURCE_DETAIL_READ_SUCCESS = 'RESOURCE_DETAIL_READ_SUCCESS'
 export const RESOURCE_DETAIL_READ_FAILURE = 'RESOURCE_DETAIL_READ_FAILURE'
 
-export const resourceDetailReadRequest = (resource, needle, entityType) => ({
+export const resourceDetailReadRequest = (
+  resource,
+  needle,
+  params,
+  entityType,
+) => ({
   type: RESOURCE_DETAIL_READ_REQUEST,
-  payload: {needle},
+  payload: {needle, params},
   meta: {
     entityType,
     resource,

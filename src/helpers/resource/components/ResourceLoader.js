@@ -146,12 +146,18 @@ class ResourceLoader extends React.Component {
   requestResource = params => {
     return this.props.list
       ? this.requestResourceList(params)
-      : this.requestResourceDetailRead(params)
+      : this.requestResourceDetail(params)
   }
 
-  requestResourceDetailRead = () => {
+  requestResourceDetail = dynamicParams => {
+    const {requestParams} = this.props
+    const params = {...requestParams, ...dynamicParams}
+    return this.requestResourceDetailRead(params)
+  }
+
+  requestResourceDetailRead = params => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
-    return requestDetailRead(resource, resourceId, entityType)
+    return requestDetailRead(resource, resourceId, params, entityType)
   }
 
   requestResourceDetailUpdate = data => {
@@ -161,7 +167,7 @@ class ResourceLoader extends React.Component {
 
   requestResourceList = dynamicParams => {
     const {postRequest, requestParams} = this.props
-    const params = {...dynamicParams, ...requestParams}
+    const params = {...requestParams, ...dynamicParams}
     return postRequest
       ? this.requestResourceListCreate(params)
       : this.requestResourceListRead(params)

@@ -235,11 +235,14 @@ test('resourceListReadFailure', () => {
 // --
 
 test('resourceDetailReadRequest', () => {
-  expect(actions.resourceDetailReadRequest('resourceName', 1)).toEqual(
+  expect(
+    actions.resourceDetailReadRequest('resourceName', 1, {flag: 1}),
+  ).toEqual(
     expect.objectContaining({
       type: actions.RESOURCE_DETAIL_READ_REQUEST,
       payload: {
         needle: 1,
+        params: {flag: 1},
       },
       meta: expect.objectContaining({
         resource: 'resourceName',

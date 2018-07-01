@@ -176,8 +176,8 @@ describe('resourceDetailRead', () => {
     'action',
     opts => {
       const {action} = resourceDetailRead(opts.resource, opts.entitiy)
-      expect(action(opts.payload)).toEqual(
-        expectActions(opts.resource, opts.payload, opts.entitiy),
+      expect(action(opts.payload, opts.params)).toEqual(
+        expectActions(opts.resource, opts.payload, opts.params, opts.entitiy),
       )
     },
     {
@@ -185,10 +185,21 @@ describe('resourceDetailRead', () => {
         resource: 'team',
         payload: {id: 1, title: 'Team 1'},
       },
+      'resource ONLY (no entitiy) w/ params': {
+        resource: 'team',
+        payload: {id: 1, title: 'Team 1'},
+        params: {flag: 1},
+      },
       'resource & entitiy': {
         resource: 'team',
         entitiy: 'team',
         payload: {id: 1, title: 'Team 2'},
+      },
+      'resource & entitiy w/ params': {
+        resource: 'team',
+        entitiy: 'team',
+        payload: {id: 1, title: 'Team 2'},
+        params: {flag: 1},
       },
     },
   )
