@@ -53,3 +53,31 @@ test('auto loads list and renders results', async () => {
    */
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
+
+test('auto loads list with POST request and renders results', async () => {
+  mockApi.onPost('/user').reply(200, [{id: 1, name: 'Ben'}])
+
+  // Renders ResourceListLoader component with statusView from renderInitial prop.
+  const {getByTestId} = renderWithRedux(
+    <ResourceListLoader
+      resource="user"
+      renderInitial={() => <Status initial />}
+      renderError={error => <Status error>{error}</Status>}
+      renderLoading={() => <Status loading />}
+      renderSuccess={userList => <Status success>{`${userList}`}</Status>}
+      autoLoad
+      postRequest
+    >
+      {({statusView}) => <div>{statusView}</div>}
+    </ResourceListLoader>,
+  )
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+
+  /*  'wait' method waits (4500ms by default) until a callback
+   *  function stops throwing an error. It is being checked
+   *  at 50ms intervals.
+   *
+   *  Waiting for renderSuccess to show in DOM
+   */
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+})
