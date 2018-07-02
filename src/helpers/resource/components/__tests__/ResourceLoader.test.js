@@ -21,6 +21,20 @@ test('throws error if child prop not function', () => {
   }).toThrow()
 })
 
+test('component unmounts', () => {
+  const {container, unmount} = renderWithRedux(
+    <ResourceLoader
+      resource="example"
+      renderInitial={() => <Status initial />}
+      list={false}
+    >
+      {({statusView}) => statusView}
+    </ResourceLoader>,
+  )
+  unmount()
+  expect(container.innerHTML).toBe('')
+})
+
 test('receives props and renders initial statusView', () => {
   const {getByTestId} = renderWithRedux(
     <ResourceLoader

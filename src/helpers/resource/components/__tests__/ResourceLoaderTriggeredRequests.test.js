@@ -7,6 +7,14 @@ import ResourceLoader from '../ResourceLoader'
 import {api, mockApi, renderWithRedux} from '../../../../utils/test'
 import {Status} from './helpers/ResourceLoader'
 
+const testLocker = () => {
+  const vals = {}
+  return {
+    put: (name, value) => (vals[name] = value),
+    get: name => vals[name],
+  }
+}
+
 test('error loading detail and updates status object', async () => {
   mockApi.onGet('/user/1').reply(500)
 
@@ -54,6 +62,8 @@ test('makes resource requests using the child render request functions', async (
     </Status>
   )
 
+  const locker = testLocker()
+
   const {getByTestId, getByText} = renderWithRedux(
     <ResourceLoader
       resource="user"
@@ -74,10 +84,13 @@ test('makes resource requests using the child render request functions', async (
         updateResource,
         updateResourceRequest,
       }) => {
-        const doLoadResource = () => loadResource()
-        const doLoadResourceRequest = () => loadResourceRequest()
-        const doUpdateResource = () => updateResource(userPut)
-        const doUpdateResourceRequest = () => updateResourceRequest(userPut)
+        const doLoadResource = () => locker.put('loadResource', loadResource())
+        const doLoadResourceRequest = () =>
+          locker.put('loadResourceRequest', loadResourceRequest())
+        const doUpdateResource = () =>
+          locker.put('updateResource', updateResource(userPut))
+        const doUpdateResourceRequest = () =>
+          locker.put('updateResourceRequest', updateResourceRequest(userPut))
         return (
           <div>
             <button onClick={onEventLoadResource}>OnEventLoadResource</button>
@@ -133,6 +146,14 @@ test('makes resource requests using the child render request functions', async (
 
   expect(spyApiGet).toHaveBeenCalledTimes(3)
   expect(spyApiPut).toHaveBeenCalledTimes(2)
+
+  // --
+  // -- 6. confirm triggers return a promise (from redux-saga-thunk)
+  // --
+  expect(locker.get('loadResource')).toBeInstanceOf(Promise)
+  expect(locker.get('loadResourceRequest')).toBeInstanceOf(Promise)
+  expect(locker.get('updateResource')).toBeInstanceOf(Promise)
+  expect(locker.get('updateResourceRequest')).toBeInstanceOf(Promise)
 })
 
 test('auto loads and then makes update resource when updateResource called', async () => {

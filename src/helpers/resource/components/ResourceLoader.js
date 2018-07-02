@@ -10,6 +10,8 @@ import {
 } from '../../../modules/resource/actions'
 
 class ResourceLoader extends React.Component {
+  _asyncActive = null
+
   state = {
     requestResult: null,
     error: null,
@@ -38,6 +40,11 @@ class ResourceLoader extends React.Component {
     if (prevState.prevResourcePath !== this.state.prevResourcePath) {
       this.loadResourceAutomatically()
     }
+  }
+
+  componentWillUnmount() {
+    // Sets this false so we can prevent setState after unmount
+    this._asyncActive = false
   }
 
   getRequesResultValuesObj() {
@@ -96,20 +103,20 @@ class ResourceLoader extends React.Component {
     return null
   }
 
-  loadResource = params => {
+  loadResourceAsync(requestPromise) {
+    this._asyncActive = true
     this.setState({loading: true})
-    this.requestResource(params).then(
-      this.loadResourceSuccess,
-      this.loadResourceError,
-    )
+    return requestPromise.then(this.loadResourceSuccess, this.loadResourceError)
+  }
+
+  loadResource = params => {
+    const request = this.requestResource(params)
+    return this.loadResourceAsync(request)
   }
 
   updateResource = data => {
-    this.setState({loading: true})
-    this.requestResourceDetailUpdate(data).then(
-      this.loadResourceSuccess,
-      this.loadResourceError,
-    )
+    const request = this.requestResourceDetailUpdate(data)
+    return this.loadResourceAsync(request)
   }
 
   loadResourceAutomatically = () => {
@@ -119,23 +126,29 @@ class ResourceLoader extends React.Component {
   }
 
   loadResourceError = error => {
-    this.setState({loading: false, error})
+    // Only update if async active (mounted && sent request)
+    if (this._asyncActive) {
+      this.setState({loading: false, error})
+    }
   }
 
   loadResourceSuccess = payload => {
-    const requestResult = {
-      api: payload.api,
-      data: payload.data,
-      entities: payload.entities,
-      entityType: payload.entityType,
-      resource: payload.resource,
-    }
+    // Only update if async active (mounted && sent request)
+    if (this._asyncActive) {
+      const requestResult = {
+        api: payload.api,
+        data: payload.data,
+        entities: payload.entities,
+        entityType: payload.entityType,
+        resource: payload.resource,
+      }
 
-    this.setState({
-      requestResult,
-      error: null,
-      loading: false,
-    })
+      this.setState({
+        requestResult,
+        error: null,
+        loading: false,
+      })
+    }
   }
 
   onEventLoadResource = e => {
