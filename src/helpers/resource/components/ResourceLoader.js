@@ -10,6 +10,8 @@ import {
 } from '../../../modules/resource/actions'
 
 class ResourceLoader extends React.Component {
+  _asyncActive = null
+
   state = {
     requestResult: null,
     error: null,
@@ -42,7 +44,7 @@ class ResourceLoader extends React.Component {
 
   componentWillUnmount() {
     // Sets this false so we can prevent setState after unmount
-    this.requestingResource = false
+    this._asyncActive = false
   }
 
   getRequesResultValuesObj() {
@@ -101,22 +103,20 @@ class ResourceLoader extends React.Component {
     return null
   }
 
-  loadResource = params => {
-    this.requestingResource = true
+  loadResourceAsync(requestPromise) {
+    this._asyncActive = true
     this.setState({loading: true})
-    return this.requestResource(params).then(
-      this.loadResourceSuccess,
-      this.loadResourceError,
-    )
+    return requestPromise.then(this.loadResourceSuccess, this.loadResourceError)
+  }
+
+  loadResource = params => {
+    const request = this.requestResource(params)
+    return this.loadResourceAsync(request)
   }
 
   updateResource = data => {
-    this.requestingResource = true
-    this.setState({loading: true})
-    return this.requestResourceDetailUpdate(data).then(
-      this.loadResourceSuccess,
-      this.loadResourceError,
-    )
+    const request = this.requestResourceDetailUpdate(data)
+    return this.loadResourceAsync(request)
   }
 
   loadResourceAutomatically = () => {
@@ -126,20 +126,22 @@ class ResourceLoader extends React.Component {
   }
 
   loadResourceError = error => {
-    this.setState({loading: false, error})
+    // Only update if async active (mounted && sent request)
+    if (this._asyncActive) {
+      this.setState({loading: false, error})
+    }
   }
 
   loadResourceSuccess = payload => {
-    const requestResult = {
-      api: payload.api,
-      data: payload.data,
-      entities: payload.entities,
-      entityType: payload.entityType,
-      resource: payload.resource,
-    }
-
-    if (this.requestingResource) {
-      this.requestingResource = false
+    // Only update if async active (mounted && sent request)
+    if (this._asyncActive) {
+      const requestResult = {
+        api: payload.api,
+        data: payload.data,
+        entities: payload.entities,
+        entityType: payload.entityType,
+        resource: payload.resource,
+      }
 
       this.setState({
         requestResult,
