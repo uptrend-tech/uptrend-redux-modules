@@ -17,35 +17,59 @@ export class RdxModEntitiesError extends BaseError {}
 export class RdxModResourceError extends BaseError {}
 
 // --
-// -- object key formating
-// --
-
-export const isCamelSafe = str => /^[A-Za-z0-9_]+$/.test(str)
-export const hasLodashPrefix = str => /^_/.test(str)
-
-export const camelKeys = obj =>
-  camelizeKeys(obj, (key, convert) => {
-    if (!isCamelSafe(key) || hasLodashPrefix(key)) {
-      return key
-    }
-
-    return convert(key)
-  })
-
-export const snakeKeys = obj =>
-  decamelizeKeys(obj, (key, convert, options) => {
-    if (!isCamelSafe(key) || hasLodashPrefix(key)) {
-      return key
-    }
-
-    return convert(key, options)
-  })
-
-// --
 // -- General Utils
 // --
 
+export const alwaysFn = val => () => val
+
+export const alwaysNull = alwaysFn(null)
+
 export const isObject = input => typeof input === 'object'
+
+// --
+// -- object key formating
+// --
+
+export const hasDashes = str => str.includes('-')
+export const hasLodashPrefix = str => str.startsWith('_')
+
+export const createCamelKeys = (customPred = alwaysNull) => obj =>
+  // eslint-disable-next-line complexity
+  camelizeKeys(obj, (key, convert) => {
+    const isSafe = !hasDashes(key) && !hasLodashPrefix(key)
+    const pred = customPred(key, obj, isSafe)
+
+    // Custom Key (the pred value) when pred is `string`
+    if (typeof pred === 'string') return pred
+
+    // Original Key when pred is `false`
+    if (pred === false) return key
+
+    // Converted Key when pred is `true`
+    if (pred === true || isSafe) return convert(key)
+
+    // Otherwise use original key
+    return key
+  })
+
+export const createSnakeKeys = (customPred = alwaysNull) => obj =>
+  // eslint-disable-next-line complexity
+  decamelizeKeys(obj, (key, convert, options) => {
+    const isSafe = !hasDashes(key) && !hasLodashPrefix(key)
+    const pred = customPred(key, obj, isSafe)
+
+    // Custom Key (the pred value) when pred is `string`
+    if (typeof pred === 'string') return pred
+
+    // Original Key when pred is `false`
+    if (pred === false) return key
+
+    // Converted Key when pred is `true`
+    if (pred === true || isSafe) return convert(key, options)
+
+    // Otherwise use original key
+    return key
+  })
 
 // --
 // -- Selector State Helpers

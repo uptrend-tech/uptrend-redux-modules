@@ -1,6 +1,8 @@
 import {put, call} from 'redux-saga/effects'
 import * as actions from '../actions'
-import * as sagas from '../sagas'
+import createSagas from '../sagas'
+
+const sagas = createSagas()
 
 const api = {
   post: () => {},

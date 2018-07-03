@@ -1,14 +1,20 @@
 import {isolateSelectorsState} from '../../utils'
+import createSagas from './sagas'
 import * as actions from './actions'
 import * as selectors from './selectors'
 import reducer from './reducer'
-import sagas from './sagas'
 
-export default ({storeName = 'resource'} = {}) => {
+export default ({
+  storeName = 'resource',
+  camelCaseKeyPred,
+  snakeCaseKeyPred,
+} = {}) => {
+  const {rootSaga} = createSagas({camelCaseKeyPred, snakeCaseKeyPred})
+
   return {
     actions,
     reducer,
-    sagas,
+    sagas: rootSaga,
     selectors: isolateSelectorsState(storeName, selectors),
   }
 }
