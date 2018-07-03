@@ -1,8 +1,8 @@
 import createSagaMiddleware from 'redux-saga'
 import {createStore, applyMiddleware} from 'redux'
+import createSagas from '../sagas'
 import {delay} from '../../../utils'
 import reducer from '../reducer'
-import sagas from '../sagas'
 import {getList, getDetail} from '../selectors'
 import {
   resourceCreateRequest,
@@ -13,6 +13,7 @@ import {
 } from '../actions'
 
 const sagaMiddleware = createSagaMiddleware()
+const {rootSaga} = createSagas()
 
 const api = {
   post: (path, data) => Promise.resolve({data}),
@@ -27,7 +28,7 @@ const getStore = initialState => {
     initialState,
     applyMiddleware(sagaMiddleware),
   )
-  sagaMiddleware.run(sagas, {api})
+  sagaMiddleware.run(rootSaga, {api})
   return store
 }
 
