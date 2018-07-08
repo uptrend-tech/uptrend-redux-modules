@@ -45,25 +45,17 @@ test('error loading detail and updates status object', async () => {
   expect(getByTestId('render-done')).toBeInTheDOM()
 })
 
-test('makes resource requests using the child render request functions', async () => {
+// eslint-disable-next-line
+const UserTap = ({id, name}) => (
+  <Status success>
+    {id}:{name}
+  </Status>
+)
+
+test('makes resource GET requests using the child render request functions', async () => {
   const user = {id: 'a', name: 'Ben'}
-  const userPost = {id: 'a', name: 'Mat'}
-  const userPut = {id: 'a', name: 'Tom'}
-
   mockApi.onGet('/user/a').reply(200, user)
-  mockApi.onPost('/user', userPost).reply(200, userPost)
-  mockApi.onPut('/user/a', userPut).reply(200, userPut)
-
   const spyApiGet = jest.spyOn(api, 'get')
-  const spyApiPost = jest.spyOn(api, 'post')
-  const spyApiPut = jest.spyOn(api, 'put')
-
-  // eslint-disable-next-line
-  const UserTap = ({id, name}) => (
-    <Status success>
-      {id}:{name}
-    </Status>
-  )
 
   const locker = testLocker()
 
@@ -82,29 +74,13 @@ test('makes resource requests using the child render request functions', async (
       {({
         statusView,
         onEventLoadResource,
-        createResource,
-        createResourceRequest,
         loadResource,
         loadResourceRequest,
-        updateResource,
-        updateResourceRequest,
       }) => {
         // Load Resurce
         const doLoadResource = () => locker.put('loadResource', loadResource())
         const doLoadResourceRequest = () =>
           locker.put('loadResourceRequest', loadResourceRequest())
-
-        // Create Resurce
-        const doCreateResource = () =>
-          locker.put('createResource', createResource(userPost))
-        const doCreateResourceRequest = () =>
-          locker.put('createResourceRequest', createResourceRequest(userPost))
-
-        // Update Resurce
-        const doUpdateResource = () =>
-          locker.put('updateResource', updateResource(userPut))
-        const doUpdateResourceRequest = () =>
-          locker.put('updateResourceRequest', updateResourceRequest(userPut))
 
         return (
           <div>
@@ -112,18 +88,6 @@ test('makes resource requests using the child render request functions', async (
             <button onClick={onEventLoadResource}>OnEventLoadResource</button>
             <button onClick={doLoadResource}>LoadResource</button>
             <button onClick={doLoadResourceRequest}>LoadResourceRequest</button>
-
-            {/* Create Resource */}
-            <button onClick={doCreateResource}>CreateResource</button>
-            <button onClick={doCreateResourceRequest}>
-              CreateResourceRequest
-            </button>
-
-            {/* Update Resource */}
-            <button onClick={doUpdateResource}>UpdateResource</button>
-            <button onClick={doUpdateResourceRequest}>
-              UpdateResourceRequest
-            </button>
             {statusView}
           </div>
         )
@@ -151,39 +115,132 @@ test('makes resource requests using the child render request functions', async (
   expect(getByTestId('render-success')).toHaveTextContent('a:Ben')
 
   // --
-  // -- 3. `createResource` triggers create resource request
-  // --
-  Simulate.click(getByText('CreateResource'))
-  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
-  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
-  expect(getByTestId('render-success')).toHaveTextContent('a:Mat')
-
-  // --
-  // -- 4. `updateResource` triggers update resource request
-  // --
-  Simulate.click(getByText('UpdateResource'))
-  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
-  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
-  expect(getByTestId('render-success')).toHaveTextContent('a:Tom')
-
-  // --
   // -- 5. Triggers resource requests ONLY no status changes
   // --
   Simulate.click(getByText('LoadResourceRequest'))
-  Simulate.click(getByText('CreateResourceRequest'))
-  Simulate.click(getByText('UpdateResourceRequest'))
 
   expect(spyApiGet).toHaveBeenCalledTimes(3)
-  expect(spyApiPost).toHaveBeenCalledTimes(2)
-  expect(spyApiPut).toHaveBeenCalledTimes(2)
 
   // --
   // -- 6. confirm triggers return a promise (from redux-saga-thunk)
   // --
   expect(locker.get('loadResource')).toBeInstanceOf(Promise)
   expect(locker.get('loadResourceRequest')).toBeInstanceOf(Promise)
+})
+
+test('makes resource POST requests using the child render request functions', async () => {
+  const userPost = {id: 'a', name: 'Mat'}
+  mockApi.onPost('/user', userPost).reply(200, userPost)
+  const spyApiPost = jest.spyOn(api, 'post')
+
+  // eslint-disable-next-line
+  const locker = testLocker()
+
+  const {getByTestId, getByText} = renderWithRedux(
+    <ResourceLoader
+      resource="user"
+      resourceId="a"
+      renderInitial={() => <Status initial />}
+      renderError={error => (
+        <Status error>{JSON.stringify(error, null, 2)}</Status>
+      )}
+      renderLoading={() => <Status loading />}
+      renderSuccess={({id, name}) => <UserTap {...{id, name}} />}
+      list={false}
+    >
+      {({statusView, createResource, createResourceRequest}) => {
+        // Create Resurce
+        const doCreateResource = () =>
+          locker.put('createResource', createResource(userPost))
+        const doCreateResourceRequest = () =>
+          locker.put('createResourceRequest', createResourceRequest(userPost))
+
+        return (
+          <div>
+            {/* Create Resource */}
+            <button onClick={doCreateResource}>CreateResource</button>
+            <button onClick={doCreateResourceRequest}>
+              CreateResourceRequest
+            </button>
+            {statusView}
+          </div>
+        )
+      }}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderInitial.
+  expect(getByTestId('render-initial')).toHaveTextContent('Initial')
+
+  // `createResource` triggers create resource request
+  Simulate.click(getByText('CreateResource'))
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('a:Mat')
+
+  // Triggers resource requests ONLY no status changes
+  Simulate.click(getByText('CreateResourceRequest'))
+  expect(spyApiPost).toHaveBeenCalledTimes(2)
+
+  // Confirm triggers return a promise (from redux-saga-thunk)
   expect(locker.get('createResource')).toBeInstanceOf(Promise)
   expect(locker.get('createResourceRequest')).toBeInstanceOf(Promise)
+})
+
+test('makes resource PUT requests using the child render request functions', async () => {
+  const userPut = {id: 'a', name: 'Tom'}
+  mockApi.onPut('/user/a', userPut).reply(200, userPut)
+  const spyApiPut = jest.spyOn(api, 'put')
+  const locker = testLocker()
+
+  const {getByTestId, getByText} = renderWithRedux(
+    <ResourceLoader
+      resource="user"
+      resourceId="a"
+      renderInitial={() => <Status initial />}
+      renderError={error => (
+        <Status error>{JSON.stringify(error, null, 2)}</Status>
+      )}
+      renderLoading={() => <Status loading />}
+      renderSuccess={({id, name}) => <UserTap {...{id, name}} />}
+      list={false}
+    >
+      {({statusView, updateResource, updateResourceRequest}) => {
+        // Update Resurce
+        const doUpdateResource = () =>
+          locker.put('updateResource', updateResource(userPut))
+        const doUpdateResourceRequest = () =>
+          locker.put('updateResourceRequest', updateResourceRequest(userPut))
+
+        return (
+          <div>
+            {/* Update Resource */}
+            <button onClick={doUpdateResource}>UpdateResource</button>
+            <button onClick={doUpdateResourceRequest}>
+              UpdateResourceRequest
+            </button>
+            {statusView}
+          </div>
+        )
+      }}
+    </ResourceLoader>,
+  )
+
+  // Expects ResourceLoader component to render statusView from renderInitial.
+  expect(getByTestId('render-initial')).toHaveTextContent('Initial')
+
+  // `updateResource` triggers update resource request
+  Simulate.click(getByText('UpdateResource'))
+  expect(getByTestId('render-loading')).toHaveTextContent('Loading')
+  await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
+  expect(getByTestId('render-success')).toHaveTextContent('a:Tom')
+
+  // Triggers resource requests ONLY no status changes
+  Simulate.click(getByText('UpdateResourceRequest'))
+
+  expect(spyApiPut).toHaveBeenCalledTimes(2)
+
+  // confirm triggers return a promise (from redux-saga-thunk)
   expect(locker.get('updateResource')).toBeInstanceOf(Promise)
   expect(locker.get('updateResourceRequest')).toBeInstanceOf(Promise)
 })
