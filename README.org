@@ -1,0 +1,59 @@
+* TODO Composing ResourceLoader components w/ robust status handling
+As I look to find the most elegant way to use multiple ResourceLoaders in a single place, a key requirement is providing a way to conditionally handle both individual and combined ResourceLoader status objects. A key to making the solution elegant *and* robust is separating status handling from the ResourceLoader all together and instead letting that be handled in the child render function. By simplifying the ResourceLoader to always pass down the ResourceLoaderBag object (an object with status, result, and action functions) the API can be smaller and more specific while still allowing comprehensive status handling to be solved by one or more components provided by URM.
+** [ ] Separate render view functionality from ResourceLoader
+This can be done in a separate component that is passed the status object from within the render child function.
+** [ ] Standardized way to load GET,POST,PATCH,PUT,DELETE requests
+This should replace the current `updateResource` and `loadResource`. This could be `getResource`, `postResource`, `patchResource`, etc.
+** [ ] Add a ResourceLoaderComposer component for composing multiple nested ResourceLoader components.
+This should provide an easy to use and understand way of loading multiple resources and rendering based on their results (with particular support added for status)
+
+Here is a loose idea of how this could look (based on react-composer):
+#+BEGIN_SRC javascript
+const ComposedResourceLoaders = ({}) => (
+  <ResourceLoaderComposer
+    loaders={[
+      <PlanAppLoader autoLoad />,
+      <PlanAppWorksheetAnswersLoader autoLoad />,
+      ([planApp, wsAnswers], render) => (
+        <ResourceLoaderStatusRender
+          statuses={[planApp.status, wsAnswers.status]}
+          renderAllDone={render}
+        />
+      ),
+    ]}
+  >
+    {([planApp, wsAnswers], render) => {
+      <div>planApp</div>;
+    }}
+  </ResourceLoaderComposer>
+);
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+undefined:2
+  <ResourceLoaderComposer
+  ^
+
+SyntaxError: Unexpected token <
+    at __ob_eval__ (/private/var/folders/n7/k6_rp58j4rlbb3sr1_7s_gch0000gn/T/babel-vhOImc/javascript-RndraE:3:33)
+    at Object.<anonymous> (/private/var/folders/n7/k6_rp58j4rlbb3sr1_7s_gch0000gn/T/babel-vhOImc/javascript-RndraE:22:1)
+    at Module._compile (internal/modules/cjs/loader.js:654:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:665:10)
+    at Module.load (internal/modules/cjs/loader.js:566:32)
+    at tryModuleLoad (internal/modules/cjs/loader.js:506:12)
+    at Function.Module._load (internal/modules/cjs/loader.js:498:3)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:695:10)
+    at startup (internal/bootstrap/node.js:201:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:516:3)
+#+end_example
+
+#+BEGIN_SRC javascript
+fetch = require('node-fetch')
+
+fetch('https://api.github.com/repos/zweifisch/ob-coffee/languages')
+  .then(res => res.json())
+#+END_SRC
+
+#+RESULTS:
+: { 'Emacs Lisp': 4691, JavaScript: 184 }
