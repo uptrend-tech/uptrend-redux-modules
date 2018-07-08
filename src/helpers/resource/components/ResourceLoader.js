@@ -4,6 +4,7 @@ import {polyfill} from 'react-lifecycles-compat'
 import {connect} from 'react-redux'
 import {
   resourceCreateRequest,
+  resourceDeleteRequest,
   resourceDetailReadRequest,
   resourceListCreateRequest,
   resourceListReadRequest,
@@ -109,6 +110,11 @@ class ResourceLoader extends React.Component {
     return this.loadResourceAsync(request)
   }
 
+  deleteResource = deleteId => {
+    const request = this.requestResourceDetailDelete(deleteId)
+    return this.loadResourceAsync(request)
+  }
+
   loadResourceAsync(requestPromise) {
     this._asyncActive = true
     this.setState({loading: true})
@@ -181,6 +187,12 @@ class ResourceLoader extends React.Component {
     return requestDetailCreate(resource, data, entityType)
   }
 
+  requestResourceDetailDelete = deleteId => {
+    const {requestDetailDelete, resource, resourceId, entityType} = this.props
+    const finalDeleteId = deleteId === undefined ? resourceId : deleteId
+    return requestDetailDelete(resource, finalDeleteId, entityType)
+  }
+
   requestResourceDetailRead = params => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
     return requestDetailRead(resource, resourceId, params, entityType)
@@ -223,6 +235,8 @@ class ResourceLoader extends React.Component {
         onEventLoadResource: this.onEventLoadResource,
         createResource: this.createResource,
         createResourceRequest: this.requestResourceDetailCreate,
+        deleteResource: this.deleteResource,
+        deleteResourceRequest: this.requestResourceDetailDelete,
         loadResource: this.loadResource,
         loadResourceRequest: this.requestResource,
         updateResource: this.updateResource,
@@ -250,6 +264,7 @@ ResourceLoader.propTypes = {
   renderLoading: PropTypes.func,
   renderSuccess: PropTypes.func,
   requestDetailCreate: PropTypes.func.isRequired,
+  requestDetailDelete: PropTypes.func.isRequired,
   requestDetailRead: PropTypes.func.isRequired,
   requestDetailUpdate: PropTypes.func.isRequired,
   requestListCreate: PropTypes.func.isRequired,
@@ -265,6 +280,7 @@ polyfill(ResourceLoader)
 
 const mapDispatchToProps = {
   requestDetailCreate: resourceCreateRequest,
+  requestDetailDelete: resourceDeleteRequest,
   requestDetailRead: resourceDetailReadRequest,
   requestDetailUpdate: resourceUpdateRequest,
   requestListCreate: resourceListCreateRequest,
