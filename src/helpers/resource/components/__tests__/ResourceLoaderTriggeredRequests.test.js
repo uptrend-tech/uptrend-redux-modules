@@ -252,15 +252,18 @@ test('makes resource DELETE requests using the child render request functions', 
         <Status error>{JSON.stringify(error, null, 2)}</Status>
       )}
       renderLoading={() => <Status loading />}
-      renderSuccess={({id, name}) => <UserTap {...{id, name}} />}
+      renderSuccess={() => <UserTap id="a" name="Dead" />}
       list={false}
     >
       {({statusView, deleteResource, deleteResourceRequest}) => {
         // Delete Resurce
         const doDeleteResource = () =>
-          locker.put('deleteResource', deleteResource(userDelete))
+          locker.put('deleteResource', deleteResource(userDelete.id))
         const doDeleteResourceRequest = () =>
-          locker.put('deleteResourceRequest', deleteResourceRequest(userDelete))
+          locker.put(
+            'deleteResourceRequest',
+            deleteResourceRequest(userDelete.id),
+          )
 
         return (
           <div>
@@ -283,7 +286,7 @@ test('makes resource DELETE requests using the child render request functions', 
   Simulate.click(getByText('DeleteResource'))
   expect(getByTestId('render-loading')).toHaveTextContent('Loading')
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
-  expect(getByTestId('render-success')).toHaveTextContent('a:Tom')
+  expect(getByTestId('render-success')).toHaveTextContent('a:Dead')
 
   // Triggers resource requests ONLY no status changes
   Simulate.click(getByText('DeleteResourceRequest'))
