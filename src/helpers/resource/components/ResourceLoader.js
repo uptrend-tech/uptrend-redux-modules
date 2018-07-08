@@ -3,6 +3,7 @@ import React from 'react'
 import {polyfill} from 'react-lifecycles-compat'
 import {connect} from 'react-redux'
 import {
+  resourceCreateRequest,
   resourceDetailReadRequest,
   resourceListCreateRequest,
   resourceListReadRequest,
@@ -103,6 +104,11 @@ class ResourceLoader extends React.Component {
     return null
   }
 
+  createResource = data => {
+    const request = this.requestResourceDetailCreate(data)
+    return this.loadResourceAsync(request)
+  }
+
   loadResourceAsync(requestPromise) {
     this._asyncActive = true
     this.setState({loading: true})
@@ -163,9 +169,16 @@ class ResourceLoader extends React.Component {
   }
 
   requestResourceDetail = dynamicParams => {
-    const {requestParams} = this.props
+    const {postRequest, requestParams} = this.props
     const params = {...requestParams, ...dynamicParams}
-    return this.requestResourceDetailRead(params)
+    return postRequest
+      ? this.requestResourceDetailCreate(params)
+      : this.requestResourceDetailRead(params)
+  }
+
+  requestResourceDetailCreate = data => {
+    const {requestDetailCreate, resource, entityType} = this.props
+    return requestDetailCreate(resource, data, entityType)
   }
 
   requestResourceDetailRead = params => {
@@ -186,9 +199,9 @@ class ResourceLoader extends React.Component {
       : this.requestResourceListRead(params)
   }
 
-  requestResourceListCreate = params => {
+  requestResourceListCreate = data => {
     const {entityType, resource, requestListCreate} = this.props
-    return requestListCreate(resource, params, entityType)
+    return requestListCreate(resource, data, entityType)
   }
 
   requestResourceListRead = params => {
@@ -208,6 +221,8 @@ class ResourceLoader extends React.Component {
     return this.props.children(
       {
         onEventLoadResource: this.onEventLoadResource,
+        createResource: this.createResource,
+        createResourceRequest: this.requestResourceDetailCreate,
         loadResource: this.loadResource,
         loadResourceRequest: this.requestResource,
         updateResource: this.updateResource,
@@ -234,10 +249,11 @@ ResourceLoader.propTypes = {
   renderInitial: PropTypes.func,
   renderLoading: PropTypes.func,
   renderSuccess: PropTypes.func,
-  requestDetailRead: PropTypes.func,
-  requestDetailUpdate: PropTypes.func,
-  requestListCreate: PropTypes.func,
-  requestListRead: PropTypes.func,
+  requestDetailCreate: PropTypes.func.isRequired,
+  requestDetailRead: PropTypes.func.isRequired,
+  requestDetailUpdate: PropTypes.func.isRequired,
+  requestListCreate: PropTypes.func.isRequired,
+  requestListRead: PropTypes.func.isRequired,
   requestParams: PropTypes.object,
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -248,6 +264,7 @@ ResourceLoader.propTypes = {
 polyfill(ResourceLoader)
 
 const mapDispatchToProps = {
+  requestDetailCreate: resourceCreateRequest,
   requestDetailRead: resourceDetailReadRequest,
   requestDetailUpdate: resourceUpdateRequest,
   requestListCreate: resourceListCreateRequest,
