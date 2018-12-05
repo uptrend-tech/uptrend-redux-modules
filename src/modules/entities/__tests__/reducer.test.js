@@ -9,8 +9,15 @@ const reducer = createReducer({initialState})
 const altState = {
   ...initialState,
   foo: {
-    id: 1,
-    bars: [1, 2, 3],
+    1: {
+      id: 1,
+      bars: [1, 2, 3],
+    },
+  },
+  bar: {
+    1: {type: 'ape', food: 'bananas'},
+    2: {type: 'cat', food: 'fish'},
+    3: {type: 'doc', food: 'meat'},
   },
 }
 
@@ -18,20 +25,50 @@ test('returns the initial state', () => {
   expect(reducer(undefined, {})).toEqual(initialState)
 })
 
-test('handles recieving entities', () => {
+describe('handles recieving entities', () => {
   const createAction = payload => ({
     type: ENTITIES_RECEIVE,
     payload,
   })
-  expect(reducer(initialState, createAction({foo: altState.foo}))).toEqual(
-    altState,
-  )
-  expect(reducer(altState, createAction({foo: {bars: [4]}}))).toEqual({
-    ...altState,
-    foo: {
-      ...altState.foo,
-      bars: [4],
-    },
+
+  describe('normalized entities value', () => {
+    test('initial state', () => {
+      const payload = {foo: {1: {id: 1, bars: [2]}}}
+      expect(reducer(initialState, createAction(payload))).toEqual(payload)
+    })
+
+    test('existing state', () => {
+      const payload = {foo: {1: {id: 1, bars: [4]}}}
+      expect(reducer(altState, createAction(payload))).toEqual({
+        ...altState,
+        foo: {...altState.foo, ...payload.foo},
+      })
+    })
+  })
+
+  describe('non-normalized value', () => {
+    const payload = {bar: {1: {type: 'ant', food: 'chip'}}}
+    test('initial state', () => {
+      expect(reducer(initialState, createAction(payload))).toEqual(payload)
+    })
+    test('existing state', () => {
+      expect(reducer(altState, createAction(payload))).toEqual({
+        ...altState,
+        bar: {...altState.bar, ...payload.bar},
+      })
+    })
+  })
+  test('object value', () => {
+    expect(reducer(initialState, createAction({foo: altState.foo}))).toEqual({
+      foo: altState.foo,
+    })
+    expect(reducer(altState, createAction({foo: {bars: [4]}}))).toEqual({
+      ...altState,
+      foo: {
+        ...altState.foo,
+        bars: [4],
+      },
+    })
   })
 })
 
