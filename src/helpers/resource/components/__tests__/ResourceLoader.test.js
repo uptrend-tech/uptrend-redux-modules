@@ -129,7 +129,9 @@ test('auto loads list and renders results', async () => {
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => <div key={user.id}>{user.name}</div>)}
+          {userList.map(user => (
+            <div key={user.id}>{user.name}</div>
+          ))}
         </Status>
       )}
       autoLoad
@@ -160,7 +162,9 @@ test('auto loads with params passed in', async () => {
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => <div key={user.id}>{user.name}</div>)}
+          {userList.map(user => (
+            <div key={user.id}>{user.name}</div>
+          ))}
         </Status>
       )}
       requestParams={{best: 'dude'}}
@@ -263,7 +267,9 @@ test('post resource request and renders results', async () => {
       renderLoading={() => <Status loading />}
       renderSuccess={userList => (
         <Status success>
-          {userList.map(user => <div key={user.id}>{user.name}</div>)}
+          {userList.map(user => (
+            <div key={user.id}>{user.name}</div>
+          ))}
         </Status>
       )}
       autoLoad
