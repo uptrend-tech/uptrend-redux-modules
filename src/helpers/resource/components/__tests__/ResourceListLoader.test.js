@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import 'dom-testing-library/extend-expect';
+import 'dom-testing-library/extend-expect'
 import React from 'react'
 import {wait} from 'react-testing-library'
 import {mockApi, renderWithRedux} from '../../../../utils/test'
@@ -20,7 +20,7 @@ test('receives props and renders initial statusView', () => {
 
 test('receives props and renders status.initial true', () => {
   const {getByTestId} = renderWithRedux(
-    <ResourceListLoader resource={'example'} resourceId={1}>
+    <ResourceListLoader resource="example" resourceId={1}>
       {({status}) => <div>{status.initial && <Status initial />}</div>}
     </ResourceListLoader>,
   )
