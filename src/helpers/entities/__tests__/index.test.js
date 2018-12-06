@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import 'dom-testing-library/extend-expect';
+import 'dom-testing-library/extend-expect'
 import createHelpers from '../'
 import {createEntitiesForTests} from '../../../utils/test'
 

@@ -53,14 +53,13 @@ const assoc = curry((prop, val, obj) => {
 
 /* eslint-disable */
 // dissocPath : [k] -> { k: v } -> { k: v }
-export const dissocPath = curry(
-  ([head, ...tail], obj) =>
-    !head
-      ? obj
-      : obj[head] == null
-        ? obj
-        : length(tail)
-          ? assoc(head, dissocPath(tail, obj[head]), obj)
-          : dissoc(head, obj),
+export const dissocPath = curry(([head, ...tail], obj) =>
+  !head
+    ? obj
+    : obj[head] == null
+    ? obj
+    : length(tail)
+    ? assoc(head, dissocPath(tail, obj[head]), obj)
+    : dissoc(head, obj),
 )
 /* eslint-enable */

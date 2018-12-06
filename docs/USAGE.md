@@ -129,7 +129,11 @@ class GroupListContainer extends React.Component {
     if (loading) return <div>Loading...</div>
 
     return (
-      <ul>{groupList.map(group => <li key={group.id}>{group.name}</li>)}</ul>
+      <ul>
+        {groupList.map(group => (
+          <li key={group.id}>{group.name}</li>
+        ))}
+      </ul>
     )
   }
 }
@@ -138,5 +142,8 @@ GroupListContainer.propTypes = {
   fetchTripGroupList: PropTypes.func.isRequired,
 }
 
-export default connect(null, mapDispatchToProps)(GroupListContainer)
+export default connect(
+  null,
+  mapDispatchToProps,
+)(GroupListContainer)
 ```

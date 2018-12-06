@@ -31,15 +31,14 @@
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Inspiration](#inspiration)
-* [Other Solutions](#other-solutions)
-* [Contributors](#contributors)
-* [LICENSE](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Inspiration](#inspiration)
+- [Other Solutions](#other-solutions)
+- [Contributors](#contributors)
+- [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -62,7 +61,7 @@ not strict guidelines by any means.
 
 #### Resource & Entities
 
-* `src/store/modules/resource/index.js`
+- `src/store/modules/resource/index.js`
 
   ```js
   // - src/store/modules/resource/index.js
@@ -72,7 +71,7 @@ not strict guidelines by any means.
   export default createResource()
   ```
 
-* `src/store/modules/entities/index.js`
+- `src/store/modules/entities/index.js`
 
   ```js
   // - src/store/modules/entities/index.js
@@ -83,7 +82,7 @@ not strict guidelines by any means.
   export default createEntities({schemas})
   ```
 
-* `src/store/modules/entities/schema.js`
+- `src/store/modules/entities/schema.js`
 
   ```js
   // - src/store/modules/entities/schemas.js
@@ -93,7 +92,7 @@ not strict guidelines by any means.
   export const team = new schema.Entity('teams', {owner: user, members: [user]})
   ```
 
-* `src/store/actions.js`
+- `src/store/actions.js`
 
   ```js
   // - src/store/actions.js
@@ -106,7 +105,7 @@ not strict guidelines by any means.
   }
   ```
 
-* `src/store/middlewares.js`
+- `src/store/middlewares.js`
 
   ```js
   // - src/store/middlewares.js
@@ -118,7 +117,7 @@ not strict guidelines by any means.
   ]
   ```
 
-- `src/store/reducers.js`
+* `src/store/reducers.js`
 
   ```js
   // - src/store/reducer.js
@@ -133,7 +132,7 @@ not strict guidelines by any means.
   })
   ```
 
-- `src/store/sagas.js`
+* `src/store/sagas.js`
 
   ```js
   // - src/store/sagas.js
@@ -158,7 +157,7 @@ not strict guidelines by any means.
   }
   ```
 
-- `src/store/selectors.js`
+* `src/store/selectors.js`
 
   ```js
   // - src/store/selectors.js

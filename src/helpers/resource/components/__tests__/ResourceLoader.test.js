@@ -50,7 +50,7 @@ test('receives props and renders initial statusView', () => {
 
 test('receives props and renders status.initial true', () => {
   const {getByTestId} = renderWithRedux(
-    <ResourceLoader resource={'example'} list={false}>
+    <ResourceLoader resource="example" list={false}>
       {({status}) => <div>{status.initial && <Status initial />}</div>}
     </ResourceLoader>,
   )
@@ -182,7 +182,7 @@ test('auto loads with params passed in', async () => {
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements,jest/valid-describe
 describe('auto loads resource when resource or resourceId prop changes', async () => {
   mockApi.onGet('/user/1').reply(200, {id: 1, name: 'Ben'})
   mockApi.onGet('/user/2').reply(200, {id: 2, name: 'Mat'})
@@ -286,6 +286,7 @@ test('post resource request and renders results', async () => {
   await wait(() => expect(getByTestId('render-success')).toBeInTheDOM())
 })
 
+// eslint-disable-next-line jest/valid-describe
 describe('loads resource when resourceId is missing or empty', async () => {
   mockApi.onGet('/test').reply(200, {id: 0, name: 'Test'})
   mockApi.onGet('/test/1').reply(200, {id: 1, name: 'One'})
