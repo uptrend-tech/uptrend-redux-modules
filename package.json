@@ -28,6 +28,7 @@
   "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
   "license": "MIT",
   "dependencies": {
+    "@babel/helpers": "^7.2.0",
     "@babel/runtime": "^7.2.0",
     "humps": "^2.0.1",
     "lodash": "^4.17.5",
