@@ -28,6 +28,7 @@
   "author": "Brandon Orther <brandon@uptrend.tech> (http://github.com/orther)",
   "license": "MIT",
   "dependencies": {
+    "global": "^4.3.2",
     "humps": "^2.0.1",
     "lodash": "^4.17.5",
     "make-error-cause": "^2.0.0",
@@ -51,7 +52,7 @@
     "normalizr": "^3.2.4",
     "react-testing-library": "^3.1.3",
     "redux-mock-store": "^1.5.1",
-    "uptrend-scripts": "^0.40.0"
+    "uptrend-scripts": "0.40.0"
   },
   "eslintIgnore": [
     "node_modules",
