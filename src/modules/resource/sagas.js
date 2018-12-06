@@ -7,6 +7,7 @@ import {
 } from '../../utils'
 import * as actions from './actions'
 
+//  eslint-disable-next-line max-lines-per-function
 const sagasFactory = ({
   // Function to customize auto camelCasing response data keys
   camelCaseKeyPred,
