@@ -19,7 +19,7 @@ const api = {
   post: (path, data) => Promise.resolve({data}),
   get: () => Promise.resolve({data: [1, 2, 3]}),
   put: (path, data) => Promise.resolve({data}),
-  delete: () => Promise.resolve(),
+  delete: (path, data) => Promise.resolve({data}),
 }
 
 const getStore = initialState => {
@@ -106,9 +106,11 @@ describe('resource', () => {
     })
 
     expect(getList(getState(), 'resources')).toEqual([1, 2, {foo: 'bar'}])
+
     dispatch(resourceDeleteRequest('resources', 1))
     await delay()
     expect(getList(getState(), 'resources')).toEqual([2, {foo: 'bar'}])
+
     dispatch(resourceDeleteRequest('resources', {foo: 'bar'}))
     await delay()
     expect(getList(getState(), 'resources')).toEqual([2])

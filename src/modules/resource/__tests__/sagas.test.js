@@ -8,7 +8,7 @@ const api = {
   post: () => {},
   get: () => {},
   put: () => {},
-  delete: () => {},
+  delete: (path, data) => Promise.resolve({data}),
 }
 
 const thunk = '123'
@@ -182,14 +182,41 @@ describe('updateResource', () => {
 
 describe('deleteResource', () => {
   const payload = {needle: 1}
-
-  it('calls success', () => {
+  it('calls success withOUT updates', () => {
     const generator = sagas.deleteResource(api, payload, meta)
     expect(generator.next().value).toEqual(
       call([api, api.delete], `/${resource}/1`),
     )
+    expect(generator.next({status: 204}).value).toEqual(
+      put(
+        actions.resourceDeleteSuccess(
+          resource,
+          entityType,
+          sagas.apiResponseToPayload({status: 204}),
+          payload,
+          thunk,
+          false,
+        ),
+      ),
+    )
+  })
+
+  it('calls success WITH UPDATES', () => {
+    const generator = sagas.deleteResource(api, payload, meta)
     expect(generator.next().value).toEqual(
-      put(actions.resourceDeleteSuccess(resource, entityType, payload, thunk)),
+      call([api, api.delete], `/${resource}/1`),
+    )
+    expect(generator.next({status: 200}).value).toEqual(
+      put(
+        actions.resourceDeleteSuccess(
+          resource,
+          entityType,
+          sagas.apiResponseToPayload({status: 200}),
+          payload,
+          thunk,
+          true,
+        ),
+      ),
     )
   })
 
@@ -248,11 +275,20 @@ test('watchResourceUpdateRequest', () => {
 })
 
 test('watchResourceDeleteRequest', () => {
-  const payload = {needle: 1}
-  const generator = sagas.watchResourceDeleteRequest(api, {payload, meta})
-  expect(generator.next({payload, meta}).value).toEqual(
-    call(sagas.deleteResource, api, payload, meta),
-  )
+  ;(() => {
+    const payload = {needle: 1}
+    const generator = sagas.watchResourceDeleteRequest(api, {payload, meta})
+    expect(generator.next({payload, meta}).value).toEqual(
+      call(sagas.deleteResource, api, payload, meta),
+    )
+  })()
+  ;(() => {
+    const payload = {needle: 2, data: {id: 3}}
+    const generator = sagas.watchResourceDeleteRequest(api, {payload, meta})
+    expect(generator.next({payload, meta}).value).toEqual(
+      call(sagas.deleteResource, api, payload, meta),
+    )
+  })()
 })
 
 // TODO re-enable these after we can mock safe sagas
