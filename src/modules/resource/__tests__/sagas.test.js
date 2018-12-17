@@ -187,12 +187,12 @@ describe('deleteResource', () => {
     expect(generator.next().value).toEqual(
       call([api, api.delete], `/${resource}/1`),
     )
-    expect(generator.next({status: 202}).value).toEqual(
+    expect(generator.next({status: 204}).value).toEqual(
       put(
         actions.resourceDeleteSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload({status: 202}),
+          sagas.apiResponseToPayload({status: 204}),
           payload,
           thunk,
           false,
