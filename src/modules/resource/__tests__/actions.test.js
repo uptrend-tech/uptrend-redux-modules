@@ -411,10 +411,13 @@ test('resourceDeleteRequest', () => {
 })
 
 test('resourceDeleteSuccess', () => {
+  const api = {response: {data: {id: 1, title: 'test'}}}
+  const payload = {api, data: api.response.data}
   expect(
     actions.resourceDeleteSuccess(
       'resourceName',
       'schemaName',
+      payload,
       'request',
       'thunk',
     ),
@@ -422,6 +425,7 @@ test('resourceDeleteSuccess', () => {
     expect.objectContaining({
       type: actions.RESOURCE_DELETE_SUCCESS,
       payload: {
+        ...payload,
         entityType: 'schemaName',
         resource: {
           path: 'resourceName',

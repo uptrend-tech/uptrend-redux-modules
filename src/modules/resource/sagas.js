@@ -167,9 +167,20 @@ const sagasFactory = ({
 
   function* deleteResource(api, {needle}, {resource, thunk, entityType}) {
     try {
-      yield call([api, api.delete], resourceNeedlePath(resource, needle))
+      const resp = yield call(
+        [api, api.delete],
+        resourceNeedlePath(resource, needle),
+      )
+
       yield put(
-        actions.resourceDeleteSuccess(resource, entityType, {needle}, thunk),
+        actions.resourceDeleteSuccess(
+          resource,
+          entityType,
+          apiResponseToPayload(resp),
+          {needle},
+          thunk,
+          resp.status === 200, // update on 200
+        ),
       )
     } catch (e) {
       yield put(
