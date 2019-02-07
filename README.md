@@ -152,7 +152,7 @@ class GroupListContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchGroups()
+    this.loadGroups()
   }
 
   loadGroups() {
