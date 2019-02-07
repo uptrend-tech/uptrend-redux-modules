@@ -25,24 +25,25 @@
 At Uptrend we enjoy building React applications and have had success using
 redux + normalizr to manage state and redux-saga + redux-saga-thunk to
 orchestrate application side effects (i.e. asynchronous things like data
-fetching). Code is easy to understand and typically works as expected but one
-criticism could be had about the amount of ceremony and boilerplate it takes.
+fetching). Code is easy to understand and typically works as expected but
+someone could have a criticism about the amount of ceremony and boilerplate
+required.
 
-Typically whenever a new type of thing (an entity) was added to our app we were
-required to add reducers, actions, sagas, schemas, selectors, and container
-components for basic CRUD functionality.
+Typically, whenever adding a new entity to an app it required us to write
+reducers, actions, sagas, schemas, selectors, and container components to get
+basic CRUD functionality.
 
 ## This solution
 
-Create a concise and straight forward way to make HTTP requests
-that normalize response handling including normalization of response data into
-index entities in the redux store. To get CRUD functionality for a new entity
-you simply add a Normalizr schema and use the provided actions and selectors
-provided by URM (uptrend-redux-modules). URM also provides render prop React
-components that simplify and reduce the amount of code needed. 
+Create a concise and straightforward way to make HTTP requests that normalize
+response handling including normalization of response data into index entities
+in the redux store. To get CRUD functionality for a new entity, you add a
+normalizr schema and use the provided actions and selectors provided by URM
+(uptrend-redux-modules). URM also provides render prop React components that
+simplify and reduce the amount of code needed.
 
-Below are some code examples to highlight what using URM resource and entities
-looks like:
+Below are code examples to highlight what using URM resource and entities looks
+like:
 
 ### ResourceDetailLoader Component
 
