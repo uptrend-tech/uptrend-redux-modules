@@ -218,8 +218,8 @@ yarn add uptrend-redux-modules
 
 #### Example Project Usage
 
-Using `uptrend-redux-modules` requires some ceremony. Below is an example of how
-one may set it up in a react app using the resource and entities redux-modules.
+Below is an example of how one may set it up in a react app using the resource 
+and entities redux-modules.
 
 Do note there are many ways you could organize your project and this example is
 not strict guidelines by any means.
