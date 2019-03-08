@@ -1,8 +1,10 @@
+import React from 'react'
+import {Provider} from 'react-redux'
 import {done, fulfilled, pending, rejected} from 'redux-saga-thunk'
 import ResourceDetailLoader from './components/ResourceDetailLoader'
 import ResourceListLoader from './components/ResourceListLoader'
 
-export default ({entities, resource}) => {
+export default ({entities, resource, store}) => {
   const {
     resourceCreateRequest,
     resourceDeleteRequest,
@@ -90,9 +92,21 @@ export default ({entities, resource}) => {
     entities.selectors.getDetail,
   )
 
+  const ResourceDetailLoaderWithStore = props => (
+    <Provider store={store}>
+      <ResourceDetailLoader {...props} />
+    </Provider>
+  )
+
+  const ResourceListLoaderWithStore = props => (
+    <Provider store={store}>
+      <ResourceListLoader {...props} />
+    </Provider>
+  )
+
   return {
-    ResourceDetailLoader,
-    ResourceListLoader,
+    ResourceDetailLoader: ResourceDetailLoaderWithStore,
+    ResourceListLoader: ResourceListLoaderWithStore,
     resourceCreate,
     resourceDelete,
     resourceDetailRead,
