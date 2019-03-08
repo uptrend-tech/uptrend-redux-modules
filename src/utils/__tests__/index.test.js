@@ -1,6 +1,7 @@
 import {createCamelKeys, createSnakeKeys} from '../index'
 
 /* eslint-disable camelcase */
+/* eslint-disable babel/camelcase */
 describe('camelKeys', () => {
   const camelKeys = createCamelKeys()
 
@@ -99,4 +100,3 @@ describe('snakeKeys - prevent matrixValues pred', () => {
     },
   )
 })
-/* eslint-enable camelcase */

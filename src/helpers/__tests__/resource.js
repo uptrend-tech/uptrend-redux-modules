@@ -49,26 +49,36 @@ const getThunkState = (thunkName, status) => {
   }
 }
 
-const createHelpers = () => {
+const createHelpers = ({store} = {}) => {
   const entities = createEntities({isDevEnv: false, schemas: getSchemas()})
   const resource = createResource()
-  return createResourceHelpers({entities, resource})
+  return createResourceHelpers({entities, resource, store})
 }
 
 describe('createResourceHelpers', () => {
-  const resourceHelpers = createHelpers()
+  test('requires `store` object passed as option', () => {
+    expect(() => createHelpers({})).toThrow()
+    expect(() => createHelpers({store: null})).toThrow()
+    expect(() => createHelpers({store: 1})).toThrow()
+    expect(() => createHelpers({store: ''})).toThrow()
+    expect(() => createHelpers({store: []})).toThrow()
+    expect(() => createHelpers({store: {}})).not.toThrow()
+  })
+
   test('module parts defined', () => {
-    expect(resourceHelpers.resourceCreate).toBeDefined()
-    expect(resourceHelpers.resourceDelete).toBeDefined()
-    expect(resourceHelpers.resourceDetailRead).toBeDefined()
-    expect(resourceHelpers.resourceListCreate).toBeDefined()
-    expect(resourceHelpers.resourceListRead).toBeDefined()
-    expect(resourceHelpers.resourceUpdate).toBeDefined()
+    expect(() => createHelpers({})).toThrow()
+    // const resourceHelpers = createHelpers({store: {}})
+    // expect(resourceHelpers.resourceCreate).toBeDefined()
+    // expect(resourceHelpers.resourceDelete).toBeDefined()
+    // expect(resourceHelpers.resourceDetailRead).toBeDefined()
+    // expect(resourceHelpers.resourceListCreate).toBeDefined()
+    // expect(resourceHelpers.resourceListRead).toBeDefined()
+    // expect(resourceHelpers.resourceUpdate).toBeDefined()
   })
 })
 
 describe('resourceCreate', () => {
-  const {resourceCreate} = createHelpers()
+  const {resourceCreate} = createHelpers({store: {}})
   const expectActions = actions.resourceCreateRequest
   cases(
     'action',
@@ -118,7 +128,7 @@ describe('resourceCreate', () => {
 })
 
 describe('resourceDelete', () => {
-  const {resourceDelete} = createHelpers()
+  const {resourceDelete} = createHelpers({store: {}})
   const expectActions = actions.resourceDeleteRequest
   cases(
     'action',
@@ -170,7 +180,7 @@ describe('resourceDelete', () => {
 })
 
 describe('resourceDetailRead', () => {
-  const {resourceDetailRead} = createHelpers()
+  const {resourceDetailRead} = createHelpers({store: {}})
   const expectActions = actions.resourceDetailReadRequest
   cases(
     'action',
@@ -231,7 +241,7 @@ describe('resourceDetailRead', () => {
 })
 
 describe('resourceListCreate', () => {
-  const {resourceListCreate} = createHelpers()
+  const {resourceListCreate} = createHelpers({store: {}})
   const expectActions = actions.resourceListCreateRequest
   cases(
     'action',
@@ -283,7 +293,7 @@ describe('resourceListCreate', () => {
 })
 
 describe('resourceListRead', () => {
-  const {resourceListRead} = createHelpers()
+  const {resourceListRead} = createHelpers({store: {}})
   const expectActions = actions.resourceListReadRequest
   cases(
     'action',
@@ -335,7 +345,7 @@ describe('resourceListRead', () => {
 })
 
 describe('resourceUpdate', () => {
-  const {resourceUpdate} = createHelpers()
+  const {resourceUpdate} = createHelpers({store: {}})
   const expectActions = actions.resourceUpdateRequest
   cases(
     'action',
