@@ -26,6 +26,9 @@ export const alwaysNull = alwaysFn(null)
 
 export const isObject = input => typeof input === 'object'
 
+export const isPlainObject = val =>
+  !!val && typeof val === 'object' && val.constructor === Object
+
 // --
 // -- object key formating
 // --

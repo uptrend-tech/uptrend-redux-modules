@@ -1,10 +1,17 @@
 import React from 'react'
 import {Provider} from 'react-redux'
 import {done, fulfilled, pending, rejected} from 'redux-saga-thunk'
+import {isPlainObject} from '../../utils'
 import ResourceDetailLoader from './components/ResourceDetailLoader'
 import ResourceListLoader from './components/ResourceListLoader'
 
 export default ({entities, resource, store}) => {
+  if (!isPlainObject(store)) {
+    throw new Error(
+      '`createResourceHelpers` requires a redux store object be passed as `store` property!',
+    )
+  }
+
   const {
     resourceCreateRequest,
     resourceDeleteRequest,

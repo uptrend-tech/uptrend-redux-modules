@@ -1,10 +1,4 @@
 import {createResource, createEntities} from '../'
-// const createHelpers = () => {
-//   const entities = createEntities({isDevEnv: false, schemas: getSchemas()})
-//   const resource = createResource()
-//   return createResourceHelpers({entities, resource})
-// }
-
 import {getSchemas} from '../utils/test/fixtures'
 
 describe('createEntities', () => {
