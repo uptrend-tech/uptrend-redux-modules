@@ -287,6 +287,10 @@ ResourceLoader.propTypes = {
   passThru: PropTypes.any,
 }
 
+ResourceLoader.defaultProps = {
+  autoCaseKeys: true,
+}
+
 // Polyfill component so the new lifecycles will work with older React versions
 polyfill(ResourceLoader)
 

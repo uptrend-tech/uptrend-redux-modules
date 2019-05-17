@@ -23,7 +23,7 @@ const sagasFactory = ({
   }
 
   const apiResponseData = (autoCaseKeys, response) => {
-    return autoCaseKeys === false ? response.data : camelKeys(response.data)
+    return autoCaseKeys ? camelKeys(response.data) : response.data
   }
 
   const apiResponseToPayload = (autoCaseKeys, response) => ({

@@ -6,7 +6,7 @@ const optionsDefault = {
 
 export function getCreateRequestMetaOptions(options) {
   if (!isPlainObject(options)) {
-    return optionsDefault
+    return {...optionsDefault}
   }
 
   return {...optionsDefault, ...options}
