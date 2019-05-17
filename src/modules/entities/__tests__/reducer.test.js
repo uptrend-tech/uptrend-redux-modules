@@ -3,7 +3,7 @@ import createReducer from '../reducer'
 import createSelectors from '../selectors'
 import {ENTITIES_RECEIVE, ENTITIES_REMOVE} from '../actions'
 
-const {initialState} = createSelectors({storeName: 'resource'})
+const {initialState} = createSelectors()
 const reducer = createReducer({initialState})
 
 const altState = {

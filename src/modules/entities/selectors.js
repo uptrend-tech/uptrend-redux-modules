@@ -1,7 +1,6 @@
-import {denormalize} from 'normalizr'
 import {isObject} from '../../utils'
 
-export default ({schemas}) => {
+export default () => {
   const initialState = {}
 
   const getEntity = (state = initialState, entity) => {
@@ -20,21 +19,10 @@ export default ({schemas}) => {
     return entityDetailList.filter(isObject)
   }
 
-  const getDenormalizedDetail = (state = initialState, entity, entityId) => {
-    return denormalize({[entity]: entityId}, schemas[entity], state)
-  }
-
-  const getDenormalizedList = (state = initialState, entity, entityIdList) => {
-    const schema = schemas[entity]
-    return denormalize({[entity]: entityIdList}, [schema], state)
-  }
-
   return {
     initialState,
     getEntity,
     getDetail,
     getList,
-    getDenormalizedDetail,
-    getDenormalizedList,
   }
 }

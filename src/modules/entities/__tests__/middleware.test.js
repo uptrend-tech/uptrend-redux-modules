@@ -1,6 +1,6 @@
 import configureStore from 'redux-mock-store'
 import {getSchemas} from '../../../utils/test/fixtures'
-import {entitiesReceive} from '../actions'
+import {entitiesReceive, entitiesRemove} from '../actions'
 import middlewareFactory from '../middleware'
 
 const userTom = {uuid: 'aaa', name: 'Tom'}
@@ -158,6 +158,26 @@ describe('middlewareFactory:isDevEnv=true', () => {
     expect(store.getActions()).toEqual([
       entitiesReceive(entities),
       {...action, payload: {...action.payload, entities: 1}},
+    ])
+  })
+
+  it('dispatches entitiesRemove action', () => {
+    const store = mockStore({})
+    const action = {
+      type: 'RESP',
+      payload: {},
+      meta: {request: {needle: 1}, entityType: 'team', removeEntities: true},
+    }
+    const modifiedAction = {
+      type: 'RESP',
+      payload: {},
+      meta: {entityType: 'team', removeEntities: true, request: {needle: 1}},
+    }
+
+    expect(store.dispatch(action)).toEqual(modifiedAction)
+    expect(store.getActions()).toEqual([
+      entitiesRemove('team', [1]),
+      {...action},
     ])
   })
 

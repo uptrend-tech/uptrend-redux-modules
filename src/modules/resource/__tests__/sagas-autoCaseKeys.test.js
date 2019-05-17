@@ -14,7 +14,8 @@ const api = {
 const thunk = '123'
 const resource = 'resources'
 const entityType = 'resource'
-const meta = {thunk, resource, entityType}
+const autoCaseKeys = false
+const meta = {thunk, resource, entityType, autoCaseKeys}
 
 describe('createResource', () => {
   const payload = {data: 'foo'}
@@ -25,12 +26,12 @@ describe('createResource', () => {
     expect(generator.next().value).toEqual(
       call([api, api.post], `/${resource}`, 'foo'),
     )
-    expect(generator.next({data: {data: detail}}).value).toEqual(
+    expect(generator.next({data: {Data: detail}}).value).toEqual(
       put(
         actions.resourceCreateSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {data: {data: detail}}),
+          sagas.apiResponseToPayload(false, {data: {Data: detail}}),
           payload,
           thunk,
         ),
@@ -61,7 +62,7 @@ describe('readResourceList', () => {
   const payload = {params: {_limit: 1}}
 
   it('calls success', () => {
-    const detail = [1, 2, 3]
+    const detail = [1, 2, 3, {Data: 'foo'}]
     const generator = sagas.readResourceList(api, payload, meta)
     expect(generator.next().value).toEqual(
       call([api, api.get], `/${resource}`, payload.params),
@@ -71,7 +72,7 @@ describe('readResourceList', () => {
         actions.resourceListReadSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {data: detail}),
+          sagas.apiResponseToPayload(false, {data: detail}),
           payload,
           thunk,
         ),
@@ -102,7 +103,7 @@ describe('readResourceDetail', () => {
   const payload = {needle: 1, params: {flag: 1}}
 
   it('calls success', () => {
-    const detail = 'foo'
+    const detail = {Data: 'foo'}
     const generator = sagas.readResourceDetail(api, payload, meta)
     expect(generator.next().value).toEqual(
       call([api, api.get], `/${resource}/1`, payload.params),
@@ -112,7 +113,7 @@ describe('readResourceDetail', () => {
         actions.resourceDetailReadSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {data: detail}),
+          sagas.apiResponseToPayload(false, {data: detail}),
           payload,
           thunk,
         ),
@@ -140,20 +141,20 @@ describe('readResourceDetail', () => {
 })
 
 describe('updateResource', () => {
-  const payload = {needle: 1, data: 'foo'}
+  const detail = {Data: 'foo'}
+  const payload = {needle: 1, data: detail}
 
   it('calls success', () => {
-    const detail = 'foo'
     const generator = sagas.updateResource(api, payload, meta)
     expect(generator.next().value).toEqual(
-      call([api, api.put], `/${resource}/1`, 'foo'),
+      call([api, api.put], `/${resource}/1`, detail),
     )
     expect(generator.next({data: detail}).value).toEqual(
       put(
         actions.resourceUpdateSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {data: detail}),
+          sagas.apiResponseToPayload(false, {data: detail}),
           payload,
           thunk,
         ),
@@ -164,7 +165,7 @@ describe('updateResource', () => {
   it('calls failure', () => {
     const generator = sagas.updateResource(api, payload, meta)
     expect(generator.next().value).toEqual(
-      call([api, api.put], `/${resource}/1`, 'foo'),
+      call([api, api.put], `/${resource}/1`, detail),
     )
     expect(generator.throw('test').value).toEqual(
       put(
@@ -192,7 +193,7 @@ describe('deleteResource', () => {
         actions.resourceDeleteSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {status: 204}),
+          sagas.apiResponseToPayload(false, {status: 204}),
           payload,
           thunk,
           false,
@@ -211,7 +212,7 @@ describe('deleteResource', () => {
         actions.resourceDeleteSuccess(
           resource,
           entityType,
-          sagas.apiResponseToPayload(true, {status: 200}),
+          sagas.apiResponseToPayload(false, {status: 200}),
           payload,
           thunk,
           true,

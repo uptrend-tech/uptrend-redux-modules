@@ -49,7 +49,12 @@ class ResourceLoader extends React.Component {
     this._asyncActive = false
   }
 
-  getRequesResultValuesObj() {
+  getRequestActionOptionsObj() {
+    const {autoCaseKeys} = this.props
+    return {autoCaseKeys}
+  }
+
+  getRequestResultValuesObj() {
     const {requestResult} = this.state
     const entities = requestResult && requestResult.entities
     const result = requestResult && requestResult.data
@@ -95,7 +100,7 @@ class ResourceLoader extends React.Component {
     } else if (status.loading) {
       return this.getStatusViewLoading()
     } else if (status.success) {
-      const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+      const {result, ...requestResultValues} = this.getRequestResultValuesObj()
       return this.getStatusViewSuccess(result, requestResultValues)
     } else if (status.initial) {
       return this.getStatusViewInitial()
@@ -184,23 +189,27 @@ class ResourceLoader extends React.Component {
 
   requestResourceDetailCreate = data => {
     const {requestDetailCreate, resource, entityType} = this.props
-    return requestDetailCreate(resource, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailCreate(resource, data, entityType, options)
   }
 
   requestResourceDetailDelete = deleteId => {
     const {requestDetailDelete, resource, resourceId, entityType} = this.props
     const finalDeleteId = deleteId === undefined ? resourceId : deleteId
-    return requestDetailDelete(resource, finalDeleteId, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailDelete(resource, finalDeleteId, entityType, options)
   }
 
   requestResourceDetailRead = params => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
-    return requestDetailRead(resource, resourceId, params, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailRead(resource, resourceId, params, entityType, options)
   }
 
   requestResourceDetailUpdate = data => {
     const {requestDetailUpdate, resource, resourceId, entityType} = this.props
-    return requestDetailUpdate(resource, resourceId, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailUpdate(resource, resourceId, data, entityType, options)
   }
 
   requestResourceList = dynamicParams => {
@@ -213,12 +222,14 @@ class ResourceLoader extends React.Component {
 
   requestResourceListCreate = data => {
     const {entityType, resource, requestListCreate} = this.props
-    return requestListCreate(resource, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestListCreate(resource, data, entityType, options)
   }
 
   requestResourceListRead = params => {
     const {entityType, resource, requestListRead} = this.props
-    return requestListRead(resource, params, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestListRead(resource, params, entityType, options)
   }
 
   render() {
@@ -228,7 +239,7 @@ class ResourceLoader extends React.Component {
 
     const {error} = this.state
     const {entityType} = this.props
-    const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+    const {result, ...requestResultValues} = this.getRequestResultValuesObj()
 
     return this.props.children(
       {
@@ -257,6 +268,7 @@ ResourceLoader.propTypes = {
   children: PropTypes.func.isRequired,
   entityType: PropTypes.string,
   list: PropTypes.bool.isRequired,
+  autoCaseKeys: PropTypes.bool,
   autoLoad: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
@@ -273,6 +285,10 @@ ResourceLoader.propTypes = {
   resource: PropTypes.string.isRequired,
   resourceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   passThru: PropTypes.any,
+}
+
+ResourceLoader.defaultProps = {
+  autoCaseKeys: true,
 }
 
 // Polyfill component so the new lifecycles will work with older React versions
