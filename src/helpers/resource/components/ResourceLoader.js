@@ -49,7 +49,7 @@ class ResourceLoader extends React.Component {
     this._asyncActive = false
   }
 
-  getRequesResultValuesObj() {
+  getRequestResultValuesObj() {
     const {requestResult} = this.state
     const entities = requestResult && requestResult.entities
     const result = requestResult && requestResult.data
@@ -95,7 +95,7 @@ class ResourceLoader extends React.Component {
     } else if (status.loading) {
       return this.getStatusViewLoading()
     } else if (status.success) {
-      const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+      const {result, ...requestResultValues} = this.getRequestResultValuesObj()
       return this.getStatusViewSuccess(result, requestResultValues)
     } else if (status.initial) {
       return this.getStatusViewInitial()
@@ -228,7 +228,7 @@ class ResourceLoader extends React.Component {
 
     const {error} = this.state
     const {entityType} = this.props
-    const {result, ...requestResultValues} = this.getRequesResultValuesObj()
+    const {result, ...requestResultValues} = this.getRequestResultValuesObj()
 
     return this.props.children(
       {
@@ -258,6 +258,7 @@ ResourceLoader.propTypes = {
   entityType: PropTypes.string,
   list: PropTypes.bool.isRequired,
   autoLoad: PropTypes.bool,
+  autoCaseKeys: PropTypes.bool,
   postRequest: PropTypes.bool,
   renderError: PropTypes.func,
   renderInitial: PropTypes.func,
