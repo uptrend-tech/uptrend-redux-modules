@@ -49,6 +49,11 @@ class ResourceLoader extends React.Component {
     this._asyncActive = false
   }
 
+  getRequestActionOptionsObj() {
+    const {autoCaseKeys} = this.props
+    return {autoCaseKeys}
+  }
+
   getRequestResultValuesObj() {
     const {requestResult} = this.state
     const entities = requestResult && requestResult.entities
@@ -184,23 +189,27 @@ class ResourceLoader extends React.Component {
 
   requestResourceDetailCreate = data => {
     const {requestDetailCreate, resource, entityType} = this.props
-    return requestDetailCreate(resource, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailCreate(resource, data, entityType, options)
   }
 
   requestResourceDetailDelete = deleteId => {
     const {requestDetailDelete, resource, resourceId, entityType} = this.props
     const finalDeleteId = deleteId === undefined ? resourceId : deleteId
-    return requestDetailDelete(resource, finalDeleteId, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailDelete(resource, finalDeleteId, entityType, options)
   }
 
   requestResourceDetailRead = params => {
     const {requestDetailRead, resource, resourceId, entityType} = this.props
-    return requestDetailRead(resource, resourceId, params, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailRead(resource, resourceId, params, entityType, options)
   }
 
   requestResourceDetailUpdate = data => {
     const {requestDetailUpdate, resource, resourceId, entityType} = this.props
-    return requestDetailUpdate(resource, resourceId, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestDetailUpdate(resource, resourceId, data, entityType, options)
   }
 
   requestResourceList = dynamicParams => {
@@ -213,12 +222,14 @@ class ResourceLoader extends React.Component {
 
   requestResourceListCreate = data => {
     const {entityType, resource, requestListCreate} = this.props
-    return requestListCreate(resource, data, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestListCreate(resource, data, entityType, options)
   }
 
   requestResourceListRead = params => {
     const {entityType, resource, requestListRead} = this.props
-    return requestListRead(resource, params, entityType)
+    const options = this.getRequestActionOptionsObj()
+    return requestListRead(resource, params, entityType, options)
   }
 
   render() {

@@ -142,13 +142,12 @@ describe('readResourceDetail', () => {
 
 describe('updateResource', () => {
   const detail = {Data: 'foo'}
-  const payload = {needle: 1, data: detail} //'foo'}
+  const payload = {needle: 1, data: detail}
 
   it('calls success', () => {
-    // const detail = {Data: 'foo'}
     const generator = sagas.updateResource(api, payload, meta)
     expect(generator.next().value).toEqual(
-      call([api, api.put], `/${resource}/1`, detail), // 'foo'),
+      call([api, api.put], `/${resource}/1`, detail),
     )
     expect(generator.next({data: detail}).value).toEqual(
       put(
