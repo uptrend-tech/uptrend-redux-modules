@@ -22,7 +22,11 @@ describe('getEntity', () => {
     opts => {
       expect(selectors.getEntity(opts.state, opts.entity)).toEqual({})
     },
-    [{state: {}, entity: 'team'}, {state, entity: 'no-match-entity'}],
+    [
+      {state: {}, entity: 'team'},
+      {state, entity: 'no-match-entity'},
+      {entity: 'no-state-no-match'},
+    ],
   )
 
   cases(
@@ -52,6 +56,7 @@ describe('getDetail', () => {
       {state: {}, entity: 'team', id: '2'},
       {state, entity: 'team', id: 99999},
       {state, entity: 'user', id: 'miss'},
+      {entity: 'no-state-no-match', id: 'miss'},
     ],
   )
 
@@ -86,6 +91,7 @@ describe('getList', () => {
       {state: {}, entity: 'team', ids: ['2']},
       {state, entity: 'team', ids: [99999]},
       {state, entity: 'user', ids: [99999, 'miss']},
+      {entity: 'no-state-no-match', ids: ['miss']},
     ],
   )
 
@@ -109,6 +115,7 @@ describe('getList', () => {
         ids: ['aaa', 'ccc'],
         result: [state.user.aaa, state.user.ccc],
       },
+      {entity: 'no-state-no-match', result: []},
     ],
   )
 })

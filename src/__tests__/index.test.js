@@ -2,17 +2,35 @@ import {createResource, createEntities} from '../'
 import {getSchemas} from '../utils/test/fixtures'
 
 describe('createEntities', () => {
-  const entities = createEntities({
-    isDevEnv: false,
-    schemas: getSchemas(),
-  })
-
   test('module parts defined', () => {
+    const entities = createEntities({
+      isDevEnv: false,
+      schemas: getSchemas(),
+    })
+
     expect(entities.actions).toBeDefined()
     expect(entities.middleware).toBeDefined()
     expect(entities.reducer).toBeDefined()
     expect(entities.schemas).toBeDefined()
     expect(entities.selectors).toBeDefined()
+  })
+
+  test('selector state is isolated', () => {
+    const entities = createEntities({
+      isDevEnv: true,
+      schemas: getSchemas(),
+    })
+
+    const {selectors} = entities
+    const localState = {team: {1: {id: 1, foo: 'bar'}, 2: {id: 2, foo: 'zax'}}}
+    const state = {entities: {...localState}}
+
+    expect(selectors.getEntity(state, 'team')).toBe(localState.team)
+    expect(selectors.getDetail(state, 'team', 1)).toBe(localState.team['1'])
+    expect(selectors.getList(state, 'team', [1, 2])).toEqual([
+      localState.team['1'],
+      localState.team['2'],
+    ])
   })
 })
 

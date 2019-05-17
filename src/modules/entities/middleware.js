@@ -28,6 +28,7 @@ const middlewareFactory = ({isDevEnv = false, schemas = {}}) => {
         return next({...action, payload: {...payload, entities: result}})
       }
 
+      /* istanbul ignore next */
       warning(
         isDevEnv,
         `[entityType] There is no ${meta.entityType} schema on schemas.js`,
