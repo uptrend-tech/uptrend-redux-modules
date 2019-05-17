@@ -21,20 +21,31 @@ const sagasFactory = ({
     if (!needle) return `/${resource}`
     return `/${resource}/${needle}`
   }
-  const apiResponseData = response => camelKeys(response.data)
 
-  const apiResponseToPayload = response => ({
+  const apiResponseData = (autoCaseKeys, response) => {
+    return autoCaseKeys === false ? response.data : camelKeys(response.data)
+  }
+
+  const apiResponseToPayload = (autoCaseKeys, response) => ({
     api: {response},
-    data: apiResponseData(response),
+    data: apiResponseData(autoCaseKeys, response),
   })
 
-  function* createResource(api, {data}, {resource, thunk, entityType}) {
+  function* createResource(
+    api,
+    {data},
+    {resource, thunk, entityType, autoCaseKeys},
+  ) {
     try {
-      const resp = yield call([api, api.post], `/${resource}`, snakeKeys(data))
+      const resp = yield call(
+        [api, api.post],
+        `/${resource}`,
+        autoCaseKeys ? snakeKeys(data) : data,
+      )
       const action = actions.resourceCreateSuccess(
         resource,
         entityType,
-        apiResponseToPayload(resp),
+        apiResponseToPayload(autoCaseKeys, resp),
         {data},
         thunk,
       )
@@ -44,7 +55,7 @@ const sagasFactory = ({
         actions.resourceCreateFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           {data},
           thunk,
         ),
@@ -52,14 +63,18 @@ const sagasFactory = ({
     }
   }
 
-  function* createResourceList(api, {data}, {resource, thunk, entityType}) {
-    const params = snakeKeys(data)
+  function* createResourceList(
+    api,
+    {data},
+    {resource, thunk, entityType, autoCaseKeys},
+  ) {
+    const params = autoCaseKeys ? snakeKeys(data) : data
     try {
       const resp = yield call([api, api.post], `/${resource}`, params)
       const action = actions.resourceListCreateSuccess(
         resource,
         entityType,
-        apiResponseToPayload(resp),
+        apiResponseToPayload(autoCaseKeys, resp),
         params,
         thunk,
       )
@@ -69,7 +84,7 @@ const sagasFactory = ({
         actions.resourceListCreateFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           data,
           thunk,
         ),
@@ -77,7 +92,11 @@ const sagasFactory = ({
     }
   }
 
-  function* readResourceList(api, {params}, {resource, thunk, entityType}) {
+  function* readResourceList(
+    api,
+    {params},
+    {resource, thunk, entityType, autoCaseKeys},
+  ) {
     try {
       const resp = yield call([api, api.get], `/${resource}`, params)
 
@@ -85,7 +104,7 @@ const sagasFactory = ({
         actions.resourceListReadSuccess(
           resource,
           entityType,
-          apiResponseToPayload(resp),
+          apiResponseToPayload(autoCaseKeys, resp),
           {params},
           thunk,
         ),
@@ -95,7 +114,7 @@ const sagasFactory = ({
         actions.resourceListReadFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           {params},
           thunk,
         ),
@@ -106,7 +125,7 @@ const sagasFactory = ({
   function* readResourceDetail(
     api,
     {needle, params},
-    {resource, thunk, entityType},
+    {resource, thunk, entityType, autoCaseKeys},
   ) {
     try {
       const resp = yield call(
@@ -118,7 +137,7 @@ const sagasFactory = ({
         actions.resourceDetailReadSuccess(
           resource,
           entityType,
-          apiResponseToPayload(resp),
+          apiResponseToPayload(autoCaseKeys, resp),
           {needle, params},
           thunk,
         ),
@@ -128,7 +147,7 @@ const sagasFactory = ({
         actions.resourceDetailReadFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           {needle, params},
           thunk,
         ),
@@ -136,18 +155,22 @@ const sagasFactory = ({
     }
   }
 
-  function* updateResource(api, {needle, data}, {resource, thunk, entityType}) {
+  function* updateResource(
+    api,
+    {needle, data},
+    {resource, thunk, entityType, autoCaseKeys},
+  ) {
     try {
       const resp = yield call(
         [api, api.put],
         resourceNeedlePath(resource, needle),
-        snakeKeys(data),
+        autoCaseKeys ? snakeKeys(data) : data,
       )
       yield put(
         actions.resourceUpdateSuccess(
           resource,
           entityType,
-          apiResponseToPayload(resp),
+          apiResponseToPayload(autoCaseKeys, resp),
           {needle, data},
           thunk,
         ),
@@ -157,7 +180,7 @@ const sagasFactory = ({
         actions.resourceUpdateFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           {needle, data},
           thunk,
         ),
@@ -165,7 +188,11 @@ const sagasFactory = ({
     }
   }
 
-  function* deleteResource(api, {needle}, {resource, thunk, entityType}) {
+  function* deleteResource(
+    api,
+    {needle},
+    {resource, thunk, entityType, autoCaseKeys},
+  ) {
     try {
       const resp = yield call(
         [api, api.delete],
@@ -176,7 +203,7 @@ const sagasFactory = ({
         actions.resourceDeleteSuccess(
           resource,
           entityType,
-          apiResponseToPayload(resp),
+          apiResponseToPayload(autoCaseKeys, resp),
           {needle},
           thunk,
           resp.status === 200, // update on 200
@@ -187,7 +214,7 @@ const sagasFactory = ({
         actions.resourceDeleteFailure(
           resource,
           entityType,
-          camelKeys(e),
+          autoCaseKeys ? camelKeys(e) : e,
           {needle},
           thunk,
         ),
