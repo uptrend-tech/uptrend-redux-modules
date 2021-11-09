@@ -15,6 +15,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fuptrend-tech%2Fuptrend-redux-modules.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fuptrend-tech%2Fuptrend-redux-modules?ref=badge_shield)
 
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
@@ -401,3 +402,6 @@ MIT
 [all-contributors]: https://github.com/uptrend-tech/all-contributors
 [arc-redux-modules]: https://github.com/diegohaz/arc/wiki/Redux-modules
 [redux-modules]: https://github.com/diegohaz/redux-modules
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fuptrend-tech%2Fuptrend-redux-modules.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fuptrend-tech%2Fuptrend-redux-modules?ref=badge_large)
